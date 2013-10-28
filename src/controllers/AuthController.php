@@ -88,10 +88,13 @@ class AuthController extends anlutro\L4Base\Controller
 				->withErrors(Lang::get('c::auth.user-email-notfound'));
 		}
 
-		Password::remind($user);
-
-		return $this->redirectAction('login')
-			->with('info', Lang::get('c::auth.reminder-sent'));
+		if (Password::requestReset($user)) {
+			return $this->redirectAction('login')
+				->with('info', Lang::get('c::auth.reminder-sent'));
+		} else {
+			return $this->redirectAction('reminder')
+				->withErrors(Lang::get('c::std.failure'));
+		}
 	}
 
 	/**
@@ -101,11 +104,6 @@ class AuthController extends anlutro\L4Base\Controller
 	 */
 	public function reset()
 	{
-		if (!Password::getUserFromToken(Input::get('token'))) {
-			return $this->redirectAction('reminder')
-				->withErrors(Lang::get('c::auth.user-notfound'));
-		}
-
 		return View::make('c::auth.reset', [
 			'formAction' => $this->urlAction('attemptReset'),
 			'token' => Request::query('token'),
@@ -119,17 +117,23 @@ class AuthController extends anlutro\L4Base\Controller
 	 */
 	public function attemptReset()
 	{
-		$user = Password::getUserFromToken(Input::get('token'));
-
 		if (!$user) {
 			return $this->redirectAction('reminder')
 				->withErrors(Lang::get('c::auth.user-notfound'));
 		}
 
+		$credentials = Input::only('email');
+		$token = Input::get('token');
 		$input = Input::only('password', 'password_confirmation');
-		Password::reset($user, $input);
 
-		return $this->redirectAction('login')
-			->with('success', Lang::get('c::auth.reset-success'));
+		// @todo validate password
+
+		if (Password::reset($credentials, $token, $newPassword)) {
+			return $this->redirectAction('login')
+				->with('success', Lang::get('c::auth.reset-success'));
+		} else {
+			return $this->redirectAction('login')
+				->withErrors(Lang::get('c::auth.reset-failure'));
+		}
 	}
 }

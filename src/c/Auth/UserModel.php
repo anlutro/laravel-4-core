@@ -4,8 +4,9 @@ namespace c\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\UserInterface;
+use Illuminate\Auth\Reminders\RemindableInterface;
 
-class UserModel extends Model implements UserInterface
+class UserModel extends Model implements UserInterface, RemindableInterface
 {
 	protected $table = 'users';
 
@@ -47,5 +48,10 @@ class UserModel extends Model implements UserInterface
 		return $this->newQuery()
 			->distinct()
 			->lists('user_type');
+	}
+
+	public function getReminderEmail()
+	{
+		return $this->attributes['email'];
 	}
 }
