@@ -10,16 +10,6 @@ class UserModel extends Model implements UserInterface, RemindableInterface
 {
 	protected $table = 'users';
 
-	public function getAuthIdentifier()
-	{
-		return $this->getKey();
-	}
-
-	public function getAuthPassword()
-	{
-		return $this->attributes['password'];
-	}
-
 	public function setPasswordAttribute($value)
 	{
 		$this->attributes['password'] = Hash::make($value);
@@ -48,6 +38,16 @@ class UserModel extends Model implements UserInterface, RemindableInterface
 		return $this->newQuery()
 			->distinct()
 			->lists('user_type');
+	}
+
+	public function getAuthIdentifier()
+	{
+		return $this->getKey();
+	}
+
+	public function getAuthPassword()
+	{
+		return $this->attributes['password'];
 	}
 
 	public function getReminderEmail()

@@ -27,6 +27,8 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		$this->app['view']->addNamespace($namespace, $srcPath . '/views');
+
+		require $srcPath . '/routes-' . $this->app['translator']->getLocale() . '.php';
 	}
 
 }

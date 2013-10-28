@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
 Route::group(['before' => 'guest'], function()
 {
@@ -28,11 +29,11 @@ Route::group(['before' => 'auth'], function()
 
 Route::group(['prefix' => 'admin', 'before' => ['auth', 'access:admin']], function()
 {
-	Route::get('/brukere', 'AdminUserController@userList');
-	Route::post('/brukere', 'AdminUserController@bulkUserAction');
-	Route::get('/brukere/ny', 'AdminUserController@newUser');
-	Route::post('/bruker/ny', 'AdminUserController@createNewUser');
-	Route::get('/brukere/{id}', 'AdminUserController@showUser');
-	Route::post('/brukere/{id}', 'AdminUserController@updateUser');
-	Route::post('/brukere/{id}/slett', 'AdminUserController@deleteUser');
+	Route::get('brukere', 'AdminUserController@userList');
+	Route::post('brukere', 'AdminUserController@bulkUserAction');
+	Route::get('brukere/ny', 'AdminUserController@newUser');
+	Route::post('bruker/ny', 'AdminUserController@createNewUser');
+	Route::get('brukere/{id}', 'AdminUserController@showUser');
+	Route::post('brukere/{id}', 'AdminUserController@updateUser');
+	Route::post('brukere/{id}/slett', 'AdminUserController@deleteUser');
 });
