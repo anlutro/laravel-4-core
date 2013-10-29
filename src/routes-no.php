@@ -3,20 +3,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['before' => 'guest'], function()
 {
-	Route::get('/logg-inn', 'UserController@login');
+	Route::get('/logg-inn', 'AuthController@login');
 	Route::post('/logg-inn', [
 		'before' => 'csrf',
-		'uses' => 'UserController@attemptLogin'
+		'uses' => 'AuthController@attemptLogin'
 	]);
-	Route::get('/glemt-passord', 'UserController@reminder');
+	Route::get('/glemt-passord', 'AuthController@reminder');
 	Route::post('/glemt-passord', [
 		'before' => 'csrf',
-		'uses' => 'UserController@sendReminder'
+		'uses' => 'AuthController@sendReminder'
 	]);
-	Route::get('/tilbakestill-passord', 'UserController@reset');
+	Route::get('/tilbakestill-passord', 'AuthController@reset');
 	Route::post('/tilbakestill-passord', [
 		'before' => 'csrf',
-		'uses' => 'UserController@attemptReset'
+		'uses' => 'AuthController@attemptReset'
 	]);
 });
 
@@ -29,11 +29,11 @@ Route::group(['before' => 'auth'], function()
 
 Route::group(['prefix' => 'admin', 'before' => ['auth', 'access:admin']], function()
 {
-	Route::get('brukere', 'AdminUserController@userList');
-	Route::post('brukere', 'AdminUserController@bulkUserAction');
-	Route::get('brukere/ny', 'AdminUserController@newUser');
-	Route::post('bruker/ny', 'AdminUserController@createNewUser');
-	Route::get('brukere/{id}', 'AdminUserController@showUser');
-	Route::post('brukere/{id}', 'AdminUserController@updateUser');
-	Route::post('brukere/{id}/slett', 'AdminUserController@deleteUser');
+	Route::get('brukere', 'UserController@userList');
+	Route::post('brukere', 'UserController@bulkUserAction');
+	Route::get('brukere/ny', 'UserController@newUser');
+	Route::post('bruker/ny', 'UserController@createNewUser');
+	Route::get('brukere/{id}', 'UserController@showUser');
+	Route::post('brukere/{id}', 'UserController@updateUser');
+	Route::delete('brukere/{id}', 'UserController@deleteUser');
 });

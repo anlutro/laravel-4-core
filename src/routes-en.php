@@ -3,20 +3,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['before' => 'guest'], function()
 {
-	Route::get('/login', 'UserController@login');
+	Route::get('/login', 'AuthController@login');
 	Route::post('/login', [
 		'before' => 'csrf',
-		'uses' => 'UserController@attemptLogin'
+		'uses' => 'AuthController@attemptLogin'
 	]);
-	Route::get('/reminder', 'UserController@reminder');
+	Route::get('/reminder', 'AuthController@reminder');
 	Route::post('/reminder', [
 		'before' => 'csrf',
-		'uses' => 'UserController@sendReminder'
+		'uses' => 'AuthController@sendReminder'
 	]);
-	Route::get('/reset', 'UserController@reset');
+	Route::get('/reset', 'AuthController@reset');
 	Route::post('/reset', [
 		'before' => 'csrf',
-		'uses' => 'UserController@attemptReset'
+		'uses' => 'AuthController@attemptReset'
 	]);
 });
 
@@ -29,11 +29,11 @@ Route::group(['before' => 'auth'], function()
 
 Route::group(['prefix' => 'admin', 'before' => ['auth', 'access:admin']], function()
 {
-	Route::get('users', 'AdminUserController@userList');
-	Route::post('users', 'AdminUserController@bulkUserAction');
-	Route::get('users/new', 'AdminUserController@newUser');
-	Route::post('users/new', 'AdminUserController@createNewUser');
-	Route::get('users/{id}', 'AdminUserController@showUser');
-	Route::post('users/{id}', 'AdminUserController@updateUser');
-	Route::post('users/{id}/slett', 'AdminUserController@deleteUser');
+	Route::get('users', 'UserController@userList');
+	Route::post('users', 'UserController@bulkUserAction');
+	Route::get('users/new', 'UserController@newUser');
+	Route::post('users/new', 'UserController@createNewUser');
+	Route::get('users/{id}', 'UserController@showUser');
+	Route::post('users/{id}', 'UserController@updateUser');
+	Route::delete('users/{id}', 'UserController@deleteUser');
 });

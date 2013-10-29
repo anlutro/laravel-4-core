@@ -14,7 +14,10 @@
     "autoload": {
         "psr-0": {
             "c\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/controllers"
+        ]
     },
     "minimum-stability": "dev"
 }
