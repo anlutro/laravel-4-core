@@ -11,7 +11,7 @@
 {{ Form::model($user, ['url' => $formAction, 'class' => 'form-horizontal', 'role' => 'form']) }}
 
 	<div class="form-group">
-		{{ Form::label('username', Lang::get('base.username-field'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('username', Lang::get('c::user.username-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
 			{{ Form::text('username', null, ['class' => 'form-control']) }}
 		</div>
@@ -19,7 +19,7 @@
 
 	@if ($userTypes)
 	<div class="form-group">
-		{{ Form::label('usertype', Lang::get('base.usertype-field'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('usertype', Lang::get('c::user.usertype-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
 			{{ Form::select('usertype', $userTypes, $user->usertype, ['class' => 'form-control']) }}
 		</div>
@@ -27,21 +27,21 @@
 	@endif
 
 	<div class="form-group">
-		{{ Form::label('name', Lang::get('base.name-field'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('name', Lang::get('c::user.name-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
 			{{ Form::text('name', null, ['class' => 'form-control']) }}
 		</div>
 	</div>
 
 	<div class="form-group">
-		{{ Form::label('email', Lang::get('base.email-field'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('email', Lang::get('c::user.email-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
 			{{ Form::email('email', null, ['class' => 'form-control']) }}
 		</div>
 	</div>
 
 	<div class="form-group">
-		{{ Form::label('phone', Lang::get('base.phone-field'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('phone', Lang::get('c::user.phone-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
 			{{ Form::text('phone', null, ['class' => 'form-control']) }}
 		</div>
@@ -51,20 +51,20 @@
 	<hr>
 	<div class="row">
 		<div class="col-sm-10 col-sm-offset-2">
-			<p>@lang('base.updating-password-explanation')</p>
+			<p>@lang('c::user.updating-password-explanation')</p>
 		</div>
 	</div>
 	@endif
 
 	<div class="form-group">
-		{{ Form::label('password', Lang::get('base.password-field'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('password', Lang::get('c::user.new-password'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
 			{{ Form::password('password', ['class' => 'form-control']) }}
 		</div>
 	</div>
 
 	<div class="form-group">
-		{{ Form::label('password_confirmation', Lang::get('base.confirm-password'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('password_confirmation', Lang::get('c::auth.confirm-password'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
 			{{ Form::password('password_confirmation', ['class' => 'form-control']) }}
 		</div>
@@ -72,10 +72,19 @@
 
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-6">
-			<button type="submit" class="btn btn-primary">@glyph('save') @lang('base.save')</button>
-			<a href="{{ $backUrl }}" class="btn btn-default">@glyph('backward') @lang('base.back')</a>
+			<button type="submit" class="btn btn-primary">
+				<span class="glyphicon glyphicon-save"></span>
+				@lang('c::std.save')
+			</button>
+			<a href="{{ $backUrl }}" class="btn btn-default">
+				<span class="glyphicon glyphicon-backward"></span>
+				@lang('c::std.back')
+			</a>
 			@if (isset($deleteUrl))
-			<button type="button" id="delete" class="btn btn-danger" data-deleteurl="{{ $deleteUrl }}">@glyph('trash') @lang('base.delete')</button>
+			<button type="button" id="delete" class="btn btn-danger" data-deleteurl="{{ $deleteUrl }}">
+				<span class="glyphicon glyphicon-trash"></span>
+				@lang('c::std.delete')
+			</button>
 			@endif
 		</div>
 	</div>

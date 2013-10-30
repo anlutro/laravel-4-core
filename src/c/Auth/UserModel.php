@@ -20,17 +20,22 @@ class UserModel extends Model implements UserInterface, RemindableInterface
 		return Hash::check($password, $this->attributes['password']);
 	}
 
-	public function addSearchConstraint($query, $search)
+	public function scopeSearchFor($query, $search)
 	{
 		$searchable = ['username', 'email', 'name'];
 		
-		$query->where(function($query) use ($searchable, $search) {
+		return $query->where(function($query) use ($searchable, $search) {
 			foreach ($searchable as $field) {
 				$query->orWhere($field, 'like', '%'.$search.'%');
 			}
 		});
+	}
 
+	public function scopeFilterUserType($query, $type)
+	{
 		return $query;
+
+		return $query->where('user_type', '=', $type);
 	}
 
 	public function getDistinctUserTypes()

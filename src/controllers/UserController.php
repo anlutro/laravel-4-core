@@ -22,11 +22,11 @@ class UserController extends anlutro\L4Base\Controller
 	 *
 	 * @return View
 	 */
-	public function viewProfile()
+	public function profile()
 	{
 		$user = $this->users->getCurrentUser();
 
-		return View::make('c::auth.profile', [
+		return View::make('c::user.profile', [
 			'user' => $user,
 			'formAction' => $this->urlAction('updateProfile'),
 			'backUrl' => URL::to('/'),
@@ -41,28 +41,18 @@ class UserController extends anlutro\L4Base\Controller
 	public function updateProfile()
 	{
 		$user = $this->users->getCurrentUser();
+		$redirect = $this->redirectAction('profile');
 
 		if (!$user->confirmPassword(Input::get('old_password'))) {
-			return $this->redirectAction('viewProfile')
-				->withErrors(Lang::get('c::auth.invalid-password'));
+			return $redirect->withErrors(Lang::get('c::auth.invalid-password'));
 		}
 
-		$input = Input::except('_token');
-		
-		// @todo validation
-		$validator = Validator::make([], []);
-
-		if ($validator->fails()) {
-			return $this->redirectAction('viewProfile')
-				->withErrors($validator);
-		}
-
-		$redirect = $this->redirectAction('viewProfile');
+		$input = Input::all();
 
 		if ($this->users->updateProfile($user, $input)) {
-			return $redirect->with('success', Lang::get('c::auth.profile-update-success'));
+			return $redirect->with('success', Lang::get('c::user.profile-update-success'));
 		} else {
-			return $redirect->withErrors(Lang::get('c::auth.profile-update-failure'));
+			return $redirect->withErrors($this->users->errors());
 		}
 	}
 
@@ -71,7 +61,7 @@ class UserController extends anlutro\L4Base\Controller
 	 *
 	 * @return View
 	 */
-	public function userList()
+	public function index()
 	{
 		if (Input::has('search')) {
 			$this->users->search(Input::get('search'));
@@ -83,7 +73,7 @@ class UserController extends anlutro\L4Base\Controller
 
 		$this->users->togglePagination(20);
 		$users = $this->users->getAll();
-		$types = ['all' => Lang::get('c::auth.usertype-all')]
+		$types = ['all' => Lang::get('c::user.usertype-all')]
 			+ $this->users->getUserTypes();
 
 		return View::make('c::user.list', [
@@ -93,9 +83,9 @@ class UserController extends anlutro\L4Base\Controller
 				'-'      => '-',
 				'delete' => Lang::get('c::std.delete'),
 			],
-			'editAction'  => $this->parseAction('showUser'),
+			'editAction'  => $this->parseAction('edit'),
+			'newUrl'      => $this->urlAction('create'),
 			'backUrl'     => URL::to('/'),
-			'newUrl'      => $this->urlAction('newUser'),
 		]);
 	}
 
@@ -104,14 +94,14 @@ class UserController extends anlutro\L4Base\Controller
 	 *
 	 * @return Redirect
 	 */
-	public function bulkUserAction()
+	public function bulk()
 	{
 		$userIds = array_keys(Input::get('bulk'));
 		$action = Input::get('bulkAction');
 
 		$this->users->processBulkAction($action, $userIds);
 
-		return $this->redirectAction('userList');
+		return $this->redirectAction('index');
 	}
 
 	/**
@@ -121,127 +111,99 @@ class UserController extends anlutro\L4Base\Controller
 	 *
 	 * @return View
 	 */
-	public function showUser($userId)
+	public function show($userId)
 	{
 		if (!$user = $this->users->getByKey($userId))
 			return $this->notFoundRedirect();
 
-		$viewData = ['user' => $user];
+		$viewData = [
+			'user' => $user,
+			'backUrl' => URL::to('/'),
+		];
 
 		$isAdmin = $this->users
 			->getCurrentUser()
 			->hasAccess('admin');
 
 		if ($isAdmin) {
-			$viewData += [
-				'backUrl' => $this->urlAction('userList'),
-				'editUrl' => $this->urlAction('editUser', [$user->id]),
-			];
-		} else {
-			$viewData += [
-				'backUrl' => URL::to('/'),
-			];
+			$viewData['editUrl'] = $this->urlAction('edit', [$user->id]);
 		}
 
-		return View::make('c::user.show', $data);
+		return View::make('c::user.show', $viewData);
 	}
 
-	public function editUser($userId)
+	public function edit($userId)
 	{
 		if (!$user = $this->users->getByKey($userId))
 			return $this->notFoundRedirect();
 
 		return View::make('c::user.form', [
-			'pageTitle'  => Lang::get('c::user.edit'),
+			'pageTitle'  => Lang::get('c::user.admin-edituser'),
 			'user'       => $user,
 			'userTypes'  => $this->getUserTypes(),
-			'formAction' => $this->urlAction('updateUser', [$user->id]),
-			'deleteUrl'  => $this->urlAction('deleteUser', [$user->id]),
-			'backUrl'    => $this->urlAction('userList'),
+			'formAction' => $this->urlAction('update', [$user->id]),
+			'deleteUrl'  => $this->urlAction('delete', [$user->id]),
+			'backUrl'    => $this->urlAction('index'),
 		]);
 	}
 
-	public function updateUser($userId)
+	public function update($userId)
 	{
 		if (!$user = $this->users->getByKey($userId))
 			return $this->notFoundRedirect();
 
 		$input = Input::all();
-
-		// @todo validation
-		$validator = Validator::make([], []);
-
-		if ($validator->fails()) {
-			return $this->redirectAction('editUser', [$user->id])
-				->withErrors($validator)
-				->withInput();
-		}
-
-		// unset the password element if empty to prevent 
-		if (empty($input['password'])) {
-			unset($input['password']);
-		}
-
-		$redirect = $this->redirectAction('showUser', [$user->id]);
+		$redirect = $this->redirectAction('edit', [$user->id]);
 
 		if ($this->users->update($user, $input)) {
 			return $redirect->with('success', Lang::get('c::user.update-success'));
 		} else {
-			return $redirect->withErrors(Lang::get('c::user.update-failure'));
+			return $redirect->withErrors($this->users->errors());
 		}
 	}
 
-	public function deleteUser($userId)
+	public function delete($userId)
 	{
 		if (!$user = $this->users->getByKey($userId))
 			return $this->notFoundRedirect();
 
 		if ($this->users->delete($user)) {
-			return $this->redirectAction('userList')
+			return $this->redirectAction('index')
 				->with('success', Lang::get('c::user.delete-success'));
 		} else {
-			return $this->redirectAction('showUser', [$user->id])
+			return $this->redirectAction('edit', [$user->id])
 				->withErrors(Lang::get('c::user.delete-failure'));
 		}
 	}
 
-	public function newUser()
+	public function create()
 	{
 		return View::make('c::user.form', [
-			'pageTitle'  => Lang::get('c::user.new'),
+			'pageTitle'  => Lang::get('c::user.admin-newuser'),
 			'user'       => $this->users->getNew(),
 			'userTypes'  => $this->getUserTypes(),
-			'formAction' => $this->urlAction('createNewUser'),
-			'backUrl'    => $this->urlAction('userList'),
+			'formAction' => $this->urlAction('store'),
+			'backUrl'    => $this->urlAction('index'),
 		]);
 	}
 
-	public function createNewUser()
+	public function store()
 	{
 		$input = Input::all();
 
-		// @todo validation
-		$validator = Validator::make([], []);
-
-		if ($validator->fails()) {
-			return $this->redirectAction('newUser')
-				->withErrors($validator)
-				->withInput();
-		}
-
 		if ($user = $this->users->create($input)) {
-			return $this->redirectAction('showUser', [$user->id])
+			return $this->redirectAction('edit', [$user->id])
 				->with('success', Lang::get('c::user.create-success'));
 		} else {
 			return $this->redirectAction('newUser')
-				->withErrors(Lang::get('c::user.create-failure'))
+				->withErrors($this->users->errors())
 				->withInput();
 		}
 	}
 
 	private function notFoundRedirect()
 	{
-		return $this->redirectAction('userList')
+		return $this->redirectAction('index')
 			->withErrors(Lang::get('c::user.not-found'));
 	}
 

@@ -28,7 +28,18 @@ class CoreServiceProvider extends ServiceProvider
 
 		$this->app['view']->addNamespace($namespace, $srcPath . '/views');
 
+		$this->addSidebarFunctionality();
+
 		require $srcPath . '/routes-' . $this->app['translator']->getLocale() . '.php';
+
+		$this->app->bind('c\Auth\UserModel', $this->app['config']->get('auth.model', 'c\Auth\UserModel'));
+	}
+
+	protected function addSidebarFunctionality()
+	{
+		$this->app['view']->creator('c::sidebar', function($view) {
+			$view->with('sidebar', array());
+		});
 	}
 
 }

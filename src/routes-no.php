@@ -22,18 +22,19 @@ Route::group(['before' => 'guest'], function()
 
 Route::group(['before' => 'auth'], function()
 {
-	Route::get('/min-profil', 'UserController@viewProfile');
+	Route::get('/min-profil', 'UserController@profile');
 	Route::post('/min-profil', 'UserController@updateProfile');
-	Route::get('/logg-ut', 'UserController@logout');
+	Route::get('/logg-ut', 'AuthController@logout');
+	Route::get('/profil/{id}', 'UserController@show');
 });
 
 Route::group(['prefix' => 'admin', 'before' => ['auth', 'access:admin']], function()
 {
-	Route::get('brukere', 'UserController@userList');
-	Route::post('brukere', 'UserController@bulkUserAction');
-	Route::get('brukere/ny', 'UserController@newUser');
-	Route::post('bruker/ny', 'UserController@createNewUser');
-	Route::get('brukere/{id}', 'UserController@showUser');
-	Route::post('brukere/{id}', 'UserController@updateUser');
-	Route::delete('brukere/{id}', 'UserController@deleteUser');
+	Route::get('brukere', 'UserController@index');
+	Route::post('brukere', 'UserController@bulk');
+	Route::get('brukere/ny', 'UserController@create');
+	Route::post('bruker/ny', 'UserController@store');
+	Route::get('brukere/{id}', 'UserController@edit');
+	Route::post('brukere/{id}', 'UserController@update');
+	Route::delete('brukere/{id}', 'UserController@delete');
 });

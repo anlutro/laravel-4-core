@@ -2,6 +2,7 @@
 return array(
 
 	'admin-newuser' => 'Add user',
+	'admin-edituser' => 'Edit user',
 	'admin-title' => 'Administration',
 	'admin-userlist' => 'List of users',
 	'email-field' => 'E-mail',
@@ -14,6 +15,7 @@ return array(
 	'password-field' => 'Password',
 	'phone-field' => 'Phone',
 	'profile-title' => 'My profile',
+	'profile-update-success' => 'Profile updated!',
 	'updating-password-explanation' => 'You only need to fill in the following forms if you intend to change the password.',
 	'username-field' => 'Username',
 	'usertype-admin' => 'Administrators',

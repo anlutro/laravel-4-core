@@ -22,18 +22,19 @@ Route::group(['before' => 'guest'], function()
 
 Route::group(['before' => 'auth'], function()
 {
-	Route::get('/my-profile', 'UserController@viewProfile');
+	Route::get('/my-profile', 'UserController@profile');
 	Route::post('/my-profile', 'UserController@updateProfile');
-	Route::get('/logout', 'UserController@logout');
+	Route::get('/logout', 'AuthController@logout');
+	Route::get('/profile/{id}', 'UserController@show');
 });
 
 Route::group(['prefix' => 'admin', 'before' => ['auth', 'access:admin']], function()
 {
-	Route::get('users', 'UserController@userList');
-	Route::post('users', 'UserController@bulkUserAction');
-	Route::get('users/new', 'UserController@newUser');
-	Route::post('users/new', 'UserController@createNewUser');
-	Route::get('users/{id}', 'UserController@showUser');
-	Route::post('users/{id}', 'UserController@updateUser');
-	Route::delete('users/{id}', 'UserController@deleteUser');
+	Route::get('users', 'UserController@index');
+	Route::post('users', 'UserController@bulk');
+	Route::get('users/new', 'UserController@create');
+	Route::post('users/new', 'UserController@store');
+	Route::get('users/{id}', 'UserController@edit');
+	Route::post('users/{id}', 'UserController@update');
+	Route::delete('users/{id}', 'UserController@delete');
 });

@@ -101,6 +101,9 @@ class AuthController extends anlutro\L4Base\Controller
 	 */
 	public function reset()
 	{
+		if (!Request::query('token'))
+			return $this->redirectAction('login');
+
 		return View::make('c::auth.reset', [
 			'formAction' => $this->urlAction('attemptReset'),
 			'token' => Request::query('token'),
@@ -114,16 +117,19 @@ class AuthController extends anlutro\L4Base\Controller
 	 */
 	public function attemptReset()
 	{
-		if (!$user) {
-			return $this->redirectAction('reminder')
-				->withErrors(Lang::get('c::auth.user-notfound'));
-		}
-
-		$credentials = Input::only('email');
+		$credentials = Input::only('username');
 		$token = Input::get('token');
 		$input = Input::only('password', 'password_confirmation');
 
 		// @todo validate password
+		$validator = Validator::make([], []);
+		
+		if (!$validator->passes()) {
+			return $this->redirectAction('reset')
+				->withErrors($validator);
+		}
+
+		$newPassword = Input::get('password');
 
 		if (Password::reset($credentials, $token, $newPassword)) {
 			return $this->redirectAction('login')

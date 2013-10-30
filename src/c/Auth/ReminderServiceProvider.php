@@ -16,7 +16,7 @@ class ReminderServiceProvider extends BaseProvider
 			$users = $app['auth']->driver()->getProvider();
 
 			// inject and construct
-			$broker = new PasswordBroker($reminders, $users);
+			$broker = new PasswordBroker($users, $reminders);
 			
 			return $broker;
 

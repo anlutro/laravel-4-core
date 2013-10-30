@@ -2,6 +2,7 @@
 namespace c\Auth;
 
 use anlutro\L4Base\EloquentRepository as BaseRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 
@@ -9,16 +10,28 @@ class UserRepository extends BaseRepository
 {
 	protected $search;
 	protected $filter;
+	protected $validator;
 
-	public function __construct(UserModel $model)
+	public function __construct(UserModel $model, UserValidator $validator)
 	{
 		$this->model = $model;
+		$this->validator = $validator;
 	}
 
-	public function prepareQuery($query)
+	public function search($search)
+	{
+		$this->search = $search;
+	}
+
+	public function filter($filter)
+	{
+		$this->filter = $filter;
+	}
+
+	protected function prepareQuery($query)
 	{
 		if ($this->search) {
-			$query->addSearchConstraint($this->search);
+			$query->searchFor($this->search);
 		}
 
 		if ($this->filter) {
@@ -33,6 +46,8 @@ class UserRepository extends BaseRepository
 
 	public function getUserTypes()
 	{
+		return [];
+
 		$types = $this->model->getDistinctUserTypes();
 		$strings = [];
 
@@ -43,10 +58,23 @@ class UserRepository extends BaseRepository
 		return $strings;
 	}
 
-	public function updateUserProfile(UserModel $user, $attributes)
+	public function update(Model $model, array $attributes)
 	{
-		// @todo filter $attributes
-		return $this->update($user, $attributes);
+		if (empty($attributes['password'])) {
+			unset($attributes['password']);
+		}
+
+		return parent::update($model, $attributes);
+	}
+
+	public function updateProfile(Model $model, array $attributes)
+	{
+		$this->validator->setKey($model->getKey());
+
+		if (!$this->validator->validProfileUpdate($attributes, $model->getKey()))
+			return false;
+		
+		return $this->update($model, $attributes);
 	}
 
 	public function processBulkAction($action, $keys)
