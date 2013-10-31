@@ -26,6 +26,8 @@ class UserController extends anlutro\L4Base\Controller
 	{
 		$user = $this->users->getCurrentUser();
 
+		$url = URL::action('UserController@profile');
+
 		return View::make('c::user.profile', [
 			'user' => $user,
 			'formAction' => $this->urlAction('updateProfile'),
@@ -195,7 +197,7 @@ class UserController extends anlutro\L4Base\Controller
 			return $this->redirectAction('edit', [$user->id])
 				->with('success', Lang::get('c::user.create-success'));
 		} else {
-			return $this->redirectAction('newUser')
+			return $this->redirectAction('create')
 				->withErrors($this->users->errors())
 				->withInput();
 		}

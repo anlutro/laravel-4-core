@@ -75,10 +75,8 @@ class AuthController extends anlutro\L4Base\Controller
 	 */
 	public function sendReminder()
 	{
-		// @todo replace this somehow
-		$user = $this->users
-			->where('email', Input::get('email'))
-			->first();
+		$credentials = Input::only('email');
+		$user = Password::findUser($credentials);
 
 		if (!$user) {
 			return $this->redirectAction('reminder')

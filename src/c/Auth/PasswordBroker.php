@@ -29,6 +29,18 @@ class PasswordBroker
 	}
 
 	/**
+	 * Get a user by his/her credentials.
+	 *
+	 * @param  array  $credentials
+	 *
+	 * @return mixed
+	 */
+	public function findUser(array $credentials)
+	{
+		return $this->users->retrieveByCredentials($credentials);
+	}
+
+	/**
 	 * Register a request for a password reset. Create a reset token for a user
 	 * and send him/her an email with instructions on how to reset password.
 	 *
