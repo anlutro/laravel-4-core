@@ -4,6 +4,8 @@ namespace c\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\MessageBag;
 use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\UserProviderInterface;
@@ -19,6 +21,7 @@ class PasswordBroker
 {
 	protected $users;
 	protected $reminders;
+	protected $errors = array();
 
 	public function __construct(
 		UserProviderInterface $users,
@@ -94,12 +97,12 @@ class PasswordBroker
 		$user = $this->users->retrieveByCredentials($credentials);
 
 		if (!$user) {
-			// @todo throw exception?
+			$this->errors[] = 'user';
 			return false;
 		}
 
 		if (!$this->reminders->exists($user, $token)) {
-			// @todo throw exception?
+			$this->errors[] = 'token';
 			return false;
 		}
 
@@ -108,5 +111,15 @@ class PasswordBroker
 		$this->reminders->delete($token);
 
 		return $user;
+	}
+
+	/**
+	 * Get the password broker errors.
+	 *
+	 * @return array
+	 */
+	public function errors()
+	{
+		return $this->errors;
 	}
 }

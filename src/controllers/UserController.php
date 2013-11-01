@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core - User Controller
+ *
+ * @author    Andreas Lutro <anlutro@gmail.com>
+ * @license   http://opensource.org/licenses/MIT
+ * @package   Laravel 4 Core
+ */
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
@@ -8,10 +16,19 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use c\Auth\UserRepository;
 
+/**
+ * Controller for managing users, not including authentication.
+ */
 class UserController extends anlutro\L4Base\Controller
 {
+	/**
+	 * @var c\Auth\UserRepository
+	 */
 	protected $users;
 
+	/**
+	 * @param UserRepository $users
+	 */
 	public function __construct(UserRepository $users)
 	{
 		$this->users = $users;
@@ -134,6 +151,13 @@ class UserController extends anlutro\L4Base\Controller
 		return View::make('c::user.show', $viewData);
 	}
 
+	/**
+	 * Show the edit form for a user.
+	 *
+	 * @param  int $userId
+	 *
+	 * @return View
+	 */
 	public function edit($userId)
 	{
 		if (!$user = $this->users->getByKey($userId))
@@ -149,6 +173,13 @@ class UserController extends anlutro\L4Base\Controller
 		]);
 	}
 
+	/**
+	 * Update a user's information.
+	 *
+	 * @param  int $userId
+	 *
+	 * @return Redirect
+	 */
 	public function update($userId)
 	{
 		if (!$user = $this->users->getByKey($userId))
@@ -164,6 +195,13 @@ class UserController extends anlutro\L4Base\Controller
 		}
 	}
 
+	/**
+	 * Delete an existing user.
+	 *
+	 * @param  int $userId
+	 *
+	 * @return Redirect
+	 */
 	public function delete($userId)
 	{
 		if (!$user = $this->users->getByKey($userId))
@@ -178,6 +216,11 @@ class UserController extends anlutro\L4Base\Controller
 		}
 	}
 
+	/**
+	 * Show the create new user form.
+	 *
+	 * @return View
+	 */
 	public function create()
 	{
 		return View::make('c::user.form', [
@@ -189,6 +232,11 @@ class UserController extends anlutro\L4Base\Controller
 		]);
 	}
 
+	/**
+	 * Store a new user in the database.
+	 *
+	 * @return Redirect
+	 */
 	public function store()
 	{
 		$input = Input::all();
@@ -203,12 +251,23 @@ class UserController extends anlutro\L4Base\Controller
 		}
 	}
 
+	/**
+	 * Return a not found redirect.
+	 *
+	 * @return Redirect
+	 */
 	private function notFoundRedirect()
 	{
 		return $this->redirectAction('index')
 			->withErrors(Lang::get('c::user.not-found'));
 	}
 
+	/**
+	 * Get a list of user types. Return false if not logged in or not allowed
+	 * to edit user types.
+	 * 
+	 * @return array|false
+	 */
 	private function getUserTypes()
 	{
 		if (!Auth::check() || !Auth::user()->hasAccess('*'))

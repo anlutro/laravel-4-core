@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core - Auth Controller
+ *
+ * @author    Andreas Lutro <anlutro@gmail.com>
+ * @license   http://opensource.org/licenses/MIT
+ * @package   Laravel 4 Core
+ */
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
@@ -8,6 +16,9 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Controller for authentication actions.
+ */
 class AuthController extends anlutro\L4Base\Controller
 {
 	/**
@@ -119,10 +130,11 @@ class AuthController extends anlutro\L4Base\Controller
 		$token = Input::get('token');
 		$input = Input::only('password', 'password_confirmation');
 
-		// @todo validate password
-		$validator = Validator::make([], []);
+		$validator = Validator::make($input, [
+			'password' => ['required', 'confirmed', 'min:5'],
+		]);
 		
-		if (!$validator->passes()) {
+		if ($validator->fails()) {
 			return $this->redirectAction('reset')
 				->withErrors($validator);
 		}
@@ -133,8 +145,13 @@ class AuthController extends anlutro\L4Base\Controller
 			return $this->redirectAction('login')
 				->with('success', Lang::get('c::auth.reset-success'));
 		} else {
+			$errors = array();
+			foreach (Password::errors() as $error) {
+				$errors[] = Lang::get('reminder'.$error);
+			}
+
 			return $this->redirectAction('login')
-				->withErrors(Lang::get('c::auth.reset-failure'));
+				->withErrors($errors);
 		}
 	}
 }

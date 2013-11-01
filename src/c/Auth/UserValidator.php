@@ -26,18 +26,4 @@ class UserValidator extends BaseValidator
 		
 		return $this->valid($rules, $attributes);
 	}
-
-	public function validUpdate(array $attributes)
-	{
-		$rules = [];
-
-		return $this->valid([], $attributes);
-	}
-
-	public function validProfileUpdate(array $attributes)
-	{
-		$rules = [];
-
-		return $this->valid($rules, $attributes);
-	}
 }
