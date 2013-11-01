@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core - PasswordBroker replacement
+ *
+ * @author    Andreas Lutro <anlutro@gmail.com>
+ * @license   http://opensource.org/licenses/MIT
+ * @package   Laravel 4 Core
+ */
+
 namespace c\Auth;
 
 use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;

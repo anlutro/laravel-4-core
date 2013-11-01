@@ -1,9 +1,7 @@
 <?php
 namespace c\Auth;
 
-use anlutro\L4Base\Validator as BaseValidator;
-
-class UserValidator extends BaseValidator
+class UserValidator extends \c\Validator
 {
 	protected $commonRules = [
 		'username' => ['required', 'min:4', 'alpha_dash', 'unique:<table>,username,<key>'],

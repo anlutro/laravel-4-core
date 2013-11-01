@@ -139,19 +139,19 @@ class AuthController extends anlutro\L4Base\Controller
 				->withErrors($validator);
 		}
 
+		if (!$user = Password::findUser($credentials)) {
+			return $this->redirectAction('login')
+				->withErrors(Lang::get('reminders.user'));
+		}
+
 		$newPassword = Input::get('password');
 
-		if (Password::reset($credentials, $token, $newPassword)) {
+		if (Password::resetUser($user, $token, $newPassword)) {
 			return $this->redirectAction('login')
 				->with('success', Lang::get('c::auth.reset-success'));
 		} else {
-			$errors = array();
-			foreach (Password::errors() as $error) {
-				$errors[] = Lang::get('reminder'.$error);
-			}
-
 			return $this->redirectAction('login')
-				->withErrors($errors);
+				->withErrors(Lang::get('reminders.token'));
 		}
 	}
 }

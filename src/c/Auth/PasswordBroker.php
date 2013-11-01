@@ -1,11 +1,18 @@
 <?php
+/**
+ * Laravel 4 Core - PasswordBroker replacement
+ *
+ * @author    Andreas Lutro <anlutro@gmail.com>
+ * @license   http://opensource.org/licenses/MIT
+ * @package   Laravel 4 Core
+ */
+
 namespace c\Auth;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\MessageBag;
 use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\UserProviderInterface;
@@ -21,7 +28,6 @@ class PasswordBroker
 {
 	protected $users;
 	protected $reminders;
-	protected $errors = array();
 
 	public function __construct(
 		UserProviderInterface $users,
@@ -84,7 +90,7 @@ class PasswordBroker
 	}
 
 	/**
-	 * Reset a user's password.
+	 * Find a user and reset his/her password.
 	 *
 	 * @param  array  $credentials
 	 * @param  string $token
@@ -94,15 +100,29 @@ class PasswordBroker
 	 */
 	public function reset(array $credentials, $token, $newPassword)
 	{
-		$user = $this->users->retrieveByCredentials($credentials);
-
-		if (!$user) {
-			$this->errors[] = 'user';
+		if (!$user = $this->findUser($credentials)) {
 			return false;
 		}
 
+		if ($this->resetUser($user, $token, $newPassword)) {
+			return $user;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Reset a user's password.
+	 *
+	 * @param  RemindableInterface $user
+	 * @param  string              $token
+	 * @param  string              $newPassword
+	 *
+	 * @return boolean
+	 */
+	public function resetUser(RemindableInterface $user, $token, $newPassword)
+	{
 		if (!$this->reminders->exists($user, $token)) {
-			$this->errors[] = 'token';
 			return false;
 		}
 
@@ -110,16 +130,6 @@ class PasswordBroker
 		$user->save();
 		$this->reminders->delete($token);
 
-		return $user;
-	}
-
-	/**
-	 * Get the password broker errors.
-	 *
-	 * @return array
-	 */
-	public function errors()
-	{
-		return $this->errors;
+		return true;
 	}
 }

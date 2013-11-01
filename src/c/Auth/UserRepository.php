@@ -1,16 +1,24 @@
 <?php
+/**
+ * Laravel 4 Core - User repository
+ *
+ * @author    Andreas Lutro <anlutro@gmail.com>
+ * @license   http://opensource.org/licenses/MIT
+ * @package   Laravel 4 Core
+ */
+
 namespace c\Auth;
 
-use anlutro\L4Base\EloquentRepository as BaseRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 
-class UserRepository extends BaseRepository
+class UserRepository extends \c\EloquentRepository
 {
+	protected $model;
+	protected $validator;
 	protected $search;
 	protected $filter;
-	protected $validator;
 
 	public function __construct(UserModel $model, UserValidator $validator)
 	{
@@ -28,6 +36,10 @@ class UserRepository extends BaseRepository
 		$this->filter = $filter;
 	}
 
+	/**
+	 * Prepare the query. This function is called before every getAll() and
+	 * other functions that utilize $this->runQuery()
+	 */
 	protected function prepareQuery($query)
 	{
 		if ($this->search) {
@@ -39,15 +51,21 @@ class UserRepository extends BaseRepository
 		}
 	}
 
+	/**
+	 * We'll use the auth driver to get the currently logged in user.
+	 */
 	public function getCurrentUser()
 	{
 		return Auth::user();
 	}
 
+	/**
+	 * Get a list of unique user types.
+	 *
+	 * @return array
+	 */
 	public function getUserTypes()
 	{
-		return [];
-
 		$types = $this->model->getDistinctUserTypes();
 		$strings = [];
 
