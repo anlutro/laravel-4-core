@@ -19,7 +19,7 @@ use c\Auth\UserRepository;
 /**
  * Controller for managing users, not including authentication.
  */
-class UserController extends anlutro\L4Base\Controller
+class UserController extends \c\Controller
 {
 	/**
 	 * @var c\Auth\UserRepository

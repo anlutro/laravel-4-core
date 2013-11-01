@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\View;
 /**
  * Controller for authentication actions.
  */
-class AuthController extends anlutro\L4Base\Controller
+class AuthController extends \c\Controller
 {
 	/**
 	 * Show the login form.

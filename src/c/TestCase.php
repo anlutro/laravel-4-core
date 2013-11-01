@@ -14,8 +14,6 @@ namespace c;
  */
 abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
-	abstract public function createApplication();
-
 	/**
 	 * The controller to test, fully namespaced.
 	 *
