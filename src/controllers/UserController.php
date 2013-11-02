@@ -46,9 +46,9 @@ class UserController extends \c\Controller
 		$url = URL::action('UserController@profile');
 
 		return View::make('c::user.profile', [
-			'user' => $user,
+			'user'       => $user,
 			'formAction' => $this->urlAction('updateProfile'),
-			'backUrl' => URL::to('/'),
+			'backUrl'    => URL::to('/'),
 		]);
 	}
 
