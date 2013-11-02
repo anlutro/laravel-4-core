@@ -139,19 +139,18 @@ class AuthController extends \c\Controller
 				->withErrors($validator);
 		}
 
+		$redirect = $this->redirectAction('login');
+
 		if (!$user = Password::findUser($credentials)) {
-			return $this->redirectAction('login')
-				->withErrors(Lang::get('reminders.user'));
+			return $redirect->withErrors(Lang::get('reminders.user'));
 		}
 
 		$newPassword = Input::get('password');
 
 		if (Password::resetUser($user, $token, $newPassword)) {
-			return $this->redirectAction('login')
-				->with('success', Lang::get('c::auth.reset-success'));
+			return $redirect->with('success', Lang::get('c::auth.reset-success'));
 		} else {
-			return $this->redirectAction('login')
-				->withErrors(Lang::get('reminders.token'));
+			return $redirect->withErrors(Lang::get('reminders.token'));
 		}
 	}
 }
