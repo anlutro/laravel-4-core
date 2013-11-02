@@ -86,21 +86,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	}
 
 	/**
-	 * Assert that we're redirected to an action. If $this->controller is
-	 * set, you just need the action name.
-	 *
-	 * @param  string $action name of the action
-	 * @param  array  $params (optional) route parameters
-	 * @param  array  $with   (optional) session data
-	 *
-	 * @return void
-	 */
-	public function assertRedirectedToRoute($route, $params = array(), $with = array())
-	{
-		$this->assertRedirectedTo($this->urlRoute($route, $params), $with);
-	}
-
-	/**
 	 * Helper function to assert that the current route has a filter.
 	 *
 	 * @param  string $filtername name of the filter.
@@ -175,49 +160,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	{
 		$action = $this->parseAction($action);
 
-		$url = $this->app['url']->action($action, $params, true);
-
-		return $this->prepareUrl($url, $params);
-	}
-
-	/**
-	 * Get the URL to a named route.
-	 *
-	 * @param  string $route
-	 * @param  array  $params (optional) route parameters, GET parameters
-	 *
-	 * @return string
-	 */
-	public function urlRoute($route, $params = array())
-	{
-		$url = $this->app['url']->route($route, $params, true);
-
-		return $this->prepareUrl($url, $params);
-	}
-
-	/**
-	 * Prepare an URL to avoid the bugs in 4.1.
-	 *
-	 * @param  string $url
-	 * @param  array  $params
-	 *
-	 * @return string
-	 */
-	public function prepareUrl($url, $params = array())
-	{
-		$query = array();
-
-		foreach ($params as $key => $value) {
-			if (!is_int($key)) $query[$key] = $value;
-		}
-
-		$url = str_replace('http://:', '', $url);
-
-		if (!empty($query)) {
-			$url .= '?' . http_build_query($query);
-		}
-
-		return $url;
+		return $this->app['url']->action($action, $params, true);
 	}
 
 	/**
