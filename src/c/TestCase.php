@@ -41,7 +41,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 		return $this->call($method, $uri, $parameters, $files, $server, $content, $changeHistory);
 	}
 
-
 	/**
 	 * Perform a GET request on a controller action.
 	 *
@@ -83,7 +82,22 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 */
 	public function assertRedirectedToAction($action, $params = array(), $with = array())
 	{
-		$this->assertRedirectedto($this->urlAction($action, $params), $with);
+		$this->assertRedirectedTo($this->urlAction($action, $params), $with);
+	}
+
+	/**
+	 * Assert that we're redirected to an action. If $this->controller is
+	 * set, you just need the action name.
+	 *
+	 * @param  string $action name of the action
+	 * @param  array  $params (optional) route parameters
+	 * @param  array  $with   (optional) session data
+	 *
+	 * @return void
+	 */
+	public function assertRedirectedToRoute($route, $params = array(), $with = array())
+	{
+		$this->assertRedirectedTo($this->urlRoute($route, $params), $with);
 	}
 
 	/**
@@ -152,22 +166,50 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 * Get the URL to an action. If $this->controller is set, you don't need
 	 * to add the controller name.
 	 *
-	 * @param  string $action name of the action
-	 * @param  array  $params (optional) action parameters
+	 * @param  string $action
+	 * @param  array  $params (optional) route parameters, GET parameters
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function urlAction($action, $params = array())
 	{
 		$action = $this->parseAction($action);
 
+		$url = $this->app['url']->action($action, $params, true);
+
+		return $this->prepareUrl($url, $params);
+	}
+
+	/**
+	 * Get the URL to a named route.
+	 *
+	 * @param  string $route
+	 * @param  array  $params (optional) route parameters, GET parameters
+	 *
+	 * @return string
+	 */
+	public function urlRoute($route, $params = array())
+	{
+		$url = $this->app['url']->route($route, $params, true);
+
+		return $this->prepareUrl($url, $params);
+	}
+
+	/**
+	 * Prepare an URL to avoid the bugs in 4.1.
+	 *
+	 * @param  string $url
+	 * @param  array  $params
+	 *
+	 * @return string
+	 */
+	public function prepareUrl($url, $params = array())
+	{
 		$query = array();
 
 		foreach ($params as $key => $value) {
 			if (!is_int($key)) $query[$key] = $value;
 		}
-
-		$url = $this->app['url']->action($action, $params, true);
 
 		$url = str_replace('http://:', '', $url);
 
