@@ -45,19 +45,10 @@ abstract class DatabaseRepository
 	public function __construct(Connection $db, $table = null)
 	{
 		$this->setConnection($db);
-		if ($table !== null) {
-			$this->setTable($table);
-		}
-	}
 
-	/**
-	 * Set the table to query from.
-	 *
-	 * @param string $table
-	 */
-	public function setTable($table)
-	{
-		$this->table = (string) $table;
+		if ($table !== null) {
+			$this->table = (string) $table;
+		}
 	}
 
 	/**
