@@ -36,9 +36,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 */
 	public function action($method, $action, $parameters = array(), $input = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
 	{
-		$uri = $this->urlAction($action, $parameters);
-
-		return $this->call($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+		return parent::action($method, $this->parseAction($action), $parameters, $files, $server, $content, $changeHistory);
 	}
 
 	/**
@@ -82,7 +80,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 */
 	public function assertRedirectedToAction($action, $params = array(), $with = array())
 	{
-		$this->assertRedirectedTo($this->urlAction($action, $params), $with);
+		parent::assertRedirectedToAction($this->parseAction($action), $params, $with);
 	}
 
 	/**
@@ -145,22 +143,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
 		$this->assertEquals($realValue, $value,
 			"Unexpected value in input#{$id}: $realValue -- expected $value");
-	}
-
-	/**
-	 * Get the URL to an action. If $this->controller is set, you don't need
-	 * to add the controller name.
-	 *
-	 * @param  string $action
-	 * @param  array  $params (optional) route parameters, GET parameters
-	 *
-	 * @return string
-	 */
-	public function urlAction($action, $params = array())
-	{
-		$action = $this->parseAction($action);
-
-		return $this->app['url']->action($action, $params, true);
 	}
 
 	/**
