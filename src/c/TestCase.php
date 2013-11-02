@@ -22,20 +22,42 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	protected $controller;
 
 	/**
-	 * Perform a GET request on an action.
+	 * Call a controller action and return the Response.
+	 *
+	 * @param  string  $method
+	 * @param  string  $action
+	 * @param  array   $parameters
+	 * @param  array   $input
+	 * @param  array   $files
+	 * @param  array   $server
+	 * @param  string  $content
+	 * @param  bool    $changeHistory
+	 * @return \Illuminate\Http\Response
+	 */
+	public function action($method, $action, $parameters = array(), $input = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
+	{
+		$uri = $this->urlAction($action, $parameters);
+
+		return $this->call($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+	}
+
+
+	/**
+	 * Perform a GET request on a controller action.
 	 *
 	 * @param  string $action name of the action.
 	 * @param  array  $params (optional) route parameters
+	 * @param  array  $input  (optional) GET parameters
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function getAction($action, $params = array())
+	public function getAction($action, $params = array(), $input = array())
 	{
-		return $this->callAction('GET', $action, $params);
+		return $this->action('GET', $action, $params, $input);
 	}
 
 	/**
-	 * Perform a POST request on $action.
+	 * Perform a POST request on a controller action.
 	 *
 	 * @param  string $action name of the action.
 	 * @param  array  $params (optional) route parameters
@@ -46,7 +68,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 */
 	public function postAction($action, $params = array(), $input = array(), $files = array())
 	{
-		return $this->callAction('POST', $action, $params, $input);
+		return $this->action('POST', $action, $params, $input);
 	}
 
 	/**
@@ -61,9 +83,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 */
 	public function assertRedirectedToAction($action, $params = array(), $with = array())
 	{
-		$uri = $this->urlAction($action, $params);
-
-		$this->assertRedirectedTo($uri, $with);
+		$this->assertRedirectedto($this->urlAction($action, $params), $with);
 	}
 
 	/**
@@ -129,27 +149,6 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	}
 
 	/**
-	 * Perform a request on an action. If $this->controller is set, you
-	 * don't need to include the controller name.
-	 *
-	 * @param  string $method GET, POST, DELETE etc.
-	 * @param  string $action method/function/action name
-	 * @param  array  $params (optional) parameters
-	 * @param  array  $input  (optional) input data
-	 * @param  array  $files  (optional) files data
-	 *
-	 * @return \Illumniate\Http\Response
-	 */
-	public function callAction($method, $action, $params = array(), $input = array(), $files = array())
-	{
-		$uri = $this->urlAction($action, $params);
-
-		$this->crawler = $this->client->request($method, $uri, $input, $files);
-		
- 		return $this->client->getResponse();
-	}
-
-	/**
 	 * Get the URL to an action. If $this->controller is set, you don't need
 	 * to add the controller name.
 	 *
@@ -165,7 +164,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 		$query = array();
 
 		foreach ($params as $key => $value) {
-			if (!is_numeric($key)) $query[$key] = $value;
+			if (!is_int($key)) $query[$key] = $value;
 		}
 
 		$url = $this->app['url']->action($action, $params, true);
