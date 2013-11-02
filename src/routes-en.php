@@ -28,7 +28,6 @@ Route::group(['before' => 'auth'], function()
 	Route::get('/profile/{id}', 'UserController@show');
 });
 
-// Route::group(['prefix' => 'admin', 'before' => ['auth', 'access:admin']], function()
 Route::group(['prefix' => 'admin', 'before' => 'auth|access:admin'], function()
 {
 	Route::get('users', 'UserController@index');
