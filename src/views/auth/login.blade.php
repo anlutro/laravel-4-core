@@ -6,7 +6,7 @@
 <div class="page-header">
 	<h1>
 		@lang('c::auth.login-title')
-		 - {{ Config::get('app.name') }}
+		 - {{ Config::get('app.name') ?: Config::get('app.url') }}
 	</h1>
 </div>
 
