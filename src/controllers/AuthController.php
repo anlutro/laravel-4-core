@@ -30,7 +30,7 @@ class AuthController extends \c\Controller
 	{
 		return View::make('c::auth.login', [
 			'formAction' => $this->urlAction('attemptLogin'),
-			'resetUrl' => $this->urlAction('reminder'),
+			'resetUrl'   => $this->urlAction('reminder'),
 		]);
 	}
 
@@ -115,7 +115,7 @@ class AuthController extends \c\Controller
 
 		return View::make('c::auth.reset', [
 			'formAction' => $this->urlAction('attemptReset'),
-			'token' => Request::query('token'),
+			'token'      => Request::query('token'),
 		]);
 	}
 
