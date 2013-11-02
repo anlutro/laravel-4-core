@@ -132,8 +132,9 @@ class UserController extends \c\Controller
 	 */
 	public function show($userId)
 	{
-		if (!$user = $this->users->getByKey($userId))
+		if (!$user = $this->users->getByKey($userId)) {
 			return $this->notFoundRedirect();
+		}
 
 		$viewData = [
 			'user' => $user,
@@ -160,8 +161,9 @@ class UserController extends \c\Controller
 	 */
 	public function edit($userId)
 	{
-		if (!$user = $this->users->getByKey($userId))
+		if (!$user = $this->users->getByKey($userId)) {
 			return $this->notFoundRedirect();
+		}
 
 		return View::make('c::user.form', [
 			'pageTitle'  => Lang::get('c::user.admin-edituser'),
@@ -182,8 +184,9 @@ class UserController extends \c\Controller
 	 */
 	public function update($userId)
 	{
-		if (!$user = $this->users->getByKey($userId))
+		if (!$user = $this->users->getByKey($userId)) {
 			return $this->notFoundRedirect();
+		}
 
 		$input = Input::all();
 		$redirect = $this->redirectAction('edit', [$user->id]);
@@ -204,8 +207,9 @@ class UserController extends \c\Controller
 	 */
 	public function delete($userId)
 	{
-		if (!$user = $this->users->getByKey($userId))
+		if (!$user = $this->users->getByKey($userId)) {
 			return $this->notFoundRedirect();
+		}
 
 		if ($this->users->delete($user)) {
 			return $this->redirectAction('index')
@@ -270,8 +274,9 @@ class UserController extends \c\Controller
 	 */
 	private function getUserTypes()
 	{
-		if (!Auth::check() || !Auth::user()->hasAccess('*'))
+		if (!Auth::check() || !Auth::user()->hasAccess('*')) {
 			return false;
+		}
 
 		return $this->users->getUserTypes();
 	}

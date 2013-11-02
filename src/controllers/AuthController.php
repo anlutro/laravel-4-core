@@ -110,8 +110,9 @@ class AuthController extends \c\Controller
 	 */
 	public function reset()
 	{
-		if (!Request::query('token'))
+		if (!Request::query('token')) {
 			return $this->redirectAction('login');
+		}
 
 		return View::make('c::auth.reset', [
 			'formAction' => $this->urlAction('attemptReset'),
