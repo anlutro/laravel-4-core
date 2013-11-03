@@ -6,11 +6,11 @@ use c\Auth\UserRepository;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class CreateUserCommand extends Command {
+class CreateUserCommand extends Command
+{
 
 	protected $name = 'user:create';
 	protected $description = 'Create a new user.';
-
 	protected $users;
 
 	public function __construct(UserRepository $users)
