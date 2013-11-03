@@ -9,12 +9,13 @@
 
 namespace c\Auth;
 
+use c\Auth\Reminders\RemindableInterface;
+use c\Auth\Activation\ActivatableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableInterface;
 
-class UserModel extends Model implements UserInterface, RemindableInterface
+class UserModel extends Model implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	protected $table = 'users';
 
@@ -26,6 +27,23 @@ class UserModel extends Model implements UserInterface, RemindableInterface
 	public function confirmPassword($password)
 	{
 		return Hash::check($password, $this->attributes['password']);
+	}
+
+	public function activate()
+	{
+		$this->attributes['activation_code'] = null;
+		$this->attributes['is_active'] = true;
+		return $this->save();
+	}
+
+	public function deactivate($activationCode = null)
+	{
+		if ($activationCode) {
+			$this->attributes['activation_code'] = $activationCode;
+		}
+		
+		$this->attributes['is_active'] = false;
+		return $this->save();
 	}
 
 	public function scopeSearchFor($query, $search)

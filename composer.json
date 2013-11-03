@@ -19,7 +19,8 @@
             "c\\": "src/"
         },
         "classmap": [
-            "src/controllers"
+            "src/controllers",
+            "src/migrations"
         ]
     },
     "minimum-stability": "dev"

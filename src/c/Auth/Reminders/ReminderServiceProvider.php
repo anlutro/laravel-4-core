@@ -7,7 +7,7 @@
  * @package   Laravel 4 Core
  */
 
-namespace c\Auth;
+namespace c\Auth\Reminders;
 
 use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;
 
@@ -17,16 +17,15 @@ class ReminderServiceProvider extends BaseProvider
 	{
 		$this->app['auth.reminder'] = $this->app->share(function($app) {
 
-			// get the reminder repository
 			$reminders = $app['auth.reminder.repository'];
-
-			// get the user repository
 			$users = $app['auth']->driver()->getProvider();
+			$mailer = $app['mailer'];
+			$config = [
+				'email-view' => $app['config']->get('auth.reminder.email'),
+				'queue-email' => (bool) $app['config']->get('auth.reminder.queue'),
+			];
 
-			// inject and construct
-			$broker = new PasswordBroker($users, $reminders);
-			
-			return $broker;
+			return new PasswordBroker($users, $reminders, $mailer, $config);
 
 		});
 	}

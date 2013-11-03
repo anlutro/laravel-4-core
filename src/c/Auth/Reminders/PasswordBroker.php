@@ -7,14 +7,13 @@
  * @package   Laravel 4 Core
  */
 
-namespace c\Auth;
+namespace c\Auth\Reminders;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Config;
+use c\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Mailer;
 use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
-use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\UserProviderInterface;
 
 /**
@@ -28,25 +27,21 @@ class PasswordBroker
 {
 	protected $users;
 	protected $reminders;
+	protected $mailer;
+	protected $emailView;
+	protected $queue = false;
 
 	public function __construct(
 		UserProviderInterface $users,
-		ReminderRepositoryInterface $reminders
+		ReminderRepositoryInterface $reminders,
+		Mailer $mailer,
+		array $config
 	) {
 		$this->users = $users;
 		$this->reminders = $reminders;
-	}
-
-	/**
-	 * Get a user by his/her credentials.
-	 *
-	 * @param  array  $credentials
-	 *
-	 * @return mixed
-	 */
-	public function findUser(array $credentials)
-	{
-		return $this->users->retrieveByCredentials($credentials);
+		$this->mailer = $mailer;
+		$this->emailView = $config['email-view'];
+		$this->queue = $config['queue-email'];
 	}
 
 	/**
@@ -73,17 +68,13 @@ class PasswordBroker
 	 */
 	public function mail(RemindableInterface $user, $token)
 	{
-		// @todo inject this? maybe?
-		$view = Config::get('auth.reminder.email');
-
 		$email = $user->getReminderEmail();
 
-		// @todo inject this? maybe?
-		$method = Config::get('auth.reminder.queue') ? 'queue' : 'mail';
+		$method = $this->queue ? 'queue' : 'mail';
 
 		$viewData = ['token' => $token];
 
-		return Mail::$method($view, $viewData, function($msg) use ($email) {
+		return $this->mailer->$method($this->emailView, $viewData, function($msg) use ($email) {
 			$msg->to($email)
 				->subject(Lang::get('auth.reminder.subject'));
 		});
@@ -126,7 +117,7 @@ class PasswordBroker
 			return false;
 		}
 
-		$user->setPasswordAttribute($newPassword);
+		$user->setPasswordAttribute('password', $newPassword);
 		$user->save();
 		$this->reminders->delete($token);
 

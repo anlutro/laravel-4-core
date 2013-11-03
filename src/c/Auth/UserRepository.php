@@ -12,6 +12,7 @@ namespace c\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use c\Auth\Activation\Activation;
 
 class UserRepository extends \c\EloquentRepository
 {
@@ -60,6 +61,24 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
+	 * Get a user by his/her credentials.
+	 *
+	 * @param  array  $credentials
+	 *
+	 * @return null|Model
+	 */
+	public function getByCredentials(array $credentials)
+	{
+		$query = $this->newQuery();
+
+		foreach ($credentials as $key => $value) {
+			if (strpos($key, 'password') !== false) $query->where($key, '=', $value);
+		}
+
+		return $query->first();
+	}
+
+	/**
 	 * Get a list of unique user types.
 	 *
 	 * @return array
@@ -76,9 +95,32 @@ class UserRepository extends \c\EloquentRepository
 		return $strings;
 	}
 
+	public function create(array $attributes, $activate = false)
+	{
+		$user = parent::create($attributes);
+
+		if ($activate || (isset($attributes['active'] && $attributes['active']))) {
+			$user->activate();
+		} else {
+			Activation::generate($user);
+		}
+		
+		return $model;
+	}
+
+	public function activate($activationCode)
+	{
+		// should trigger on null, false, empty string
+		if (!$activationCode) {
+			throw new \InvalidArgumentException;
+		}
+
+		return Activation::activate($activationCode);
+	}
+
 	public function update(Model $model, array $attributes)
 	{
-		if (empty($attributes['password'])) {
+		if (isset($attributes['password']) && $attributes['password'] == '') {
 			unset($attributes['password']);
 		}
 

@@ -15,12 +15,26 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use c\Auth\UserRepository;
 
 /**
  * Controller for authentication actions.
  */
 class AuthController extends \c\Controller
 {
+	/**
+	 * @var \c\Auth\UserRepository
+	 */
+	protected $users;
+
+	/**
+	 * @param \c\Auth\UserRepository $users
+	 */
+	public function __construct(UserRepository $users)
+	{
+		$this->users = $users;
+	}
+
 	/**
 	 * Show the login form.
 	 *
@@ -68,6 +82,56 @@ class AuthController extends \c\Controller
 	}
 
 	/**
+	 * Show the form for user registration.
+	 *
+	 * @return View
+	 */
+	public function register()
+	{
+		return View::make('auth.register', [
+			'user'       => $this->users->getNew(),
+			'formAction' => $this->urlAction('attemptRegistration'),
+		]);
+	}
+
+	/**
+	 * Process a registration attempt.
+	 *
+	 * @return Redirect
+	 */
+	public function attemptRegistration()
+	{
+		$input = Input::all();
+
+		if ($this->users->create($input)) {
+			return $this->redirectAction('login')
+				->with('success', Lang::get('c::auth.register-success'));
+		} else {
+			return $this->redirectAction('register')
+				->withErrors($this->users->errors())
+				->withInput();
+		}
+	}
+
+	/**
+	 * Process an activation attempt.
+	 *
+	 * @return Redirect
+	 */
+	public function activate()
+	{
+		$code = Input::get('activation_code');
+
+		if ($user = $this->users->activate($code)) {
+			Auth::login($user);
+			return $this->redirectAction('profile');
+		} else {
+			return $this->redirectAction('login')
+				->withErrors(Lang::get('c::auth.activation-failed'));
+		}
+	}
+
+	/**
 	 * Generate the form for sending a password reset token.
 	 *
 	 * @return View
@@ -87,7 +151,7 @@ class AuthController extends \c\Controller
 	public function sendReminder()
 	{
 		$credentials = Input::only('email');
-		$user = Password::findUser($credentials);
+		$user = $this->users->getByCredentials($credentials);
 
 		if (!$user) {
 			return $this->redirectAction('reminder')
@@ -142,7 +206,7 @@ class AuthController extends \c\Controller
 
 		$redirect = $this->redirectAction('login');
 
-		if (!$user = Password::findUser($credentials)) {
+		if (!$user = $this->users->getByCredentials($credentials)) {
 			return $redirect->withErrors(Lang::get('reminders.user'));
 		}
 
