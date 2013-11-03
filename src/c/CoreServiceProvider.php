@@ -17,7 +17,7 @@ class CoreServiceProvider extends ServiceProvider
 
 	public function register()
 	{
-		// ...
+		$this->commands('c\Auth\Console\CreateUserCommand');
 	}
 
 	public function boot()
