@@ -27,6 +27,7 @@ class ActivationService
 	 */
 	public function generate(ActivatableInterface $user)
 	{
+		$user->deactivate();
 		$code = $this->generateActivationCode($user);
 		$this->codes->create($user, $code);
 		return $this->emailActivationCode($user, $code);
