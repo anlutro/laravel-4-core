@@ -21,13 +21,15 @@ class ActivationService
 	public function generate(ActivatableInterface $user)
 	{
 		$code = $this->generateActivationCode($user);
-		$user->deactivate($code);
+		$this->codes->create($user, $code);
 		return $this->emailActivationCode($user, $code);
 	}
 
 	protected function emailActivationCode(ActivatableInterface $user, $code)
 	{
-		$email = $user->getReminderEmail();
+		$email = $user->getActivationEmail();
+
+		$data = ['code' => $code];
 
 		return $this->mailer->send('c::auth.activate-email', $data, function($msg) use ($email) {
 			$msg->to($email)
@@ -49,7 +51,7 @@ class ActivationService
 			return false;
 		}
 
-		return ($this->activateUser($user) && $this->codes->delete($code));
+		return ($this->activateUser($user) && $this->codes->delete($code->code));
 	}
 
 	protected function findUserByCode($code)
@@ -63,9 +65,9 @@ class ActivationService
 		return $user->activate();
 	}
 
-	protected function generateActivationCode($user)
+	protected function generateActivationCode($object)
 	{
-		$value = str_shuffle(sha1(spl_object_hash($this).spl_object_hash($model).microtime(true)));
+		$value = str_shuffle(sha1(spl_object_hash($this).spl_object_hash($object).microtime(true)));
 		return hash_hmac('sha1', $value, $this->hashKey);
 	}
 }
