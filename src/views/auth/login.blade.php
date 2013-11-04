@@ -32,10 +32,12 @@
 				<span class="glyphicon glyphicon-log-in"></span>
 				@lang('c::auth.login-submit')
 			</button>
+			@if (isset($resetUrl))
 			<a href="{{ $resetUrl }}" class="btn btn-default">
 				<span class="glyphicon glyphicon-lock"></span>
 				@lang('c::auth.resetpass-link')
 			</a>
+			@endif
 		</div>
 	</div>
 

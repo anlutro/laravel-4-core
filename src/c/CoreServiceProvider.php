@@ -11,6 +11,8 @@ namespace c;
 
 use c\Auth\PasswordBroker;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class CoreServiceProvider extends ServiceProvider
 {

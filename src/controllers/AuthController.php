@@ -42,10 +42,15 @@ class AuthController extends \c\Controller
 	 */
 	public function login()
 	{
-		return View::make('c::auth.login', [
+		$viewData = [
 			'formAction' => $this->urlAction('attemptLogin'),
-			'resetUrl'   => $this->urlAction('reminder'),
-		]);
+		];
+
+		if ($this->routeExists('reminder')) {
+			$viewData['resetUrl'] = $this->urlAction('reminder');
+		}
+		
+		return View::make('c::auth.login', $viewData);
 	}
 
 	/**
@@ -217,5 +222,15 @@ class AuthController extends \c\Controller
 		} else {
 			return $redirect->withErrors(Lang::get('reminders.token'));
 		}
+	}
+
+	/**
+	 * Check if a route exists.
+	 */
+	private function routeExists($action)
+	{
+		$action = $this->parseAction($action);
+		return \Illuminate\Support\Facades\Route::getRoutes()
+			->getByAction($action) !== null;
 	}
 }
