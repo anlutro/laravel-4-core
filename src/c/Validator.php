@@ -67,7 +67,7 @@ abstract class Validator
 	protected function dynamicValidCall($method, $args)
 	{
 		$action = substr($method, 5);
-		$property = strtolower($action) . 'Rules';
+		$property = lcfirst($action) . 'Rules';
 
 		if (isset($this->$property) && is_array($this->$property)) {
 			$rules = $this->$property;
