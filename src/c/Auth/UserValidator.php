@@ -19,17 +19,12 @@ class UserValidator extends \c\Validator
 		'password' => ['confirmed', 'min:6'],
 	];
 
+	protected $createRules = [
+		'password' => ['required', 'confirmed', 'min:6']
+	];
+
 	public function __construct(UserModel $model)
 	{
 		$this->model = $model;
-	}
-
-	public function validCreate(array $attributes)
-	{
-		$rules = [
-			'password' => ['required', 'confirmed', 'min:6'],
-		];
-		
-		return $this->valid($rules, $attributes);
 	}
 }

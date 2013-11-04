@@ -244,8 +244,7 @@ class UserController extends \c\Controller
 	public function store()
 	{
 		$input = Input::all();
-
-		$activate = Input::get('activate') === '1';
+		$activate = Input::has('activate');
 
 		if ($user = $this->users->create($input, $activate)) {
 			return $this->redirectAction('edit', [$user->id])

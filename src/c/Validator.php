@@ -41,21 +41,11 @@ abstract class Validator
 		$this->key = $key;
 	}
 
-	public function validCreate(array $attributes)
-	{
-		return $this->valid([], $attributes);
-	}
-
-	public function validUpdate(array $attributes)
-	{
-		return $this->valid([], $attributes);
-	}
-
 	/**
 	 * Prepare rules, make the validator and check if it passes.
 	 *
-	 * @param  array  $rules      [description]
-	 * @param  array  $attributes [description]
+	 * @param  array  $rules
+	 * @param  array  $attributes
 	 *
 	 * @return boolean
 	 */
@@ -64,6 +54,30 @@ abstract class Validator
 		$rules = $this->prepareRules($rules);
 		$this->validator = VFactory::make($attributes, $rules);
 		return $this->validator->passes();
+	}
+
+	/**
+	 * Handle a dynamic 'valid' method call.
+	 *
+	 * @param  string $method
+	 * @param  array  $args
+	 *
+	 * @return boolean
+	 */
+	protected function dynamicValidCall($method, $args)
+	{
+		$action = substr($method, 5);
+		$property = strtolower($action) . 'Rules';
+
+		if (isset($this->$property) && is_array($this->$property)) {
+			$rules = $this->$property;
+		} else {
+			$rules = [];
+		}
+
+		$attributes = $args[0];
+
+		return $this->valid($rules, $attributes);
 	}
 
 	/**
@@ -96,9 +110,12 @@ abstract class Validator
 	 */
 	public function __call($method, $args)
 	{
-		if ($this->validator !== null)
+		if (substr($method, 0, 5) === 'valid') {
+			return $this->dynamicValidCall($method, $args);
+		} elseif ($this->validator !== null) {
 			return call_user_func_array([$this->validator, $method], $args);
-		else
-			throw new \BadMethodCallException;
+		} else {
+			throw new \BadMethodCallException("$method does not exist on this class or its Validator");
+		}
 	}
 }
