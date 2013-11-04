@@ -24,8 +24,8 @@ class CreateUserCommand extends Command
 		$attributes = [];
 		$attributes['username'] = $this->ask('Username:');
 		$attributes['name'] = $attributes['username'];
-		$attributes['password'] = $this->ask('Password:');
-		$attributes['password_confirmation'] = $this->ask('Confirm password:');
+		$attributes['password'] = $this->secret('Password:');
+		$attributes['password_confirmation'] = $this->secret('Confirm password:');
 		$attributes['email'] = $this->ask('E-mail address:');
 
 		$activate = $this->confirm('Should the user be activated? If no, an email with activation instructions will be sent. [yes|no]', true);

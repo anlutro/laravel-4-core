@@ -17,8 +17,6 @@ class CreateUserTable extends Migration
 			$t->string('user_type', 16);
 			$t->boolean('is_active')
 				->default(false);
-			$t->string('activation_code', 64)
-				->nullable();
 			$t->timestamps();
 		});
 	}

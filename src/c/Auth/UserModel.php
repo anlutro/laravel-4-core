@@ -19,16 +19,27 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 {
 	protected $table = 'users';
 
+	/**
+	 * Hash the password automatically when setting it.
+	 */
 	public function setPasswordAttribute($value)
 	{
 		$this->attributes['password'] = Hash::make($value);
 	}
 
+	/**
+	 * Check if a password is correct.
+	 */
 	public function confirmPassword($password)
 	{
 		return Hash::check($password, $this->attributes['password']);
 	}
 
+	/**
+	 * Add some simple search functionality.
+	 * 
+	 * $query->searchFor('admin')->get();
+	 */
 	public function scopeSearchFor($query, $search)
 	{
 		$searchable = ['username', 'email', 'name'];
@@ -40,18 +51,34 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 		});
 	}
 
+	/**
+	 * Filter user types.
+	 * 
+	 * $query->filterUserType('superuser')->get();
+	 */
 	public function scopeFilterUserType($query, $type)
 	{
-		return $query;
-
 		return $query->where('user_type', '=', $type);
 	}
 
+	/**
+	 * Get a list of distinct user types.
+	 *
+	 * @return array
+	 */
 	public function getDistinctUserTypes()
 	{
 		return $this->newQuery()
 			->distinct()
 			->lists('user_type');
+	}
+
+	/**
+	 * Make sure is_active returns the proper boolean.
+	 */
+	public function getIsActiveAttribute()
+	{
+		return $this->attributes['is_active'] === '1';
 	}
 
 	/********************

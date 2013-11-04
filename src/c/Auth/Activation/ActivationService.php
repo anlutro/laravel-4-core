@@ -18,6 +18,13 @@ class ActivationService
 		$this->hashKey = $hashKey;
 	}
 
+	/**
+	 * Generate a new activation code for a user and send it via e-mail.
+	 *
+	 * @param  ActivatableInterface $user
+	 *
+	 * @return boolean
+	 */
 	public function generate(ActivatableInterface $user)
 	{
 		$code = $this->generateActivationCode($user);
@@ -25,6 +32,14 @@ class ActivationService
 		return $this->emailActivationCode($user, $code);
 	}
 
+	/**
+	 * Send an email to a user with an activation code.
+	 *
+	 * @param  ActivatableInterface $user
+	 * @param  string               $code
+	 *
+	 * @return boolean
+	 */
 	protected function emailActivationCode(ActivatableInterface $user, $code)
 	{
 		$email = $user->getActivationEmail();
@@ -37,6 +52,13 @@ class ActivationService
 		});
 	}
 
+	/**
+	 * Activate a user via an activation code.
+	 *
+	 * @param  string $code
+	 *
+	 * @return boolean
+	 */
 	public function activate($code)
 	{
 		$code = $this->codes->retrieveByCode($code);
@@ -54,17 +76,38 @@ class ActivationService
 		return ($this->activateUser($user) && $this->codes->delete($code->code));
 	}
 
+	/**
+	 * Find the user an activation code belongs to.
+	 *
+	 * @param  string $code
+	 *
+	 * @return mixed
+	 */
 	protected function findUserByCode($code)
 	{
 		$credentials = ['email' => $code->email];
 		return $this->users->retrieveByCredentials($credentials);
 	}
 
+	/**
+	 * Activate a user.
+	 *
+	 * @param  ActivatableInterface $user
+	 *
+	 * @return boolean
+	 */
 	protected function activateUser(ActivatableInterface $user)
 	{
 		return $user->activate();
 	}
 
+	/**
+	 * Generate a random activation code.
+	 *
+	 * @param  Object $object
+	 *
+	 * @return string
+	 */
 	protected function generateActivationCode($object)
 	{
 		$value = str_shuffle(sha1(spl_object_hash($this).spl_object_hash($object).microtime(true)));
