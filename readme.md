@@ -14,7 +14,9 @@ All classes reside in the "c\" namespace (except controllers which are in the gl
 
 Add `c\CoreServiceProvider` to the list of providers in `app/config/app.php`.
 
-If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `c\Auth\ReminderServiceProvider`.
+If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `c\Auth\Reminders\ReminderServiceProvider`.
+
+If you want access to activation, add `c\Auth\Activation\ActivationServiceProvider` as well. Optionally, add the alias `'Activation' => 'c\Auth\Activation\Activation'` to your list of aliases.
 
 ## Assumptions about your app
 

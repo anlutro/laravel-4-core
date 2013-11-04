@@ -13,8 +13,10 @@ use Illuminate\Support\ServiceProvider;
 
 class ActivationServiceProvider extends ServiceProvider
 {
-	protected function registerPasswordBroker()
+	public function register()
 	{
+		$this->commands('c\Auth\Console\ActivateUserCommand');
+		
 		$this->app->bind('c\Auth\Activation\ActivationCodeRespositoryInterface',
 			'c\Auth\Activation\DatabaseActivationCodeRepository');
 
@@ -31,5 +33,23 @@ class ActivationServiceProvider extends ServiceProvider
 			return new ActivationService($codes, $users, $mailer, $hashKey);
 
 		});
+	}
+
+	public function boot()
+	{
+		$this->srcPath = __DIR__ . '/../../..';
+		$this->requireRouteFile('activation');
+	}
+
+	protected function requireRouteFile($file)
+	{
+		$locale = $this->app['translator']->getLocale();
+		$path = $this->srcPath . '/routes/' . $locale;
+
+		if (!is_dir($path)) {
+			$path = $this->srcPath . '/routes/en';
+		}
+
+		require $path . '/' . $file . '.php';
 	}
 }

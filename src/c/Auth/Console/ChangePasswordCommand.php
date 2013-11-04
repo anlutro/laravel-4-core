@@ -1,9 +1,6 @@
 <?php
 namespace c\Auth\Console;
 
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-
 class ChangePasswordCommand extends AbstractUserManagementCommand
 {
 	protected $name = 'user:changepass';

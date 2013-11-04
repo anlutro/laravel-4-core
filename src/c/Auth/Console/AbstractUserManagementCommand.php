@@ -1,11 +1,10 @@
 <?php
 namespace c\Auth\Console;
 
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-abstract class AbstractUserManagementCommand extends Command
+abstract class AbstractUserManagementCommand extends \c\Command
 {
 	public function getUser()
 	{

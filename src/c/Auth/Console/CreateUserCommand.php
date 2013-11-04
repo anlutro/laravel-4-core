@@ -1,12 +1,11 @@
 <?php
 namespace c\Auth\Console;
 
-use Illuminate\Console\Command;
 use c\Auth\UserRepository;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class CreateUserCommand extends Command
+class CreateUserCommand extends \c\Command
 {
 
 	protected $name = 'user:create';

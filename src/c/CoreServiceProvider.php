@@ -23,9 +23,7 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		$this->commands([
 			'c\Auth\Console\CreateUserCommand',
-			'c\Auth\Console\ActivateUserCommand',
 			'c\Auth\Console\ChangePasswordCommand',
-			'c\Auth\Console\SendPasswordReminderCommand',
 		]);
 	}
 
@@ -38,7 +36,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerLangFiles();
 		$this->registerViewFiles();
 		$this->addSidebarFunctionality();
-		$this->requireRouteFiles();
+		$this->requireRouteFile('core');
 
 		$this->app->bind('c\Auth\UserModel', $this->app['config']->get('auth.model', 'c\Auth\UserModel'));
 	}
@@ -59,9 +57,16 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app['view']->addNamespace($this->namespace, $this->srcPath . '/views');
 	}
 
-	protected function requireRouteFiles()
+	protected function requireRouteFile($file)
 	{
-		require $this->srcPath . '/routes-' . $this->app['translator']->getLocale() . '.php';
+		$locale = $this->app['translator']->getLocale();
+		$path = $this->srcPath . '/routes/' . $locale;
+
+		if (!is_dir($path)) {
+			$path = $this->srcPath . '/routes/en';
+		}
+
+		require $path . '/' . $file . '.php';
 	}
 
 	protected function addSidebarFunctionality()
