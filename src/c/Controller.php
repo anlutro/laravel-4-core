@@ -18,15 +18,6 @@ use Illuminate\Support\Facades\URL;
 abstract class Controller extends \Illuminate\Routing\Controller
 {
 	/**
-	 * The fully namespaced class name. Used by helper methods. If you set it
-	 * yourself you'll save PHP a tiny bit of processing power, otherwise it'll
-	 * still find out itself.
-	 *
-	 * @var string
-	 */
-	protected $classname;
-
-	/**
 	 * Helper function to retrieve this controller's action URLs.
 	 * 
 	 * @see    parseAction
@@ -61,9 +52,10 @@ abstract class Controller extends \Illuminate\Routing\Controller
 	}
 
 	/**
-	 * Parse an action input and try to guess the classname/namespace based on
-	 * whether or not the input has a @ or \. If one or more aren't present,
-	 * guess based on $this->classname.
+	 * If any \ are present, just return the string as is. If no \ are, but @ is
+	 * present, takes the current namespace and adds the given controller name.
+	 * If \ nor @ are present, takes the current controller class name and
+	 * appends the given action.
 	 *
 	 * @param  string $action
 	 *
@@ -71,14 +63,16 @@ abstract class Controller extends \Illuminate\Routing\Controller
 	 */
 	protected function parseAction($action)
 	{
-		if (!isset($this->classname)) {
-			$this->classname = get_class($this);
+		static $classname;
+
+		if ($classname === null) {
+			$classname = get_class($this);
 		}
 
 		if (strpos($action, '@') === false) {
-			return $this->classname . '@' . $action;
+			return $classname . '@' . $action;
 		} elseif (strpos($action, '\\') === false) {
-			$namespace = substr($this->classname, 0, strrpos($this->classname, '\\'));
+			$namespace = substr($classname, 0, strrpos($classname, '\\'));
 			if (!empty($namespace)) {
 				return $namespace . '\\' . $action;
 			} else {
