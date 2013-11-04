@@ -36,7 +36,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 */
 	public function action($method, $action, $parameters = array(), $input = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
 	{
-		return parent::action($method, $this->parseAction($action), $parameters, $files, $server, $content, $changeHistory);
+		return parent::action($method, $this->parseAction($action), $parameters, $input, $files, $server, $content, $changeHistory);
 	}
 
 	/**

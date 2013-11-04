@@ -69,7 +69,7 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function getByCredentials(array $credentials)
 	{
-		$query = $this->newQuery();
+		$query = $this->model->newQuery();
 
 		foreach ($credentials as $key => $value) {
 			if (strpos($key, 'password') !== false) $query->where($key, '=', $value);
@@ -95,11 +95,11 @@ class UserRepository extends \c\EloquentRepository
 		return $strings;
 	}
 
-	public function create(array $attributes, $activate = false)
+	public function create(array $attributes = array(), $activate = false)
 	{
 		$user = parent::create($attributes);
 
-		if ($activate || (isset($attributes['active'] && $attributes['active']))) {
+		if ($activate || (isset($attributes['active']) && $attributes['active'])) {
 			$user->activate();
 		} else {
 			Activation::generate($user);

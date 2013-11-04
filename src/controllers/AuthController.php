@@ -174,7 +174,7 @@ class AuthController extends \c\Controller
 	 */
 	public function reset()
 	{
-		if (!Request::query('token')) {
+		if (!Input::get('token')) {
 			return $this->redirectAction('login');
 		}
 
