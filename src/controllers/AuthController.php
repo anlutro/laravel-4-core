@@ -43,11 +43,11 @@ class AuthController extends \c\Controller
 	public function login()
 	{
 		$viewData = [
-			'formAction' => $this->urlAction('attemptLogin'),
+			'formAction' => $this->url('attemptLogin'),
 		];
 
 		if ($this->routeExists('reminder')) {
-			$viewData['resetUrl'] = $this->urlAction('reminder');
+			$viewData['resetUrl'] = $this->url('reminder');
 		}
 		
 		return View::make('c::auth.login', $viewData);
@@ -69,7 +69,7 @@ class AuthController extends \c\Controller
 			return Redirect::intended('/')
 				->with('success', Lang::get('c::auth.login-success'));
 		} else {
-			return $this->redirectAction('login')
+			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.login-failure'));
 		}
 	}
@@ -82,7 +82,7 @@ class AuthController extends \c\Controller
 	public function logout()
 	{
 		Auth::logout();
-		return $this->redirectAction('login')
+		return $this->redirect('login')
 			->with('info', Lang::get('c::auth.logout-success'));
 	}
 
@@ -95,7 +95,7 @@ class AuthController extends \c\Controller
 	{
 		return View::make('auth.register', [
 			'user'       => $this->users->getNew(),
-			'formAction' => $this->urlAction('attemptRegistration'),
+			'formAction' => $this->url('attemptRegistration'),
 		]);
 	}
 
@@ -109,10 +109,10 @@ class AuthController extends \c\Controller
 		$input = Input::all();
 
 		if ($this->users->create($input)) {
-			return $this->redirectAction('login')
+			return $this->redirect('login')
 				->with('success', Lang::get('c::auth.register-success'));
 		} else {
-			return $this->redirectAction('register')
+			return $this->redirect('register')
 				->withErrors($this->users->errors())
 				->withInput();
 		}
@@ -129,9 +129,9 @@ class AuthController extends \c\Controller
 
 		if ($user = $this->users->activate($code)) {
 			Auth::login($user);
-			return $this->redirectAction('profile');
+			return $this->redirect('profile');
 		} else {
-			return $this->redirectAction('login')
+			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.activation-failed'));
 		}
 	}
@@ -144,7 +144,7 @@ class AuthController extends \c\Controller
 	public function reminder()
 	{
 		return View::make('c::auth.reminder', [
-			'formAction' => $this->urlAction('sendReminder'),
+			'formAction' => $this->url('sendReminder'),
 		]);
 	}
 
@@ -159,15 +159,15 @@ class AuthController extends \c\Controller
 		$user = $this->users->getByCredentials($credentials);
 
 		if (!$user) {
-			return $this->redirectAction('reminder')
+			return $this->redirect('reminder')
 				->withErrors(Lang::get('c::auth.user-email-notfound'));
 		}
 
 		if (Password::requestReset($user)) {
-			return $this->redirectAction('login')
+			return $this->redirect('login')
 				->with('info', Lang::get('c::auth.reminder-sent'));
 		} else {
-			return $this->redirectAction('reminder')
+			return $this->redirect('reminder')
 				->withErrors(Lang::get('c::std.failure'));
 		}
 	}
@@ -180,11 +180,11 @@ class AuthController extends \c\Controller
 	public function reset()
 	{
 		if (!Input::get('token')) {
-			return $this->redirectAction('login');
+			return $this->redirect('login');
 		}
 
 		return View::make('c::auth.reset', [
-			'formAction' => $this->urlAction('attemptReset'),
+			'formAction' => $this->url('attemptReset'),
 			'token'      => Request::query('token'),
 		]);
 	}
@@ -205,11 +205,11 @@ class AuthController extends \c\Controller
 		]);
 		
 		if ($validator->fails()) {
-			return $this->redirectAction('reset')
+			return $this->redirect('reset')
 				->withErrors($validator);
 		}
 
-		$redirect = $this->redirectAction('login');
+		$redirect = $this->redirect('login');
 
 		if (!$user = $this->users->getByCredentials($credentials)) {
 			return $redirect->withErrors(Lang::get('reminders.user'));

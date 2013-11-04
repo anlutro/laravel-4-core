@@ -10,6 +10,8 @@
 namespace c;
 
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\URL;
 
 /**
@@ -23,15 +25,28 @@ abstract class Controller extends \Illuminate\Routing\Controller
 	 * @see    parseAction
 	 *
 	 * @param  string $action name of the action to look for
-	 * @param  array  $params route parametersa
+	 * @param  array  $params route parameters
+	 * @param  array  $get    GET parameters
 	 *
 	 * @return string         the URL to the action.
 	 */
-	protected function urlAction($action, $params = array())
+	protected function url($action, $params = array(), $get = array())
 	{
-		$action = $this->parseAction($action);
+		$url = URL::action($this->parseAction($action), $params);
 
-		return URL::action($action, $params);
+		if (!empty($get)) {
+			$url .= '?' . http_build_query($get);
+		}
+
+		return $url;
+	}
+
+	/**
+	 * @deprecated - use url()
+	 */
+	protected function urlAction()
+	{
+		return call_user_func_array([$this, 'url'], func_get_args());
 	}
 
 	/**
@@ -44,11 +59,17 @@ abstract class Controller extends \Illuminate\Routing\Controller
 	 *
 	 * @return Redirect       a Redirect response.
 	 */
-	protected function redirectAction($action, $params = array())
+	protected function redirect($action, $params = array(), $get = array())
 	{
-		$action = $this->parseAction($action);
+		return Redirect::to($this->url($action, $params, $get));
+	}
 
-		return Redirect::action($action, $params);
+	/**
+	 * @deprecated - use redirect()
+	 */
+	protected function redirectAction()
+	{
+		return call_user_func_array([$this, 'redirect'], func_get_args());
 	}
 
 	/**

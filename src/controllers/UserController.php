@@ -47,7 +47,7 @@ class UserController extends \c\Controller
 
 		return View::make('c::user.profile', [
 			'user'       => $user,
-			'formAction' => $this->urlAction('updateProfile'),
+			'formAction' => $this->url('updateProfile'),
 			'backUrl'    => URL::to('/'),
 		]);
 	}
@@ -60,7 +60,7 @@ class UserController extends \c\Controller
 	public function updateProfile()
 	{
 		$user = $this->users->getCurrentUser();
-		$redirect = $this->redirectAction('profile');
+		$redirect = $this->redirect('profile');
 
 		if (!$user->confirmPassword(Input::get('old_password'))) {
 			return $redirect->withErrors(Lang::get('c::auth.invalid-password'));
@@ -103,7 +103,7 @@ class UserController extends \c\Controller
 				'delete' => Lang::get('c::std.delete'),
 			],
 			'editAction'  => $this->parseAction('edit'),
-			'newUrl'      => $this->urlAction('create'),
+			'newUrl'      => $this->url('create'),
 			'backUrl'     => URL::to('/'),
 		]);
 	}
@@ -120,7 +120,7 @@ class UserController extends \c\Controller
 
 		$this->users->processBulkAction($action, $userIds);
 
-		return $this->redirectAction('index');
+		return $this->redirect('index');
 	}
 
 	/**
@@ -146,7 +146,7 @@ class UserController extends \c\Controller
 			->hasAccess('admin');
 
 		if ($isAdmin) {
-			$viewData['editUrl'] = $this->urlAction('edit', [$user->id]);
+			$viewData['editUrl'] = $this->url('edit', [$user->id]);
 		}
 
 		return View::make('c::user.show', $viewData);
@@ -169,9 +169,9 @@ class UserController extends \c\Controller
 			'pageTitle'  => Lang::get('c::user.admin-edituser'),
 			'user'       => $user,
 			'userTypes'  => $this->getUserTypes(),
-			'formAction' => $this->urlAction('update', [$user->id]),
-			'deleteUrl'  => $this->urlAction('delete', [$user->id]),
-			'backUrl'    => $this->urlAction('index'),
+			'formAction' => $this->url('update', [$user->id]),
+			'deleteUrl'  => $this->url('delete', [$user->id]),
+			'backUrl'    => $this->url('index'),
 		]);
 	}
 
@@ -189,7 +189,7 @@ class UserController extends \c\Controller
 		}
 
 		$input = Input::all();
-		$redirect = $this->redirectAction('edit', [$user->id]);
+		$redirect = $this->redirect('edit', [$user->id]);
 
 		if ($this->users->update($user, $input)) {
 			return $redirect->with('success', Lang::get('c::user.update-success'));
@@ -212,10 +212,10 @@ class UserController extends \c\Controller
 		}
 
 		if ($this->users->delete($user)) {
-			return $this->redirectAction('index')
+			return $this->redirect('index')
 				->with('success', Lang::get('c::user.delete-success'));
 		} else {
-			return $this->redirectAction('edit', [$user->id])
+			return $this->redirect('edit', [$user->id])
 				->withErrors(Lang::get('c::user.delete-failure'));
 		}
 	}
@@ -231,8 +231,8 @@ class UserController extends \c\Controller
 			'pageTitle'  => Lang::get('c::user.admin-newuser'),
 			'user'       => $this->users->getNew(),
 			'userTypes'  => $this->getUserTypes(),
-			'formAction' => $this->urlAction('store'),
-			'backUrl'    => $this->urlAction('index'),
+			'formAction' => $this->url('store'),
+			'backUrl'    => $this->url('index'),
 		]);
 	}
 
@@ -247,10 +247,10 @@ class UserController extends \c\Controller
 		$activate = Input::has('activate');
 
 		if ($user = $this->users->create($input, $activate)) {
-			return $this->redirectAction('edit', [$user->id])
+			return $this->redirect('edit', [$user->id])
 				->with('success', Lang::get('c::user.create-success'));
 		} else {
-			return $this->redirectAction('create')
+			return $this->redirect('create')
 				->withErrors($this->users->errors())
 				->withInput();
 		}
@@ -263,7 +263,7 @@ class UserController extends \c\Controller
 	 */
 	private function notFoundRedirect()
 	{
-		return $this->redirectAction('index')
+		return $this->redirect('index')
 			->withErrors(Lang::get('c::user.not-found'));
 	}
 
