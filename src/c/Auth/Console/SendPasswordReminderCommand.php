@@ -3,7 +3,7 @@ namespace c\Auth\Console;
 
 class SendPasswordReminderCommand extends AbstractUserManagementCommand
 {
-	protected $name = 'user:sendreminder';
+	protected $name = 'auth:sendreminder';
 	protected $description = 'Send password reset instructions to a user.';
 
 	public function fire()

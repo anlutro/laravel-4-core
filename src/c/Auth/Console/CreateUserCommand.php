@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 class CreateUserCommand extends \c\Command
 {
 
-	protected $name = 'user:create';
+	protected $name = 'auth:createuser';
 	protected $description = 'Create a new user.';
 	protected $users;
 

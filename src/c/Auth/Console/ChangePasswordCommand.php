@@ -3,7 +3,7 @@ namespace c\Auth\Console;
 
 class ChangePasswordCommand extends AbstractUserManagementCommand
 {
-	protected $name = 'user:changepass';
+	protected $name = 'auth:changepass';
 	protected $description = 'Change the password of an existing user.';
 
 	public function fire()

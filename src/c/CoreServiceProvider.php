@@ -38,7 +38,10 @@ class CoreServiceProvider extends ServiceProvider
 		$this->addSidebarFunctionality();
 		$this->requireRouteFile('core');
 
-		$this->app->bind('c\Auth\UserModel', $this->app['config']->get('auth.model', 'c\Auth\UserModel'));
+		$userModel = $this->app['config']->get('auth.model', 'c\Auth\UserModel');
+		$this->app->bind('c\Auth\UserModel', $userModel);
+		$this->registerUserEvents($userModel);
+
 	}
 
 	protected function registerLangFiles()
@@ -73,6 +76,20 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		$this->app['view']->creator('c::sidebar', function($view) {
 			$view->with('sidebar', array());
+		});
+	}
+
+	protected function registerUserEvents($userModel)
+	{
+		// set a random login token on creation.
+		$userModel::creating(function($user) {
+			$user->setAttribute('login_token', Str::random(32));
+		});
+
+		// set last_login on every successful login.
+		$this->app['events']->listen('auth.login', function($user) {
+			$user->setAttribute('last_login', Carbon::now());
+			$user->save();
 		});
 	}
 

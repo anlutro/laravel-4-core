@@ -17,6 +17,11 @@ class CreateUserTable extends Migration
 			$t->string('user_type', 16);
 			$t->boolean('is_active')
 				->default(false);
+			$t->string('login_token', 32)
+				->nullable();
+			$t->timestamp('last_login')
+				->nullable();
+			$t->softDeletes();
 			$t->timestamps();
 		});
 	}
