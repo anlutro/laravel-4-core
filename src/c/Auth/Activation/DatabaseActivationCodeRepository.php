@@ -1,6 +1,8 @@
 <?php
 namespace c\Auth\Activation;
 
+use Illuminate\Database\Connection;
+
 class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterface
 {
 	protected $db;
