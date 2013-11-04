@@ -10,7 +10,7 @@
 namespace c\Auth\Reminders;
 
 use Carbon\Carbon;
-use c\Auth\Reminders\RemindableInterface;
+use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Mail\Mailer;
 use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
@@ -81,28 +81,6 @@ class PasswordBroker
 	}
 
 	/**
-	 * Find a user and reset his/her password.
-	 *
-	 * @param  array  $credentials
-	 * @param  string $token
-	 * @param  string $newPassword 
-	 *
-	 * @return User
-	 */
-	public function reset(array $credentials, $token, $newPassword)
-	{
-		if (!$user = $this->findUser($credentials)) {
-			return false;
-		}
-
-		if ($this->resetUser($user, $token, $newPassword)) {
-			return $user;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * Reset a user's password.
 	 *
 	 * @param  RemindableInterface $user
@@ -117,7 +95,7 @@ class PasswordBroker
 			return false;
 		}
 
-		$user->setPasswordAttribute('password', $newPassword);
+		$user->setPasswordAttribute($newPassword);
 		$user->save();
 		$this->reminders->delete($token);
 

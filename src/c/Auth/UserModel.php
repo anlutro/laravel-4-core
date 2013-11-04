@@ -9,8 +9,8 @@
 
 namespace c\Auth;
 
-use c\Auth\Reminders\RemindableInterface;
 use c\Auth\Activation\ActivatableInterface;
+use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\UserInterface;

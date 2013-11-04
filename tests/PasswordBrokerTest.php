@@ -1,6 +1,6 @@
 <?php
 use Mockery as m;
-use c\Auth\PasswordBroker;
+use c\Auth\Reminders\PasswordBroker;
 use Illuminate\Support\Facades;
 
 class PasswordBrokerTest extends PHPUnit_Framework_TestCase
@@ -9,21 +9,18 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 	{
 		$this->users = m::mock('Illuminate\Auth\UserProviderInterface');
 		$this->reminders = m::mock('Illuminate\Auth\Reminders\ReminderRepositoryInterface');
-		$this->broker = new PasswordBroker($this->users, $this->reminders);
+		$this->mailer = m::mock('Illuminate\Mail\Mailer');
+		$this->config = ['email-view' => 'view', 'queue-email' => false];
+	}
+
+	public function getBroker()
+	{
+		return new PasswordBroker($this->users, $this->reminders, $this->mailer, $this->config);
 	}
 
 	public function tearDown()
 	{
 		m::close();
-	}
-
-	public function testFindUser()
-	{
-		$credentials = ['foo' => 'bar'];
-		$this->users->shouldReceive('retrieveByCredentials')->once()
-			->with($credentials)->andReturn('baz');
-		$result = $this->broker->findUser($credentials);
-		$this->assertEquals('baz', $result);
 	}
 
 	public function testRequestReset()
@@ -32,7 +29,7 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 		$this->reminders->shouldReceive('create')->with($user)->once();
 		$this->setupMailExpectations();
 
-		$this->assertTrue($this->broker->requestReset($user));
+		$this->assertTrue($this->getBroker()->requestReset($user));
 	}
 
 	public function testRequestResetQueue()
@@ -41,58 +38,40 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 		$this->reminders->shouldReceive('create')->with($user)->once();
 		$this->setupMailExpectations('queue');
 
-		$this->assertTrue($this->broker->requestReset($user));
+		$this->assertTrue($this->getBroker()->requestReset($user));
 	}
 
-	public function testResetUserNotFound()
-	{
-		$credentials = ['username' => 'foo'];
-		$token = 'bar'; $newPassword = 'baz';
-		$this->users->shouldReceive('retrieveByCredentials')->with($credentials)
-			->once()->andReturn(false);
-
-		// this may throw an exception in the future
-		$this->assertFalse($this->broker->reset($credentials, $token, $newPassword));
-	}
-
-	public function testResetReminderNotFound()
+	public function testResetUserSuccess()
 	{
 		$credentials = ['username' => 'foo'];
 		$token = 'bar'; $newPassword = 'baz';
 		$user = $this->getMockUser();
-		$this->users->shouldReceive('retrieveByCredentials')->with($credentials)
-			->once()->andReturn($user);
-		$this->reminders->shouldReceive('exists')->with($user, $token)
-			->once()->andReturn(false);
-
-		// this may throw an exception in the future
-		$this->assertFalse($this->broker->reset($credentials, $token, $newPassword));
-	}
-
-	public function testResetSuccess()
-	{
-		$credentials = ['username' => 'foo'];
-		$token = 'bar'; $newPassword = 'baz';
-		$user = $this->getMockUser();
-		$this->users->shouldReceive('retrieveByCredentials')->with($credentials)
-			->once()->andReturn($user);
-		$this->reminders->shouldReceive('exists')->with($user, $token)
-			->once()->andReturn(true);
-		$user->shouldReceive('setPasswordAttribute')->with($newPassword)->once();
+		$this->reminders->shouldReceive('exists')->once()
+			->with($user, $token)->andReturn(true);
+		$user->shouldReceive('setPasswordAttribute')->once()->with($newPassword);
 		$user->shouldReceive('save')->once();
-		$this->reminders->shouldReceive('delete')->with($token)->once();
+		$this->reminders->shouldReceive('delete')->once()->with($token);
 
-		$this->assertEquals($user, $this->broker->reset($credentials, $token, $newPassword));
+		$this->assertTrue($this->getBroker()->resetUser($user, $token, $newPassword));
 	}
 
+	public function testResetUserFailure()
+	{
+		$credentials = ['username' => 'foo'];
+		$token = 'bar'; $newPassword = 'baz';
+		$user = $this->getMockUser();
+		$this->reminders->shouldReceive('exists')->once()
+			->with($user, $token)->andReturn(false);
+
+		$this->assertFalse($this->getBroker()->resetUser($user, $token, $newPassword));
+	}
+	
 	protected function setupMailExpectations($method = 'mail', $success = true)
 	{
-		Facades\Config::shouldReceive('get')->with('auth.reminder.email');
 		$queue = ($method == 'mail') ? false : true;
 		$method = $queue ? 'queue' : 'mail';
-		Facades\Config::shouldReceive('get')->with('auth.reminder.queue')
-			->once()->andReturn($queue);
-		Facades\Mail::shouldReceive($method)->once()->andReturn($success);
+		$this->config['queue-email'] = $queue;
+		$this->mailer->shouldReceive($method)->once()->andReturn($success);
 	}
 
 	protected function getMockUser($email = 'test@example.com')
