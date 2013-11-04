@@ -29,23 +29,6 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 		return Hash::check($password, $this->attributes['password']);
 	}
 
-	public function activate()
-	{
-		$this->attributes['activation_code'] = null;
-		$this->attributes['is_active'] = true;
-		return $this->save();
-	}
-
-	public function deactivate($activationCode = null)
-	{
-		if ($activationCode) {
-			$this->attributes['activation_code'] = $activationCode;
-		}
-		
-		$this->attributes['is_active'] = false;
-		return $this->save();
-	}
-
 	public function scopeSearchFor($query, $search)
 	{
 		$searchable = ['username', 'email', 'name'];
@@ -71,6 +54,10 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 			->lists('user_type');
 	}
 
+	/********************
+	 *  Authentication  *
+	 ********************/
+
 	public function getAuthIdentifier()
 	{
 		return $this->getKey();
@@ -81,7 +68,32 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 		return $this->attributes['password'];
 	}
 
+	/********************
+	 *    Reminders     *
+	 ********************/
+
 	public function getReminderEmail()
+	{
+		return $this->attributes['email'];
+	}
+
+	/********************
+	 *    Activation    *
+	 ********************/
+
+	public function activate()
+	{
+		$this->attributes['is_active'] = true;
+		return $this->save();
+	}
+
+	public function deactivate()
+	{
+		$this->attributes['is_active'] = false;
+		return $this->save();
+	}
+
+	public function getActivationEmail()
 	{
 		return $this->attributes['email'];
 	}
