@@ -99,7 +99,7 @@ class UserRepository extends \c\EloquentRepository
 	{
 		$user = parent::create($attributes);
 
-		if ($activate || (isset($attributes['active']) && $attributes['active'])) {
+		if ($activate) {
 			$user->activate();
 		} else {
 			Activation::generate($user);

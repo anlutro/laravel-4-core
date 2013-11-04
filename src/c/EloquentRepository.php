@@ -127,7 +127,12 @@ abstract class EloquentRepository
 	 */
 	public function update(Model $model, array $attributes)
 	{
+		if (!$model->exists) {
+			throw new \RuntimeException('Cannot update non-existing model');
+		}
+
 		$this->validator->setKey($model->getKey());
+		
 		if (!$this->validator->validUpdate($attributes)) {
 			return false;
 		}

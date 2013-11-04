@@ -245,7 +245,9 @@ class UserController extends \c\Controller
 	{
 		$input = Input::all();
 
-		if ($user = $this->users->create($input)) {
+		$activate = Input::get('activate') === '1';
+
+		if ($user = $this->users->create($input, $activate)) {
 			return $this->redirectAction('edit', [$user->id])
 				->with('success', Lang::get('c::user.create-success'));
 		} else {
