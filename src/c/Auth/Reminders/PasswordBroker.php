@@ -76,7 +76,7 @@ class PasswordBroker
 
 		return $this->mailer->$method($this->emailView, $viewData, function($msg) use ($email) {
 			$msg->to($email)
-				->subject(Lang::get('auth.reminder.subject'));
+				->subject(Lang::get('c::auth.resetpass-title'));
 		});
 	}
 
