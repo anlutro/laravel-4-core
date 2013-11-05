@@ -20,6 +20,7 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 	public function testGenerate()
 	{
 		$user = $this->getMockUser();
+		$user->shouldReceive('deactivate')->once();
 		$this->codes->shouldReceive('create')->with($user, m::type('string'));
 		$user->shouldReceive('getActivationEmail')->andReturn('test@example.com');
 		$this->mailer->shouldReceive('send')->once()->andReturn(true);
