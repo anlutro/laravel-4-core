@@ -197,4 +197,12 @@ abstract class EloquentRepository
 	 * @return void
 	 */
 	protected function prepareQuery($query) {}
+
+	/**
+	 * Get the validation errors.
+	 */
+	public function errors()
+	{
+		return $this->validator->errors();
+	}
 }
