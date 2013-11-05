@@ -12,21 +12,21 @@
 	<div class="form-group">
 		{{ Form::label('username', Lang::get('c::user.username-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
-			{{ Form::text('username', null, ['class' => 'form-control', 'readonly' => 'readonly']) }}
+			{{ Form::text('username', null, ['class' => 'form-control', 'readonly']) }}
 		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('name', Lang::get('c::user.name-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
-			{{ Form::text('name', null, ['class' => 'form-control']) }}
+			{{ Form::text('name', null, ['class' => 'form-control', 'required']) }}
 		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('email', Lang::get('c::user.email-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
-			{{ Form::email('email', null, ['class' => 'form-control']) }}
+			{{ Form::email('email', null, ['class' => 'form-control', 'required']) }}
 		</div>
 	</div>
 
@@ -40,7 +40,7 @@
 	<div class="form-group">
 		{{ Form::label('old_password', Lang::get('c::user.password-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
-			{{ Form::password('old_password', ['class' => 'form-control']) }}
+			{{ Form::password('old_password', ['class' => 'form-control', 'required']) }}
 		</div>
 	</div>
 
