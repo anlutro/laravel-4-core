@@ -1,5 +1,5 @@
 <?php
-namespace c;
+namespace c\View;
 
 abstract class SidebarComposer
 {
