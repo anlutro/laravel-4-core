@@ -38,17 +38,17 @@ class MenuItem
 		if ($this->hasSubMenu()) {
 			return $this->renderWithSub();
 		} else {
-			return $this->renderSingle();
+			return '<li>' . $this->renderSingle() . '</li>';
 		}
-
-		
 	}
 
-	protected function renderSingle()
+	protected function renderSingle($dropdownToggle = false)
 	{
 		$html = '';
 
-		if (!empty($this->url)) {
+		if ($dropdownToggle) {
+			$html .= '<a class="dropdown-toggle" data-toggle="dropdown">';
+		} elseif (!empty($this->url)) {
 			$html .= '<a href="'.$this->url.'">';
 		}
 
@@ -58,7 +58,7 @@ class MenuItem
 
 		$html .= $this->title;
 
-		if (!empty($this->url)) {
+		if ($dropdownToggle || !empty($this->url)) {
 			$html .= '</a>';
 		}
 
@@ -67,9 +67,7 @@ class MenuItem
 
 	protected function renderWithSub()
 	{
-		return '<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">'
-			. $this->renderSingle() . '<b class="caret"></b>'
-			. $this->subMenu->render(['class' => 'dropdown-menu'])
-			. '</li>';
+		return '<li class="dropdown">' . $this->renderSingle(true) . '<b class="caret"></b>'
+			. $this->subMenu->render(['class' => 'dropdown-menu']) . '</li>';
 	}
 }

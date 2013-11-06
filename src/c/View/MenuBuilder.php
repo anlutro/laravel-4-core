@@ -52,9 +52,10 @@ class MenuBuilder
 	 */
 	public function add($id, MenuCollection $menu)
 	{
-		if (!array_key_exists($id, $this->menus)) {
+		if (array_key_exists($id, $this->menus)) {
+			$this->menus[$id]->mergeWith($menu);
+		} else {
 			$this->menus[$id] = $menu;
-			return;
 		}
 	}
 

@@ -59,32 +59,14 @@ class MenuCollection
 
 	public function render($attr = ['class' => 'navbar navbar-nav'])
 	{
-		$items = $this->build();
-
-		return $this->renderUl($items, $attr);
-	}
-
-	protected function renderUl($items, array $attr)
-	{
 		$attributes = $this->html->attributes($attr);
 
-		$items = implode("\n", $items);
+		$items = '';
+		
+		foreach ($this->items as $item) {
+			$items .= $item->render();
+		}
 
 		return "<ul{$attributes}>{$items}</ul>";
-	}
-
-	public function build()
-	{
-		$items = [];
-
-		foreach ($this->items as $key => $item) {
-			if ($item->hasSubMenu()) {
-				$items[] = $this->renderSubMenuDropdown($item);
-			} else {
-				$items[] = '<li>' . $item->render() . '</li>';
-			}
-		}
-		
-		return $items;
 	}
 }
