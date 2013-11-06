@@ -27,77 +27,7 @@ class MenuBuilder
 			return;
 		}
 
-		return $this->renderItems($menu, $attr);
-	}
-
-	/**
-	 * Render an array of menu items.
-	 *
-	 * @param  array $menu
-	 * @param  array $attr HTML attributes - optional
-	 *
-	 * @return string      Menu as HTML
-	 */
-	public function renderItems($menu, $attr = ['class' => 'nav navbar-nav'])
-	{
-		$items = $this->build($menu);
-
-		return $this->html->ul($items, $attr);
-	}
-
-	/**
-	 * Build a menu into an array ready to be passed to HTML::ul
-	 *
-	 * @param  array   $menu
-	 * @param  boolean $submenu Whether this is a submenu or not. Default false
-	 *
-	 * @return array
-	 */
-	public function build($menu, $submenu = false)
-	{
-		$items = [];
-
-		foreach ($menu as $key => $item) {
-			if (!empty($item['submenu'])) {
-				$html = '<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">'
-					. $this->renderItem($item) . '<b class="caret"></b>'
-					. $this->renderItems($item['submenu'], ['class' => 'dropdown-menu'])
-					. '</li>';
-			} else {
-				$html = '<li>' . $this->renderItem($item) . '</li>';
-			}
-			$items[] = $html;
-		}
-		
-		return $items;
-	}
-
-	/**
-	 * Render a single menu item.
-	 *
-	 * @param  array $item
-	 *
-	 * @return string
-	 */
-	protected function renderItem($item)
-	{
-		$html = '';
-
-		if (!empty($item['url'])) {
-			$html .= '<a href="'.$item['url'].'">';
-		}
-
-		if (!empty($item['glyph'])) {
-			$html .= $this->glyphicon($item['glyph']);
-		}
-
-		$html .= $item['title'];
-
-		if (!empty($item['url'])) {
-			$html .= '</a>';
-		}
-
-		return $html;
+		return $menu->render($attr);
 	}
 
 	/**
@@ -115,14 +45,41 @@ class MenuBuilder
 	}
 
 	/**
-	 * Render the glyphicon HTML.
+	 * Add something to an existing menu or add a new menu.
 	 *
-	 * @param  string $glyph
-	 *
-	 * @return string
+	 * @param string $id
+	 * @param mixed  $menu
 	 */
-	protected function glyphicon($glyph)
+	public function add($id, MenuCollection $menu)
 	{
-		return '<span class="glyphicon glyphicon-'.$glyph.'"></span>';
+		if (!array_key_exists($id, $this->menus)) {
+			$this->menus[$id] = $menu;
+			return;
+		}
+	}
+
+	/**
+	 * Create a new MenuCollection instance.
+	 *
+	 * @return \c\View\MenuCollection
+	 */
+	public function make(array $items = array())
+	{
+		$collection = new MenuCollection($this->html);
+		
+		if ($items) {
+			$collection->addItems($items);
+		}
+
+		return $collection;
+	}
+
+	public function item($title, $url, $glyph = null)
+	{
+		$item = new MenuItem;
+		$item->title = $title;
+		$item->url = $url;
+		$item->glyph = $glyph;
+		return $item;
 	}
 }
