@@ -37,7 +37,6 @@ class CoreServiceProvider extends ServiceProvider
 
 		$this->registerLangFiles();
 		$this->registerViewFiles();
-		$this->addSidebarFunctionality();
 		$this->requireRouteFile('core');
 
 		$userModel = $this->app['config']->get('auth.model', 'c\Auth\UserModel');
@@ -72,13 +71,6 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		require $path . '/' . $file . '.php';
-	}
-
-	protected function addSidebarFunctionality()
-	{
-		$this->app['view']->creator('c::sidebar', function($view) {
-			$view->with('sidebar', array());
-		});
 	}
 
 	protected function registerUserEvents($userModel)
