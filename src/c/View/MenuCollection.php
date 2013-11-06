@@ -61,7 +61,16 @@ class MenuCollection
 	{
 		$items = $this->build();
 
-		return $this->html->ul($items, $attr);
+		return $this->renderUl($items, $attr);
+	}
+
+	protected function renderUl($items, array $attr)
+	{
+		$attributes = $this->html->attributes($attr);
+
+		$items = implode("\n", $items);
+
+		return "<ul{$attributes}>{$items}</ul>";
 	}
 
 	public function build()

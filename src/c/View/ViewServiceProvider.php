@@ -7,7 +7,7 @@ class ViewServiceProvider extends ServiceProvider
 {
 	public function register()
 	{
-		$this->app->bindShared('menubuilder', function($app) {
+		$this->app['menubuilder'] = $this->app->share(function($app) {
 			return new MenuBuilder($app['html']);
 		});
 	}
@@ -17,5 +17,10 @@ class ViewServiceProvider extends ServiceProvider
 		$this->app['view']->creator('c::sidebar', function($view) {
 			$view->with('sidebar', array());
 		});
+	}
+
+	public function provides()
+	{
+		return ['menubuilder'];
 	}
 }
