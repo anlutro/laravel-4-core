@@ -50,12 +50,20 @@ class MenuBuilder
 	 * @param string $id
 	 * @param mixed  $menu
 	 */
-	public function add($id, MenuCollection $menu)
+	public function add($id, $menu)
 	{
-		if (array_key_exists($id, $this->menus)) {
-			$this->menus[$id]->mergeWith($menu);
-		} else {
-			$this->menus[$id] = $menu;
+		if ($menu instanceof MenuCollection) {
+			if (array_key_exists($id, $this->menus)) {
+				$this->menus[$id]->mergeWith($menu);
+			} else {
+				$this->menus[$id] = $menu;
+			}
+		} elseif ($item instanceof MenuItem) {
+			if (array_key_exists($id, $this->menus)) {
+				$this->menus[$id]->addItem($menu);
+			} else {
+				$this->menus[$id] = $this->make([$item]);
+			}
 		}
 	}
 
@@ -75,9 +83,36 @@ class MenuBuilder
 		return $collection;
 	}
 
-	public function item($title, $url, $glyph = null)
+	/**
+	 * Create a new menu item with a submenu.
+	 *
+	 * @param  string $id
+	 * @param  string $title
+	 * @param  string $glyph
+	 *
+	 * @return \c\View\MenuItem
+	 */
+	public function makeDropdown($id, $title = '', $glyph = null)
+	{
+		$main = $this->item($id, $title, '', $glyph);
+		$main->subMenu = $this->make();
+		return $main;
+	}
+
+	/**
+	 * Create a new menu item.
+	 *
+	 * @param  string $id
+	 * @param  string $title
+	 * @param  string $url
+	 * @param  string $glyph
+	 *
+	 * @return \c\View\MenuItem
+	 */
+	public function item($id, $title = '', $url = '', $glyph = null)
 	{
 		$item = new MenuItem;
+		$item->id = $id;
 		$item->title = $title;
 		$item->url = $url;
 		$item->glyph = $glyph;

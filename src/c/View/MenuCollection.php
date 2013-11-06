@@ -13,27 +13,50 @@ class MenuCollection
 		$this->html = $html;
 	}
 
+	/**
+	 * Get the items of the collection.
+	 *
+	 * @return array
+	 */
 	public function getItems()
 	{
 		return $this->items;
 	}
 
+	/**
+	 * Check if a menu has any items.
+	 *
+	 * @return boolean
+	 */
 	public function hasItems()
 	{
 		return !empty($this->items);
 	}
 
+	/**
+	 * Merge another collection into this one.
+	 *
+	 * @param  \c\View\MenuCollection $menu
+	 *
+	 * @return void
+	 */
 	public function mergeWith(MenuCollection $menu)
 	{
-		foreach ($menu->getItems() as $id => $item) {
-			$this->addItem($id, $item);
+		foreach ($menu->getItems() as $item) {
+			$this->addItem($item);
 		}
-
-		return true;
 	}
 
-	public function addItem($id, MenuItem $item)
+	/**
+	 * Add an item to the collection. Merges if one with the same unique ID
+	 * already exists.
+	 *
+	 * @param \c\View\MenuItem $item
+	 */
+	public function addItem(MenuItem $item)
 	{
+		$id = $item->id;
+
 		if (!is_string($id)) {
 			throw new \InvalidArgumentException('Menu item ID must be a string.');
 		}
@@ -45,18 +68,37 @@ class MenuCollection
 		}
 	}
 
+	/**
+	 * Add an array of items to the collection.
+	 *
+	 * @param array $items
+	 */
 	public function addItems(array $items)
 	{
-		foreach ($items as $id => $item) {
-			$this->addItem($id, $item);
+		foreach ($items as $item) {
+			$this->addItem($item);
 		}
 	}
 
+	/**
+	 * Check if a menu item with a certain unique ID is in the collection.
+	 *
+	 * @param  string  $id
+	 *
+	 * @return boolean
+	 */
 	protected function hasItem($id)
 	{
 		return array_key_exists($id, $this->items);
 	}
 
+	/**
+	 * Render the collection.
+	 *
+	 * @param  array  $attr HTML attributes
+	 *
+	 * @return string
+	 */
 	public function render($attr = ['class' => 'navbar navbar-nav'])
 	{
 		$attributes = $this->html->attributes($attr);

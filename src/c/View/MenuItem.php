@@ -3,6 +3,7 @@ namespace c\View;
 
 class MenuItem
 {
+	public $id;
 	public $title;
 	public $glyph;
 	public $url;
@@ -13,11 +14,23 @@ class MenuItem
 		// ...
 	}
 
+	/**
+	 * Check if the menu item has a submenu.
+	 *
+	 * @return boolean
+	 */
 	public function hasSubMenu()
 	{
 		return !empty($this->subMenu);
 	}
 
+	/**
+	 * Merge another menu item into this one.
+	 *
+	 * @param  \c\View\MenuItem $item
+	 *
+	 * @return void
+	 */
 	public function mergeWith(MenuItem $item)
 	{
 		if ($item->hasSubMenu() && $this->hasSubMenu()) {
@@ -33,23 +46,23 @@ class MenuItem
 		}
 	}
 
+	/**
+	 * Render the menu item.
+	 *
+	 * @return string
+	 */
 	public function render()
-	{
-		if ($this->hasSubMenu()) {
-			return $this->renderWithSub();
-		} else {
-			return '<li>' . $this->renderSingle() . '</li>';
-		}
-	}
-
-	protected function renderSingle($dropdownToggle = false)
 	{
 		$html = '';
 
-		if ($dropdownToggle) {
-			$html .= '<a class="dropdown-toggle" data-toggle="dropdown">';
-		} elseif (!empty($this->url)) {
-			$html .= '<a href="'.$this->url.'">';
+		if ($this->hasSubMenu()) {
+			$html .= '<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">';
+		} else {
+			$html .= '<li>';
+
+			if (!empty($this->url)) {
+				$html .= '<a href="'.$this->url.'">';
+			}
 		}
 
 		if (!empty($this->glyph)) {
@@ -58,18 +71,14 @@ class MenuItem
 
 		$html .= $this->title;
 
-		if ($dropdownToggle) {
-			$html .= '<b class="caret"></b></a>';
+		if ($this->hasSubMenu()) {
+			$html .= '<b class="caret"></b></a>' . $this->subMenu->render(['class' => 'dropdown-menu']);
 		} elseif (!empty($this->url)) {
 			$html .= '</a>';
 		}
 
-		return $html;
-	}
+		$html .= '</li>';
 
-	protected function renderWithSub()
-	{
-		return '<li class="dropdown">' . $this->renderSingle(true)
-			. $this->subMenu->render(['class' => 'dropdown-menu']) . '</li>';
+		return $html;
 	}
 }

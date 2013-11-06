@@ -17,9 +17,10 @@ class MenuBuilderTest extends PHPUnit_Framework_TestCase
 
 	public function testMakeItem()
 	{
-		$item = $this->builder->item('title', 'url', 'glyph');
+		$item = $this->builder->item('id', 'title', 'url', 'glyph');
 		
 		$this->assertInstanceOf('c\View\MenuItem', $item);
+		$this->assertEquals('id', $item->id);
 		$this->assertEquals('title', $item->title);
 		$this->assertEquals('url', $item->url);
 		$this->assertEquals('glyph', $item->glyph);
@@ -44,8 +45,8 @@ class MenuBuilderTest extends PHPUnit_Framework_TestCase
 
 	public function testAddMenuItem()
 	{
-		$item = $this->builder->item('title', 'url', 'glyph');
-		$menu = $this->builder->make(['id' => $item]);
+		$item = $this->builder->item('id', 'title', 'url', 'glyph');
+		$menu = $this->builder->make([$item]);
 
 		$this->assertInstanceOf('c\View\MenuCollection', $menu);
 		$this->assertTrue($menu->hasItems());
