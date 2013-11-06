@@ -13,13 +13,13 @@ class MenuItemTest extends PHPUnit_Framework_TestCase
 	public function testRenderSingle()
 	{
 		$item = $this->makeItem('title', 'url');
-		$this->assertEquals('<a href="url">title</a>', $item->render());
+		$this->assertEquals('<li><a href="url">title</a></li>', $item->render());
 	}
 
 	public function testRenderSingleWithGlyph()
 	{
 		$item = $this->makeItem('title', 'url', 'glyph');
-		$this->assertEquals('<a href="url"><span class="glyphicon glyphicon-glyph"></span>title</a>', $item->render());
+		$this->assertEquals('<li><a href="url"><span class="glyphicon glyphicon-glyph"></span>title</a></li>', $item->render());
 	}
 
 	public function testRenderWithSubMenu()
@@ -29,7 +29,7 @@ class MenuItemTest extends PHPUnit_Framework_TestCase
 		$item->subMenu->shouldReceive('render')->once()->with(['class' => 'dropdown-menu'])
 			->andReturn('{submenu}');
 
-		$this->assertEquals('<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><a href="url"><span class="glyphicon glyphicon-glyph"></span>title</a><b class="caret"></b>{submenu}</li>', $item->render());
+		$this->assertEquals('<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-glyph"></span>title<b class="caret"></b></a>{submenu}</li>', $item->render());
 	}
 
 	protected function makeCollection()

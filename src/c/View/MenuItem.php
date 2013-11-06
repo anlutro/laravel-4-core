@@ -58,7 +58,9 @@ class MenuItem
 
 		$html .= $this->title;
 
-		if ($dropdownToggle || !empty($this->url)) {
+		if ($dropdownToggle) {
+			$html .= '<b class="caret"></b></a>';
+		} elseif (!empty($this->url)) {
 			$html .= '</a>';
 		}
 
@@ -67,7 +69,7 @@ class MenuItem
 
 	protected function renderWithSub()
 	{
-		return '<li class="dropdown">' . $this->renderSingle(true) . '<b class="caret"></b>'
+		return '<li class="dropdown">' . $this->renderSingle(true)
 			. $this->subMenu->render(['class' => 'dropdown-menu']) . '</li>';
 	}
 }
