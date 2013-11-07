@@ -8,11 +8,6 @@ class MenuBuilder
 	protected $menus = [];
 	protected $html;
 
-	public function __construct(HtmlBuilder $html)
-	{
-		$this->html = $html;
-	}
-
 	/**
 	 * Render a menu.
 	 *
@@ -74,7 +69,7 @@ class MenuBuilder
 	 */
 	public function make(array $items = array())
 	{
-		$collection = new MenuCollection($this->html);
+		$collection = new MenuCollection;
 		
 		if ($items) {
 			$collection->addItems($items);

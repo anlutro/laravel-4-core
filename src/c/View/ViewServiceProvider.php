@@ -8,7 +8,7 @@ class ViewServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$this->app['menubuilder'] = $this->app->share(function($app) {
-			return new MenuBuilder($app['html']);
+			return new MenuBuilder;
 		});
 	}
 

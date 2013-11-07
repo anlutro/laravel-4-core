@@ -8,11 +8,6 @@ class MenuCollection
 	protected $html;
 	protected $items = [];
 
-	public function __construct(HtmlBuilder $html)
-	{
-		$this->html = $html;
-	}
-
 	/**
 	 * Get the items of the collection.
 	 *
@@ -101,7 +96,7 @@ class MenuCollection
 	 */
 	public function render($attr = ['class' => 'navbar navbar-nav'])
 	{
-		$attributes = $this->html->attributes($attr);
+		$attributes = $this->attributes($attr);
 
 		$items = '';
 		
@@ -110,5 +105,29 @@ class MenuCollection
 		}
 
 		return "<ul{$attributes}>{$items}</ul>";
+	}
+
+	/**
+	 * Render HTML attributes.
+	 *
+	 * @param  array $attributes
+	 *
+	 * @return string
+	 */
+	protected function attributes($attributes)
+	{
+		$html = [];
+
+		foreach ((array) $attributes as $key => $value) {
+			if (is_numeric($key)) {
+				$key = $value;
+			}
+
+			if ($value !== null) {
+				$html[] =  $key.'="'.htmlentities($value, ENT_QUOTES, 'UTF-8', false).'"';
+			}
+		}
+
+		return empty($html) ? ' ' . implode(' ', $html) : '';
 	}
 }

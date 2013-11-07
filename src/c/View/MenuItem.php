@@ -9,11 +9,6 @@ class MenuItem
 	public $url;
 	public $subMenu;
 
-	public function __construct()
-	{
-		// ...
-	}
-
 	/**
 	 * Check if the menu item has a submenu.
 	 *

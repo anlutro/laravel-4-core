@@ -6,8 +6,7 @@ class MenuBuilderTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->html = m::mock('Illuminate\Html\HtmlBuilder');
-		$this->builder = new MenuBuilder($this->html);
+		$this->builder = new MenuBuilder();
 	}
 
 	public function tearDown()
