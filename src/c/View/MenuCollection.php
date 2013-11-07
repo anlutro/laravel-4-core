@@ -40,6 +40,8 @@ class MenuCollection
 		foreach ($menu->getItems() as $item) {
 			$this->addItem($item);
 		}
+
+		return $this;
 	}
 
 	/**
