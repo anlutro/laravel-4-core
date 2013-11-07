@@ -128,6 +128,6 @@ class MenuCollection
 			}
 		}
 
-		return empty($html) ? ' ' . implode(' ', $html) : '';
+		return empty($html) ? '' : ' ' . implode(' ', $html);
 	}
 }

@@ -45,17 +45,17 @@ class MenuBuilder
 	 * @param string $id
 	 * @param mixed  $menu
 	 */
-	public function add($id, $menu)
+	public function add($id, $item)
 	{
-		if ($menu instanceof MenuCollection) {
+		if ($item instanceof MenuCollection) {
 			if (array_key_exists($id, $this->menus)) {
-				$this->menus[$id]->mergeWith($menu);
+				$this->menus[$id]->mergeWith($item);
 			} else {
-				$this->menus[$id] = $menu;
+				$this->menus[$id] = $item;
 			}
 		} elseif ($item instanceof MenuItem) {
 			if (array_key_exists($id, $this->menus)) {
-				$this->menus[$id]->addItem($menu);
+				$this->menus[$id]->addItem($item);
 			} else {
 				$this->menus[$id] = $this->make([$item]);
 			}
