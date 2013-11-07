@@ -20,6 +20,17 @@ class MenuItem
 	}
 
 	/**
+	 * Add an item to the item's submenu.
+	 *
+	 * @param MenuItem $subItem
+	 */
+	public function addSubItem(MenuItem $subItem)
+	{
+		$this->subMenu->addItem($subItem);
+		return $this;
+	}
+
+	/**
 	 * Merge another menu item into this one.
 	 *
 	 * @param  \c\View\MenuItem $item
@@ -39,6 +50,8 @@ class MenuItem
 			$this->glyph = $item->glyph;
 			$this->url = $item->url;
 		}
+
+		return $this;
 	}
 
 	/**

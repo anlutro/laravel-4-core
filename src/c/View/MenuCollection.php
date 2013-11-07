@@ -61,6 +61,8 @@ class MenuCollection
 		} else {
 			$this->items[$id] = $item;
 		}
+
+		return $this;
 	}
 
 	/**
@@ -73,6 +75,8 @@ class MenuCollection
 		foreach ($items as $item) {
 			$this->addItem($item);
 		}
+
+		return $this;
 	}
 
 	/**
