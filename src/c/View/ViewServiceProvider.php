@@ -20,9 +20,19 @@ class ViewServiceProvider extends ServiceProvider
 
 		$this->app['view']->composer('partial.menu', function($view) {
 			if ($this->app['auth']->check()) {
-				$item = $this->app['menubuilder']->makeDropdown('user', $this->app['auth']->user()->name, 'user');
-				$item->subMenu->addItem($this->app['menubuilder']->item('profile', $this->app['translator']->get('c::user.profile-title'), $this->app['url']->action('UserController@profile')));
-				$item->subMenu->addItem($this->app['menubuilder']->item('logout', $this->app['translator']->get('c::auth.logout'), $this->app['url']->action('AuthController@logout')));
+				$username = $this->app['auth']->user()->name;
+				$item = $this->app['menubuilder']->makeDropdown('user', $username, 'user');
+
+				$subItem = $this->app['menubuilder']->item('profile');
+				$subItem->title = $this->app['translator']->get('c::user.profile-title');
+				$subItem->url = $this->app['url']->action('UserController@profile');
+				$item->subMenu->addItem($subItem);
+
+				$subItem = $this->app['menubuilder']->item('logout');
+				$subItem->title = $this->app['translator']->get('c::auth.logout');
+				$subItem->url = $this->app['url']->action('AuthController@logout');
+				$item->subMenu->addItem($subItem);
+
 				$this->app['menubuilder']->add('right', $item);
 			}
 		});
