@@ -16,7 +16,6 @@ use Carbon\Carbon;
 
 class CoreServiceProvider extends ServiceProvider
 {
-
 	protected $package;
 	protected $namespace;
 	protected $srcPath;
@@ -42,7 +41,6 @@ class CoreServiceProvider extends ServiceProvider
 		$userModel = $this->app['config']->get('auth.model', 'c\Auth\UserModel');
 		$this->app->bind('c\Auth\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
-
 	}
 
 	protected function registerLangFiles()

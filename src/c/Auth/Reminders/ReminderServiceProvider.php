@@ -13,6 +13,9 @@ use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;
 
 class ReminderServiceProvider extends BaseProvider
 {
+	protected $defer = false;
+	protected $srcPath;
+
 	protected function registerCommands()
 	{
 		parent::registerCommands();
