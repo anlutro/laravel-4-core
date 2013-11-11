@@ -44,9 +44,10 @@ class ActivationServiceProvider extends ServiceProvider
 	protected function requireRouteFile($file)
 	{
 		$locale = $this->app['translator']->getLocale();
+
 		$path = $this->srcPath . '/routes/' . $locale;
 
-		if (!is_dir($path)) {
+		if (!is_dir($path) || !$locale) {
 			$path = $this->srcPath . '/routes/en';
 		}
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core - Dynamic menu builder - menu item
+ *
+ * @author    Andreas Lutro <anlutro@gmail.com>
+ * @license   http://opensource.org/licenses/MIT
+ * @package   Laravel 4 Core
+ */
+
 namespace c\View;
 
 class MenuItem

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core - Dynamic menu builder
+ *
+ * @author    Andreas Lutro <anlutro@gmail.com>
+ * @license   http://opensource.org/licenses/MIT
+ * @package   Laravel 4 Core
+ */
+
 namespace c\View;
 
 use Illuminate\Html\HtmlBuilder;
