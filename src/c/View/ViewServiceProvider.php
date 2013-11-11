@@ -35,7 +35,7 @@ class ViewServiceProvider extends ServiceProvider
 
 				$this->app['menubuilder']->add('right', $item);
 			}
-		});
+		}, -99); // low priority to force our menu to the right
 	}
 
 	public function provides()
