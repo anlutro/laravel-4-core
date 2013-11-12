@@ -29,8 +29,9 @@ class ActivationServiceProvider extends ServiceProvider
 			$users = $app['auth']->driver()->getProvider();
 			$mailer = $app['mailer'];
 			$hashKey = $app['config']->get('app.key');
+			$queue = $app['config']->get('auth.reminders.queue', false);
 
-			return new ActivationService($codes, $users, $mailer, $hashKey);
+			return new ActivationService($codes, $users, $mailer, $hashKey, $queue);
 
 		});
 	}

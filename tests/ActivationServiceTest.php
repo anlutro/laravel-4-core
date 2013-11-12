@@ -9,7 +9,7 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 		$this->codes = m::mock('c\Auth\Activation\ActivationCodeRepositoryInterface');
 		$this->users = m::mock('Illuminate\Auth\UserProviderInterface');
 		$this->mailer = m::mock('Illuminate\Mail\Mailer');
-		$this->activation = new ActivationService($this->codes, $this->users, $this->mailer, 'hashkey');
+		$this->activation = new ActivationService($this->codes, $this->users, $this->mailer, 'hashkey', false);
 	}
 
 	public function tearDown()
@@ -21,6 +21,7 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 	{
 		$user = $this->getMockUser();
 		$user->shouldReceive('deactivate')->once();
+		$this->codes->shouldReceive('deleteUser')->with($user);
 		$this->codes->shouldReceive('create')->with($user, m::type('string'));
 		$user->shouldReceive('getActivationEmail')->andReturn('test@example.com');
 		$this->mailer->shouldReceive('send')->once()->andReturn(true);

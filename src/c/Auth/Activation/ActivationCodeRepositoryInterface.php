@@ -14,4 +14,5 @@ interface ActivationCodeRepositoryInterface
 	public function create(ActivatableInterface $user, $code);
 	public function retrieveByCode($code);
 	public function delete($code);
+	public function deleteUser(ActivatableInterface $user);
 }

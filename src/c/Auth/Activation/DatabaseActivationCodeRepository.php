@@ -50,6 +50,12 @@ class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterf
 		return $this->findCodeQuery($code)->delete();
 	}
 
+	public function deleteUser(ActivatableInterface $user)
+	{
+		return $this->newQuery()
+			->where('email', '=', $user->getActivationEmail());
+	}
+
 	protected function findCodeQuery($code)
 	{
 		return $this->newQuery()

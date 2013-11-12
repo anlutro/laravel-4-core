@@ -14,16 +14,24 @@ use Illuminate\Mail\Mailer;
 
 class ActivationService
 {
+	protected $codes;
+	protected $users;
+	protected $mailer;
+	protected $hashKey;
+	protected $queue = false;
+
 	public function __construct(
 		ActivationCodeRepositoryInterface $codes,
 		UserProviderInterface $users,
 		Mailer $mailer,
-		$hashKey
+		$hashKey,
+		$queue
 	) {
 		$this->codes = $codes;
 		$this->users = $users;
 		$this->mailer = $mailer;
 		$this->hashKey = $hashKey;
+		$this->queue = $queue;
 	}
 
 	/**
@@ -35,9 +43,15 @@ class ActivationService
 	 */
 	public function generate(ActivatableInterface $user)
 	{
+		// deactivate the user and delete any existing activation tokens
 		$user->deactivate();
+		$this->codes->deleteUser($user);
+
+		// generate a new token
 		$code = $this->generateActivationCode($user);
 		$this->codes->create($user, $code);
+
+		// send the email
 		return $this->emailActivationCode($user, $code);
 	}
 
@@ -53,9 +67,11 @@ class ActivationService
 	{
 		$email = $user->getActivationEmail();
 
+		$method = $this->queue ? 'queue' : 'send';
+
 		$data = ['code' => $code];
 
-		return $this->mailer->send('c::auth.activate-email', $data, function($msg) use ($email) {
+		return $this->mailer->$method('c::auth.activate-email', $data, function($msg) use ($email) {
 			$msg->to($email)
 				->subject(Lang::get('c::auth.activate-title'));
 		});
