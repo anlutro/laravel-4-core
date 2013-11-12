@@ -75,7 +75,9 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		// set a random login token on creation.
 		$userModel::creating(function($user) {
-			$user->setAttribute('login_token', Str::random(32));
+			if (!isset($user->login_token)) {
+				$user->setAttribute('login_token', Str::random(32));
+			}
 		});
 
 		// set last_login on every successful login.

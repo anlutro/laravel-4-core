@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CreateUserCommand extends \c\Command
 {
-
 	protected $name = 'auth:createuser';
 	protected $description = 'Create a new user.';
 	protected $users;
@@ -68,5 +67,4 @@ class CreateUserCommand extends \c\Command
 		return array(
 		);
 	}
-
 }
