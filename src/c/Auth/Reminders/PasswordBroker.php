@@ -54,7 +54,13 @@ class PasswordBroker
 	 */
 	public function requestReset(RemindableInterface $user)
 	{
+		// delete existing tokens belongning to user
+		$this->reminders->deleteUser($user);
+
+		// create a new token for the user
 		$token = $this->reminders->create($user);
+
+		// send an email
 		return $this->mail($user, $token);
 	}
 
@@ -70,7 +76,7 @@ class PasswordBroker
 	{
 		$email = $user->getReminderEmail();
 
-		$method = $this->queue ? 'queue' : 'mail';
+		$method = $this->queue ? 'queue' : 'send';
 
 		$viewData = ['token' => $token];
 

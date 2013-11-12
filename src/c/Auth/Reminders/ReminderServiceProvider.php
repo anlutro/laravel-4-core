@@ -22,16 +22,37 @@ class ReminderServiceProvider extends BaseProvider
 		$this->commands('c\Auth\Console\SendPasswordReminderCommand');
 	}
 
+	/**
+	 * Register the reminder repository implementation.
+	 *
+	 * @return void
+	 */
+	protected function registerReminderRepository()
+	{
+		$this->app->bindShared('auth.reminder.repository', function($app)
+		{
+			$connection = $app['db']->connection();
+
+			$table = $app['config']['auth.reminder.table'];
+
+			$key = $app['config']['app.key'];
+
+			$expire = $app['config']->get('auth.reminder.expire', 60);
+
+			return new DatabaseReminderRepository($connection, $table, $key, $expire);
+		});
+	}
+
 	protected function registerPasswordBroker()
 	{
-		$this->app['auth.reminder'] = $this->app->share(function($app) {
+		$this->app->bindShared('auth.reminder', function($app) {
 
 			$reminders = $app['auth.reminder.repository'];
 			$users = $app['auth']->driver()->getProvider();
 			$mailer = $app['mailer'];
 			$config = [
-				'email-view' => $app['config']->get('auth.reminder.email'),
-				'queue-email' => (bool) $app['config']->get('auth.reminder.queue'),
+				'email-view' => $app['config']->get('auth.reminder.email') ?: 'c::auth.reset-email',
+				'queue-email' => (bool) $app['config']->get('auth.reminder.queue', false),
 			];
 
 			return new PasswordBroker($users, $reminders, $mailer, $config);

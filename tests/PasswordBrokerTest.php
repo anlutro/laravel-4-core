@@ -26,6 +26,7 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 	public function testRequestReset()
 	{
 		$user = $this->getMockUser();
+		$this->reminders->shouldReceive('deleteUser')->with($user)->once();
 		$this->reminders->shouldReceive('create')->with($user)->once();
 		$this->setupMailExpectations();
 
@@ -35,6 +36,7 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 	public function testRequestResetQueue()
 	{
 		$user = $this->getMockUser();
+		$this->reminders->shouldReceive('deleteUser')->with($user)->once();
 		$this->reminders->shouldReceive('create')->with($user)->once();
 		$this->setupMailExpectations('queue');
 
@@ -66,10 +68,10 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 		$this->assertFalse($this->getBroker()->resetUser($user, $token, $newPassword));
 	}
 	
-	protected function setupMailExpectations($method = 'mail', $success = true)
+	protected function setupMailExpectations($method = 'send', $success = true)
 	{
-		$queue = ($method == 'mail') ? false : true;
-		$method = $queue ? 'queue' : 'mail';
+		$queue = ($method == 'send') ? false : true;
+		$method = $queue ? 'queue' : 'send';
 		$this->config['queue-email'] = $queue;
 		$this->mailer->shouldReceive($method)->once()->andReturn($success);
 	}
