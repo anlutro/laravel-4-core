@@ -52,7 +52,7 @@ abstract class EloquentRepository
 	 *
 	 * @return void
 	 */
-	public function togglePagination($paginate = false)
+	public function paginate($paginate = false)
 	{
 		if ($paginate === false) {
 			$this->paginate = false;
@@ -90,7 +90,7 @@ abstract class EloquentRepository
 	{
 		$query = $this->model->newQuery();
 
-		return $this->runQuery($query);
+		return $this->fetchMany($query);
 	}
 
 	/**
@@ -102,7 +102,10 @@ abstract class EloquentRepository
 	 */
 	public function getByKey($key)
 	{
-		return $this->model->find($key);
+		$query = $this->model->newQuery()
+			->where($model->getKeyName(), $key);
+
+		return $this->fetchSingle($query);
 	}
 
 	/**
@@ -171,13 +174,13 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * Run a query builder and return its results.
+	 * Run a query builder and return a collection of rows.
 	 *
 	 * @param  $query  query builder instance/reference
 	 *
 	 * @return mixed
 	 */
-	protected function runQuery($query)
+	protected function fetchMany($query)
 	{
 		$this->prepareQuery($query);
 
@@ -189,8 +192,22 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * This function is ran by runQuery before fetching the results. Put default
-	 * behaviours in this function.
+	 * Run a query builder and return a single row.
+	 *
+	 * @param  $query  query builder
+	 *
+	 * @return mixed
+	 */
+	protected function fetchSingle($query)
+	{
+		$this->prepareQuery($query);
+
+		return $query->first();
+	}
+
+	/**
+	 * This method is called before fetchMany and fetchSingle. Use it to add
+	 * functionality that should be present on every query.
 	 *
 	 * @param  $query  query builder instance/reference
 	 *
