@@ -59,6 +59,8 @@ abstract class EloquentRepository
 		} else {
 			$this->paginate = (int) $paginate;
 		}
+
+		return $this;
 	}
 
 	/**
@@ -79,6 +81,8 @@ abstract class EloquentRepository
 	public function setModel(Model $model)
 	{
 		$this->model = $model;
+
+		return $this;
 	}
 
 	/**

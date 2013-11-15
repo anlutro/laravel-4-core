@@ -90,8 +90,9 @@ class UserController extends \c\Controller
 			$this->users->filter(Input::get('usertype'));
 		}
 
-		$this->users->togglePagination(20);
-		$users = $this->users->getAll();
+		$users = $this->users
+			->paginate(20)
+			->getAll();
 		$types = ['all' => Lang::get('c::user.usertype-all')]
 			+ $this->users->getUserTypes();
 

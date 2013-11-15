@@ -30,11 +30,15 @@ class UserRepository extends \c\EloquentRepository
 	public function search($search)
 	{
 		$this->search = $search;
+
+		return $this;
 	}
 
 	public function filter($filter)
 	{
 		$this->filter = $filter;
+
+		return $this;
 	}
 
 	/**
