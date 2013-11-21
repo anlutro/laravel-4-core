@@ -13,6 +13,8 @@ use Illuminate\Support\ServiceProvider;
 
 class ActivationServiceProvider extends ServiceProvider
 {
+	protected $defer = false;
+
 	public function register()
 	{
 		$this->commands('c\Auth\Console\ActivateUserCommand');

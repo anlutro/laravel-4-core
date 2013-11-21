@@ -16,6 +16,7 @@ use Carbon\Carbon;
 
 class CoreServiceProvider extends ServiceProvider
 {
+	protected $defer = false;
 	protected $package;
 	protected $namespace;
 	protected $srcPath;
