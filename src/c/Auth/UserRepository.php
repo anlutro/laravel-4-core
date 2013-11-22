@@ -93,7 +93,9 @@ class UserRepository extends \c\EloquentRepository
 		$strings = [];
 
 		foreach ($types as $type) {
-			$strings[$type] = Lang::get('c::auth.usertype-'.$type);
+			if (!empty($type)) {
+				$strings[$type] = Lang::get('c::auth.usertype-'.$type);
+			}
 		}
 
 		return $strings;

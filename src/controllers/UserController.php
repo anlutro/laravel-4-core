@@ -144,7 +144,7 @@ class UserController extends \c\Controller
 
 		$isAdmin = $this->users
 			->getCurrentUser()
-			->hasAccess('admin');
+			->hasAccess('*');
 
 		if ($isAdmin) {
 			$viewData['editUrl'] = $this->url('edit', [$user->id]);
