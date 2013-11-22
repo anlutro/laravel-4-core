@@ -138,12 +138,23 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function activate($activationCode)
 	{
-		// should trigger on null, false, empty string
-		if (!$activationCode) {
+		if (empty($activationCode)) {
 			throw new \InvalidArgumentException;
 		}
 
 		return Activation::activate($activationCode);
+	}
+
+	/**
+	 * Directly activate a user.
+	 *
+	 * @param  UserModel $user
+	 *
+	 * @return boolean
+	 */
+	public function activateUser(UserModel $user)
+	{
+		return $user->activate();
 	}
 
 	/**
@@ -174,7 +185,11 @@ class UserRepository extends \c\EloquentRepository
 		$model->username = $attributes['username'];
 		$model->user_type = $attributes['user_type'];
 
-		return $model->save();
+		if (isset($attributes['is_active']) && $attributes['is_active'] === true) {
+			return $model->activate();
+		} else {
+			return $model->deactivate();
+		}
 	}
 
 	/**

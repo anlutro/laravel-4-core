@@ -171,6 +171,7 @@ class UserController extends \c\Controller
 		return View::make('c::user.form', [
 			'pageTitle'  => Lang::get('c::user.admin-edituser'),
 			'user'       => $user,
+			'isActive'   => (bool) $user->is_active,
 			'userTypes'  => $this->getUserTypes(),
 			'formAction' => $this->url('update', [$user->id]),
 			'deleteUrl'  => $this->url('delete', [$user->id]),

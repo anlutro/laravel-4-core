@@ -47,6 +47,15 @@
 		</div>
 	</div>
 
+	@if (isset($isActive))
+	<div class="checkbox">
+		<label class="col-sm-5 col-sm-offset-2">
+			{{ Form::checkbox('is_active', $user->user_type) }}
+			@lang('c::user.active-field')
+		</label>
+	</div>
+	@endif
+
 	@if($user->exists)
 	<hr>
 	<div class="row">
