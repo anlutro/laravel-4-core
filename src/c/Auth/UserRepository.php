@@ -11,6 +11,7 @@ namespace c\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use c\Auth\Activation\Activation;
 
@@ -89,12 +90,12 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function getUserTypes()
 	{
-		$types = $this->model->getDistinctUserTypes();
+		$types = array_flip($this->model->getAccessLevels());
 		$strings = [];
 
 		foreach ($types as $type) {
 			if (!empty($type)) {
-				$strings[$type] = Lang::get('c::auth.usertype-'.$type);
+				$strings[$type] = Lang::get('c::user.usertype-'.$type);
 			}
 		}
 

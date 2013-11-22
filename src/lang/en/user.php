@@ -21,7 +21,8 @@ return array(
 	'usertype-admin' => 'Administrators',
 	'usertype-all' => 'All users',
 	'usertype-field' => 'Group',
-	'usertype-normal' => 'Normal users',
-	'usertype-superuser' => 'Superusers',
+	'usertype-user' => 'Normal users',
+	'usertype-mod' => 'Privileged users',
+	'usertype-superadmin' => 'Super Admins',
 
 );

@@ -68,21 +68,9 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 	 * 
 	 * $query->filterUserType('superuser')->get();
 	 */
-	public function scopeFilterUserType($query, $type)
+	public function scopeFilterUserLevel($query, $level)
 	{
-		return $query->where('user_type', '=', $type);
-	}
-
-	/**
-	 * Get a list of distinct user types.
-	 *
-	 * @return array
-	 */
-	public function getDistinctUserTypes()
-	{
-		return $this->newQuery()
-			->distinct()
-			->lists('user_type');
+		return $query->where('user_level', '>=', $level);
 	}
 
 	/**
@@ -103,6 +91,16 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 		'admin' => 100,
 		'superadmin' => 255,
 	];
+
+	/**
+	 * Get the list of access levels.
+	 *
+	 * @return array
+	 */
+	public function getAccessLevels()
+	{
+		return static::$accessLevels;
+	}
 
 	/**
 	 * Check if a user has access to a certain level of actions.
