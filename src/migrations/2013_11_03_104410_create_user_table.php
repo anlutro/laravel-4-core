@@ -14,7 +14,8 @@ class CreateUserTable extends Migration
 			$t->string('name', 128);
 			$t->string('email', 128);
 			$t->string('phone', 16);
-			$t->string('user_type', 16);
+			$t->tinyInteger('user_level')
+				->unsigned();
 			$t->boolean('is_active')
 				->default(false);
 			$t->string('login_token', 32)

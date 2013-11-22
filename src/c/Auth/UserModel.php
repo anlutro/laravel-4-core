@@ -17,7 +17,19 @@ use Illuminate\Auth\UserInterface;
 
 class UserModel extends Model implements UserInterface, RemindableInterface, ActivatableInterface
 {
+	/**
+	 * The database table the model queries from.
+	 *
+	 * @var string
+	 */
 	protected $table = 'users';
+
+	/**
+	 * Whether or not the model soft deletes.
+	 *
+	 * @var boolean
+	 */
+	protected $softDelete = true;
 
 	/**
 	 * Hash the password automatically when setting it.
@@ -79,6 +91,67 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 	public function getIsActiveAttribute()
 	{
 		return $this->attributes['is_active'] === '1';
+	}
+
+	/********************
+	 *  Access levels   *
+	 ********************/
+
+	protected static $accessLevels = [
+		'user' => 1,
+		'mod' => 10,
+		'admin' => 100,
+		'superadmin' => 255,
+	];
+
+	/**
+	 * Check if a user has access to a certain level of actions.
+	 *
+	 * @param  string  $access
+	 *
+	 * @return boolean
+	 */
+	public function hasAccess($access)
+	{
+		if ($access === '*') {
+			$access = 'superadmin';
+		}
+
+		if (!array_key_exists($access, static::$accessLevels)) {
+			throw new \InvalidArgumentException("Invalid access level: $access");
+		}
+
+		return $this->user_level >= static::$accessLevels[$access];
+	}
+
+	/**
+	 * Make sure the user_level attribute is cast to an int.
+	 *
+	 * @param  string $value
+	 *
+	 * @return int
+	 */
+	public function getUserLevelAttribute($value)
+	{
+		return (int) $value;
+	}
+
+	/**
+	 * Set the user_level attribute.
+	 *
+	 * @param string|int $value
+	 */
+	public function setUserLevelAttribute($value)
+	{
+		if (!is_int($value)) {
+			if (!array_key_exists($value, static::$accessLevels)) {
+				throw new \InvalidArgumentException("Invalid access level: $access");
+			}
+
+			$value = static::$accessLevels[$value];
+		}
+
+		$this->attributes['user_level'] = $value;
 	}
 
 	/********************
