@@ -32,6 +32,13 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 	protected $softDelete = true;
 
 	/**
+	 * The attributes that are fillable by mass assignment.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['name', 'email', 'phone', 'password'];
+
+	/**
 	 * Hash the password automatically when setting it.
 	 */
 	public function setPasswordAttribute($value)
@@ -150,6 +157,33 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 		}
 
 		$this->attributes['user_level'] = $value;
+	}
+
+	/**
+	 * Getter for user_type.
+	 *
+	 * @return string
+	 */
+	public function getUserTypeAttribute()
+	{
+		$types = static::$accessLevels;
+		$level = $this->user_level;
+
+		foreach ($types as $name => $min) {
+			if ($level <= $min) {
+				return $name;
+			}
+		}
+	}
+
+	/**
+	 * Setter for user_type.
+	 *
+	 * @param string $value
+	 */
+	public function setUserTypeAttribute($value)
+	{
+		$this->setUserLevelAttribute($value);
 	}
 
 	/********************

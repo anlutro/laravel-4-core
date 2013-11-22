@@ -7,7 +7,9 @@
  * @package   Laravel 4 Core
  */
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
@@ -245,7 +247,7 @@ class UserController extends \c\Controller
 	public function store()
 	{
 		$input = Input::all();
-		$activate = Input::has('activate');
+		$activate = $this->activationEnabled() ? Input::has('activate') : true;
 
 		if ($user = $this->users->create($input, $activate)) {
 			return $this->redirect('edit', [$user->id])
@@ -281,5 +283,18 @@ class UserController extends \c\Controller
 		}
 
 		return $this->users->getUserTypes();
+	}
+
+	private function activationEnabled()
+	{
+		$loadedProviders = App::getLoadedProviders();
+
+		if (!isset($loadedProviders['c\Auth\Activation\ActivationServiceProvider'])) {
+			return false;
+		}
+
+		// return Config::get('c::user.activation-enabled', false);
+		
+		return true;
 	}
 }

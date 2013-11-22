@@ -19,9 +19,9 @@
 
 	@if ($userTypes)
 	<div class="form-group">
-		{{ Form::label('usertype', Lang::get('c::user.usertype-field'), ['class' => 'control-label col-sm-2']) }}
+		{{ Form::label('user_type', Lang::get('c::user.usertype-field'), ['class' => 'control-label col-sm-2']) }}
 		<div class="col-sm-5">
-			{{ Form::select('usertype', $userTypes, $user->usertype, ['class' => 'form-control']) }}
+			{{ Form::select('user_type', $userTypes, $user->user_type, ['class' => 'form-control']) }}
 		</div>
 	</div>
 	@endif

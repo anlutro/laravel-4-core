@@ -19,15 +19,13 @@ class ActivationServiceProvider extends ServiceProvider
 	{
 		$this->commands('c\Auth\Console\ActivateUserCommand');
 		
-		$this->app->bind('c\Auth\Activation\ActivationCodeRespositoryInterface',
-			'c\Auth\Activation\DatabaseActivationCodeRepository');
+		$this->app->bindShared('auth.activation.repository', function($app) {
+			return new DatabaseActivationCodeRepository($app['db']->connection(), 'user_activation');
+		});
 
-		$this->app['auth.activation'] = $this->app->share(function($app) {
+		$this->app->bindShared('auth.activation', function($app) {
 
-			// use app.make to allow the end user to easily bind his/her own
-			// implementation to the interface
-			$codes = $app->make('c\Auth\Activation\ActivationCodeRespositoryInterface');
-
+			$codes = $app['auth.activation.repository'];
 			$users = $app['auth']->driver()->getProvider();
 			$mailer = $app['mailer'];
 			$hashKey = $app['config']->get('app.key');

@@ -102,9 +102,23 @@ class UserRepository extends \c\EloquentRepository
 		return $strings;
 	}
 
+	/**
+	 * Create a new user.
+	 *
+	 * @param  array   $attributes
+	 * @param  boolean $activate
+	 *
+	 * @return false|Model
+	 */
 	public function create(array $attributes = array(), $activate = false)
 	{
-		$user = parent::create($attributes);
+		if (!$this->validator->validCreate($attributes)) {
+			return false;
+		}
+
+		$user = $this->getNew($attributes);
+		$user->username = $attributes['username'];
+		$user->user_type = $attributes['user_type'];
 
 		if ($activate) {
 			$user->activate();
@@ -112,9 +126,16 @@ class UserRepository extends \c\EloquentRepository
 			Activation::generate($user);
 		}
 		
-		return $model;
+		return $user;
 	}
 
+	/**
+	 * Activate user with a certain activation code.
+	 *
+	 * @param  string $activationCode
+	 *
+	 * @return boolean
+	 */
 	public function activate($activationCode)
 	{
 		// should trigger on null, false, empty string
@@ -125,30 +146,74 @@ class UserRepository extends \c\EloquentRepository
 		return Activation::activate($activationCode);
 	}
 
+	/**
+	 * Update an existing user.
+	 *
+	 * @param  Model  $model
+	 * @param  array  $attributes
+	 *
+	 * @return boolean
+	 */
 	public function update(Model $model, array $attributes)
 	{
 		if (isset($attributes['password']) && $attributes['password'] == '') {
 			unset($attributes['password']);
 		}
 
-		return parent::update($model, $attributes);
+		if (!$model->exists) {
+			throw new \RuntimeException('Cannot update non-existing model');
+		}
+
+		$this->validator->setKey($model->getKey());
+		
+		if (!$this->validator->validUpdate($attributes)) {
+			return false;
+		}
+
+		$model->fill($attributes);
+		$model->username = $attributes['username'];
+		$model->user_type = $attributes['user_type'];
+
+		return $model->save();
 	}
 
+	/**
+	 * Update a user's profile.
+	 *
+	 * @param  Model  $model
+	 * @param  array  $attributes
+	 *
+	 * @return boolean
+	 */
 	public function updateProfile(Model $model, array $attributes)
 	{
+		if (isset($attributes['password']) && $attributes['password'] == '') {
+			unset($attributes['password']);
+		}
+
 		$this->validator->setKey($model->getKey());
 
-		if (!$this->validator->validProfileUpdate($attributes, $model->getKey()))
+		if (!$this->validator->validProfileUpdate($attributes, $model->getKey())) {
 			return false;
+		}
 		
-		return $this->update($model, $attributes);
+		return $model->update($attributes);
 	}
 
+	/**
+	 * Process a bulk action on a set of users.
+	 *
+	 * @param  string $action
+	 * @param  array  $keys
+	 *
+	 * @return void
+	 */
 	public function processBulkAction($action, $keys)
 	{
 		$method = 'executeBulk' . ucfirst($action);
-		if (!method_exists($this, $method))
-			return;
+		if (!method_exists($this, $method)) {
+			throw new \InvalidArgumentException('');
+		}
 
 		$query = $this->model
 			->whereIn($this->model->getKeyName(), $keys);
@@ -156,6 +221,13 @@ class UserRepository extends \c\EloquentRepository
 		$this->$method($query);
 	}
 
+	/**
+	 * Bulk delete users.
+	 *
+	 * @param  Builder $query
+	 *
+	 * @return void
+	 */
 	protected function executeBulkDelete($query)
 	{
 		$query->delete();

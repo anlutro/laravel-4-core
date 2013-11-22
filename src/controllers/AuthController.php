@@ -61,8 +61,9 @@ class AuthController extends \c\Controller
 	public function attemptLogin()
 	{
 		$credentials = [
-			'username' => Input::get('username'),
-			'password' => Input::get('password'),
+			'username'  => Input::get('username'),
+			'password'  => Input::get('password'),
+			'is_active' => 1,
 		];
 
 		if (Auth::attempt($credentials)) {
