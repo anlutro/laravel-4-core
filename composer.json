@@ -22,6 +22,9 @@
         "classmap": [
             "src/controllers",
             "src/migrations"
+        ],
+        "files": [
+            "src/helpers.php"
         ]
     },
     "minimum-stability": "dev"

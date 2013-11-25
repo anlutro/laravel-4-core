@@ -206,7 +206,7 @@ class AuthController extends \c\Controller
 		]);
 		
 		if ($validator->fails()) {
-			return $this->redirect('reset')
+			return $this->redirect('reset', ['token' => $token])
 				->withErrors($validator);
 		}
 
