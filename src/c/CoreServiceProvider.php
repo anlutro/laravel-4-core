@@ -12,6 +12,7 @@ namespace c;
 use c\Auth\PasswordBroker;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 
 class CoreServiceProvider extends ServiceProvider
@@ -55,6 +56,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerLangFiles();
 		$this->registerViewFiles();
 		$this->requireRouteFile('core');
+		$this->addRouteFilters();
 
 		$userModel = $this->app['config']->get('auth.model', 'c\Auth\UserModel');
 		$this->app->bind('c\Auth\UserModel', $userModel);
@@ -87,6 +89,50 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		require $path . '/' . $file . '.php';
+	}
+
+	protected function addRouteFilters()
+	{
+		$this->app['router']->filter('auth', function($route, $request) {
+			if ($this->app['auth']->guest()) {
+				$message = $this->app['translator']->get('c::auth.login-required');
+
+				if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
+					return Response::json(['error' => $message], 403);
+				} else {
+					return $this->app['redirect']->action('AuthController@login')
+						->withErrors($message);
+				}
+			}
+		});
+
+		$this->app['router']->filter('access', function($route, $request, $params) {
+			if ($this->app['auth']->guest()) {
+				$message = $this->app['translator']->get('c::auth.login-required');
+
+				if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
+					return Response::json(['error' => $message], 403);
+				} else {
+					return $this->app['redirect']->action('AuthController@login')
+						->withErrors($message);
+				}
+			}
+
+			$user = $this->app['auth']->user();
+
+			foreach ((array) $params as $access) {
+				if (!$user->hasAccess($access)) {
+					$message = $this->app['translator']->get('c::auth.access-denied');
+
+					if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
+						return Response::json(['error' => $message], 403);
+					} else {
+						return $this->app['redirect']->to('/')
+							->withErrors($message);
+					}
+				}
+			}
+		});
 	}
 
 	protected function registerUserEvents($userModel)
