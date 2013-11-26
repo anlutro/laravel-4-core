@@ -44,7 +44,15 @@ class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
 
 	public function testDelete()
 	{
-		$query = $this->queryWhere('foo')->shouldReceive('delete')->once()->andReturn(true);
+		// $query = $this->queryWhere('foo')->shouldReceive('delete')->once()->andReturn(true);
+		$table = m::mock();
+		$query = m::mock();
+		$this->db->shouldReceive('table')->with('activations')
+			->once()->andReturn($table);
+		$table->shouldReceive('where')->with('code', '=', 'foo')
+			->once()->andReturn($query);
+		$query->shouldReceive('delete')->once()->andReturn(true);
+
 		$result = $this->repo->delete('foo');
 
 		$this->assertTrue($result);
