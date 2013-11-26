@@ -28,7 +28,7 @@ class AuthControllerTest extends TestCase
 	public function testLoginSuccess()
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
-		$credentials = array_only($input, ['username', 'password']);
+		$credentials = array_only($input, ['username', 'password']) + ['is_active' => true];
 		Facades\Auth::shouldReceive('attempt')->once()
 			->with($credentials)->andReturn(true);
 
@@ -41,7 +41,7 @@ class AuthControllerTest extends TestCase
 	public function testLoginFailure()
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
-		$credentials = array_only($input, ['username', 'password']);
+		$credentials = array_only($input, ['username', 'password']) + ['is_active' => true];
 		Facades\Auth::shouldReceive('attempt')->once()
 			->with($credentials)
 			->andReturn(false);
@@ -164,7 +164,7 @@ class AuthControllerTest extends TestCase
 
 		$this->postAction('attemptReset', [], $input);
 
-		$this->assertRedirectedTo('reset');
+		$this->assertRedirectedToAction('reset', ['token' => 'baz']);
 		$this->assertSessionHasErrors();
 	}
 

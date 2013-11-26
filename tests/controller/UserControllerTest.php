@@ -76,10 +76,9 @@ class UserControllerTest extends TestCase
 
 	protected function setUpIndexExpectations()
 	{
-		$this->users->shouldReceive('togglePagination')->once();
 		$this->users->shouldReceive('getUserTypes')->once()
 			->andReturn([]);
-		$this->users->shouldReceive('getAll')->once()
+		$this->users->shouldReceive('paginate->getAll')->once()
 			->andReturn([]);
 	}
 
@@ -151,7 +150,7 @@ class UserControllerTest extends TestCase
 	{
 		$id = 1; $user = $this->expectFindUser($id);
 		$curUser = $this->expectCurrentUser();
-		$curUser->shouldReceive('hasAccess')->with('admin')->andReturn(true);
+		$curUser->shouldReceive('hasAccess')->with('*')->once()->andReturn(true);
 
 		$this->getAction('show', [$id]);
 
@@ -219,7 +218,7 @@ class UserControllerTest extends TestCase
 		$input = ['foo' => 'bar'];
 		$user = $this->getMockUser(); $user->id = 1;
 		$this->users->shouldReceive('create')->once()
-			->with($input, false)->andReturn($user);
+			->with($input, true)->andReturn($user);
 
 		$this->postAction('store', [], $input);
 
@@ -263,6 +262,8 @@ class UserControllerTest extends TestCase
 
 	protected function getMockUser()
 	{
-		return m::mock('App\User')->makePartial();
+		$user = m::mock('App\User')->makePartial();
+		$user->is_active = '1';
+		return $user;
 	}
 }
