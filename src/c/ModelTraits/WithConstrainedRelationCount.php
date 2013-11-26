@@ -38,8 +38,11 @@ trait WithConstrainedRelationCount
 	{
 		$relations = (array) $relations;
 
-		if (!in_array($this->table . '.*', $query->columns)) {
-			$query->addSelect($this->table.'.*');
+		if (
+			$query->getQuery()->columns === null ||
+			!in_array($this->table . '.*', $query->getQuery()->columns)
+		) {
+			$query->addSelect($this->table . '.*');
 		}
 
 		foreach ($relations as $relation => $constraint) {
