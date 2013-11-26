@@ -38,6 +38,10 @@ trait WithConstrainedRelationCount
 	{
 		$relations = (array) $relations;
 
+		if (!in_array($this->table . '.*', $query->columns)) {
+			$query->addSelect($this->table.'.*');
+		}
+
 		foreach ($relations as $relation => $constraint) {
 			$instance = $this->$relation();
 
@@ -52,11 +56,13 @@ trait WithConstrainedRelationCount
 
 			$sql = $subQuery->toSql();
 
-			$query->mergeBindings($subQuery)
-				->addSelect(new Expression("($sql) as {$relation}_count"));
+			$query->addSelect(new Expression("($sql) as {$relation}_count"));
+
+			// mergeBindings doesn't work properly, will combine in the wrong order
+			$bindings = array_merge($subQuery->getBindings(), $query->getQuery()->getBindings());
+			$query->setBindings($bindings);
 		}
 
-		// dirty hack... if anyone knows how to avoid it please let me know!
-		return $query->addSelect($this->table.'.*');
+		return $query;
 	}
 }
