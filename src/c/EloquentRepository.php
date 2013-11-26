@@ -34,6 +34,13 @@ abstract class EloquentRepository
 	protected $paginate = false;
 
 	/**
+	 * Whether to throw exceptions or return null on single row queries.
+	 *
+	 * @var boolean
+	 */
+	protected $throwExceptions = false;
+
+	/**
 	 * Dependency inject the model.
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $model
@@ -61,6 +68,18 @@ abstract class EloquentRepository
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Toggle whether or not to throw exceptions on single row queries.
+	 *
+	 * @param  boolean $toggle
+	 *
+	 * @return void
+	 */
+	public function toggleExceptions($toggle = true)
+	{
+		$this->throwExceptions = (bool) $toggle;
 	}
 
 	/**
@@ -205,6 +224,10 @@ abstract class EloquentRepository
 	protected function fetchSingle($query)
 	{
 		$this->prepareQuery($query);
+
+		if ($this->throwExceptions === true) {
+			return $query->firstOrFail();
+		}
 
 		return $query->first();
 	}
