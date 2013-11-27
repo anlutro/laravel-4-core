@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\UserInterface;
 
-class UserModel extends Model implements UserInterface, RemindableInterface, ActivatableInterface
+class UserModel extends \c\Model implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	/**
 	 * The database table the model queries from.
