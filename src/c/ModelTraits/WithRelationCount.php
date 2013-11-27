@@ -31,6 +31,13 @@ trait WithRelationCount
 	 */
 	public function scopeWithRelationCount($query, $relations)
 	{
+		if (
+			$query->getQuery()->columns === null ||
+			!in_array($this->table . '.*', $query->getQuery()->columns)
+		) {
+			$query->addSelect($this->table . '.*');
+		}
+
 		$relations = (array) $relations;
 
 		foreach ($relations as $relation) {

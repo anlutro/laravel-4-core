@@ -19,41 +19,47 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 trait AddSubSelect
 {
 	/**
-	 * Add a subquery select to the builder.
+	 * Add subquery selects to the builder.
+	 * 
+	 * Because of the way the query builder stores bindings, you can only call
+	 * this method once - calling it more than once will screw up the order
+	 * of parameters being passed to the SQL query.
 	 *
-	 * @param  $query
-	 * @param  $subQuery  Can be a closure or a query builder instance.
-	 * @param  $as        What to select the subquery as (optional)
+	 * @param  Builder $query
+	 * @param  array   $subQuery  Associative array of alias => closure/query builder
 	 *
-	 * @return [type]           [description]
+	 * @return Builder
 	 */
-	public function scopeAddSubSelect($query, $subQuery, $as = null)
+	public function scopeAddSubSelects($query, array $subQueries)
 	{
-		if ($subQuery instanceof \Closure) {
-			$newQuery = $this->newQuery();
-			$subQuery($newQuery);
-			$subQuery = $newQuery;
-		} elseif ($subQuery instanceof EloquentBuilder) {
-			$subQuery = $subQuery->getQuery();
-		} elseif (!$subQuery instanceof QueryBuilder) {
-			throw new \InvalidArgumentException;
-		}
-
 		// if there aren't any columns selected already, we need to add the
 		// "default" one of table.* - maybe this should be removed.
-		if (empty($query->getQuery()->columns)) {
+		if (empty($query->getQuery()->columns) || !in_array($this->table . '.*', $query->getQuery()->columns)) {
 			$query->addSelect($this->table . '.*');			
 		}
 
-		// get the SQL from the builder
-		$sql = '(' . $subQuery->toSql() . ')';
-		if ($as !== null) {
-			$sql .= ' as ' . $as;
+		$bindings = [];
+
+		foreach ($subQueries as $alias => $subQuery) {
+			if ($subQuery instanceof \Closure) {
+				$newQuery = $this->newQuery();
+				$subQuery($newQuery);
+				$subQuery = $newQuery;
+			} elseif ($subQuery instanceof EloquentBuilder) {
+				$subQuery = $subQuery->getQuery();
+			} elseif (!$subQuery instanceof QueryBuilder) {
+				throw new \InvalidArgumentException;
+			}
+
+			// get the SQL from the builder
+			$sql = '(' . $subQuery->toSql() . ') as ' . $alias;
+
+			$query->addSelect( new Expression($sql) );
+			$bindings = array_merge($bindings, $subQuery->getBindings());
 		}
 
-		// and finally merge it all together
-		$query->mergeBindings($subQuery)
-			->addSelect( new Expression($sql) );
+		// mergeBindings doesn't work properly, will combine in the wrong order
+		$query->setBindings(array_merge($bindings, $query->getQuery()->getBindings()));
 
 		return $query;
 	}

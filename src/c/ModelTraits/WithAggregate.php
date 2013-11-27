@@ -39,6 +39,13 @@ trait WithAggregate
 	 */
 	public function scopeWithAggregate($query, $relation, $aggregate, $column)
 	{
+		if (
+			$query->getQuery()->columns === null ||
+			!in_array($this->table . '.*', $query->getQuery()->columns)
+		) {
+			$query->addSelect($this->table . '.*');
+		}
+
 		// get a new query builder for the related model
 		$builder = $this->$relation()
 			->getRelated()
@@ -60,7 +67,6 @@ trait WithAggregate
 		$query->mergeBindings($subQuery)
 			->addSelect( new Expression("($sql) as {$aggregate}_{$relation}_{$column}") );
 
-		// dirty hack... if anyone knows how to avoid it please let me know!
-		return $query->addSelect($this->table.'.*');
+		return $query;
 	}
 }

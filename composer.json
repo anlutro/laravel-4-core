@@ -10,6 +10,7 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.1.x",
+        "illuminate/database": "4.1.x",
         "nesbot/carbon": "*"
     },
     "require-dev": {
@@ -21,7 +22,8 @@
         },
         "classmap": [
             "src/controllers",
-            "src/migrations"
+            "src/migrations",
+            "tests/SQLiteTestCase.php"
         ],
         "files": [
             "src/helpers.php"
