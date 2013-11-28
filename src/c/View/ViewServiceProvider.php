@@ -41,6 +41,18 @@ class ViewServiceProvider extends ServiceProvider
 				$subItem->url = $this->app['url']->action('AuthController@logout');
 				$item->subMenu->addItem($subItem);
 
+				if ($this->app['auth']->user()->hasAccess('admin')) {
+					$subItem = $this->app['menubuilder']->item('users');
+					$subItem->title = $this->app['translator']->get('c::user.admin-userlist');
+					$subItem->url = $this->app['url']->action('UserController@index');
+					$item->subMenu->addItem($subItem);
+
+					$subItem = $this->app['menubuilder']->item('newuser');
+					$subItem->title = $this->app['translator']->get('c::user.admin-newuser');
+					$subItem->url = $this->app['url']->action('UserController@create');
+					$item->subMenu->addItem($subItem);
+				}
+				
 				$this->app['menubuilder']->add('right', $item);
 			}
 		}, -99); // low priority to force our menu to the right
