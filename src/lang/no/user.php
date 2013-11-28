@@ -1,6 +1,7 @@
 <?php
 return array(
 
+	'active-field' => 'Aktiv',
 	'admin-newuser' => 'Ny bruker',
 	'admin-edituser' => 'Rediger bruker',
 	'admin-title' => 'Administrasjon',
