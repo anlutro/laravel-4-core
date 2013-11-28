@@ -93,6 +93,12 @@ class CoreServiceProvider extends ServiceProvider
 
 	protected function addRouteFilters()
 	{
+		$this->registerAuthFilter();
+		$this->registerAccessFilter();
+	}
+
+	protected function registerAuthFilter()
+	{
 		$this->app['router']->filter('auth', function($route, $request) {
 			if ($this->app['auth']->guest()) {
 				$message = $this->app['translator']->get('c::auth.login-required');
@@ -105,20 +111,14 @@ class CoreServiceProvider extends ServiceProvider
 				}
 			}
 		});
+	}
 
+	protected function registerAccessFilter()
+	{
 		$this->app['router']->filter('access', function($route, $request, $params) {
-			if ($this->app['auth']->guest()) {
-				$message = $this->app['translator']->get('c::auth.login-required');
-
-				if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
-					return Response::json(['error' => $message], 403);
-				} else {
-					return $this->app['redirect']->action('AuthController@login')
-						->withErrors($message);
-				}
+			if (!$user = $this->app['auth']->user()) {
+				throw new \RuntimeException('auth filter must precede access filter');
 			}
-
-			$user = $this->app['auth']->user();
 
 			foreach ((array) $params as $access) {
 				if (!$user->hasAccess($access)) {
