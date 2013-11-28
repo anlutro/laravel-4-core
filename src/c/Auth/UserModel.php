@@ -11,11 +11,10 @@ namespace c\Auth;
 
 use c\Auth\Activation\ActivatableInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\UserInterface;
 
-class UserModel extends \c\Model implements UserInterface, RemindableInterface, ActivatableInterface
+class UserModel extends \c\BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	/**
 	 * The database table the model queries from.
