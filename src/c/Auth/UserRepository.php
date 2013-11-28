@@ -185,7 +185,7 @@ class UserRepository extends \c\EloquentRepository
 		$model->username = $attributes['username'];
 		$model->user_type = $attributes['user_type'];
 
-		if (isset($attributes['is_active']) && $attributes['is_active'] === true) {
+		if (isset($attributes['is_active']) && $attributes['is_active'] !== false) {
 			return $model->activate();
 		} else {
 			return $model->deactivate();
