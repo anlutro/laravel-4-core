@@ -12,9 +12,8 @@ namespace c\Auth;
 use c\Auth\Activation\ActivatableInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\UserInterface;
 
-class UserModel extends \c\BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
+class UserModel extends \c\BaseModel implements RemindableInterface, ActivatableInterface
 {
 	/**
 	 * The database table the model queries from.
@@ -80,11 +79,19 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	}
 
 	/**
+	 * Setter for is_active.
+	 */
+	public function setIsActiveAttribute($value)
+	{
+		$this->attributes['is_active'] = $value ? '1' : '0';
+	}
+
+	/**
 	 * Make sure is_active returns the proper boolean.
 	 */
-	public function getIsActiveAttribute()
+	public function getIsActiveAttribute($value)
 	{
-		return $this->attributes['is_active'] === '1';
+		return $value === '1';
 	}
 
 	/********************
@@ -214,7 +221,7 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 
 	public function activate()
 	{
-		$this->attributes['is_active'] = true;
+		$this->is_active = true;
 		return $this->save();
 	}
 

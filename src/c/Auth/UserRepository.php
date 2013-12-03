@@ -77,7 +77,9 @@ class UserRepository extends \c\EloquentRepository
 		$query = $this->model->newQuery();
 
 		foreach ($credentials as $key => $value) {
-			if (strpos($key, 'password') !== false) $query->where($key, '=', $value);
+			if (strpos($key, 'password') === false) {
+				$query->where($key, '=', $value);
+			}
 		}
 
 		return $query->first();
