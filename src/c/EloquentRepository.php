@@ -134,18 +134,6 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * Get a new instance of the repository's model.
-	 *
-	 * @param  array  $attributes optional
-	 *
-	 * @return Illuminate\Database\Eloquent\Model
-	 */
-	public function getNew(array $attributes = array())
-	{
-		return $this->model->newInstance($attributes);
-	}
-
-	/**
 	 * Save changes an existing model instance.
 	 *
 	 * @param  Illuminate\Database\Eloquent\Model $model
@@ -183,6 +171,22 @@ abstract class EloquentRepository
 	}
 
 	/**
+	 * Create and validate a new model instance without saving it.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function getNew(array $attributes = array())
+	{
+		if (!$this->validator->validCreate($attributes)) {
+			return false;
+		}
+
+		return $this->model->newInstance($attributes);
+	}
+
+	/**
 	 * Create a new model instance and save it to the database.
 	 *
 	 * @param  array  $attributes optional
@@ -191,11 +195,14 @@ abstract class EloquentRepository
 	 */
 	public function create(array $attributes = array())
 	{
-		if (!$this->validator->validCreate($attributes)) {
+		$model = $this->getNew($attributes);
+
+		if (!$model) {
 			return false;
 		}
 
-		return $this->model->create($attributes);
+		$model->save();
+		return $model;
 	}
 
 	/**
