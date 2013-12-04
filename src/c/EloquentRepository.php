@@ -80,6 +80,8 @@ abstract class EloquentRepository
 	public function toggleExceptions($toggle = true)
 	{
 		$this->throwExceptions = (bool) $toggle;
+
+		return $this;
 	}
 
 	/**
