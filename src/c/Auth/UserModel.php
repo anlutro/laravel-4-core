@@ -10,10 +10,11 @@
 namespace c\Auth;
 
 use c\Auth\Activation\ActivatableInterface;
+use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
 
-class UserModel extends \c\BaseModel implements RemindableInterface, ActivatableInterface
+class UserModel extends \c\BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	/**
 	 * The database table the model queries from.
