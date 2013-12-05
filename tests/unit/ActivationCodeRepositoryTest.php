@@ -20,9 +20,10 @@ class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		// query expectation has to be defined first for some reason
 		$this->query()->shouldReceive('insert')->with(m::on(function($data) {
-			return ($data['code'] == 'foo') && ($data['email'] == 'test@example.com')
-				&& ($data['expires'] instanceof Carbon\Carbon);
-		}))->andReturn(true);
+			return $data['expires'] instanceof Carbon\Carbon;
+		}))->andReturnUsing(function($data) {
+			return $data['code'] === 'foo' && $data['email'] === 'test@example.com';
+		});
 		
 		$user = m::mock('c\Auth\Activation\ActivatableInterface');
 		$user->shouldReceive('getActivationEmail')->once()->andReturn('test@example.com');
