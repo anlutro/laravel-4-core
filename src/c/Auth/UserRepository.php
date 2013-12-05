@@ -114,11 +114,10 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function create(array $attributes = array(), $activate = false)
 	{
-		if (!$this->validator->validCreate($attributes)) {
+		if (!$user = $this->getNew($attributes)) {
 			return false;
 		}
-
-		$user = $this->getNew($attributes);
+		
 		$user->username = $attributes['username'];
 		$user->user_type = $attributes['user_type'];
 

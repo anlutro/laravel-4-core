@@ -21,6 +21,7 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	public function tearDown()
 	{
 		(new CreateUserTable)->down();
+		m::close();
 	}
 
 	public function testGetByCredentials()
@@ -53,8 +54,6 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 
 	public function testCreateWithoutActivation()
 	{
-		$this->markTestIncomplete();
-
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		c\Auth\Activation\Activation::setFacadeApplication(null);
