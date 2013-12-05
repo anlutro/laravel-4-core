@@ -23,6 +23,14 @@ class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterf
 		$this->table = $table;
 	}
 
+	/**
+	 * Create a new activation code row in the database.
+	 *
+	 * @param  ActivatableInterface $user
+	 * @param  string               $code
+	 *
+	 * @return int  number of inserted rows
+	 */
 	public function create(ActivatableInterface $user, $code)
 	{
 		$dt = Carbon::now()->addDay();
@@ -36,6 +44,13 @@ class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterf
 		return $this->newQuery()->insert($data);
 	}
 
+	/**
+	 * Retrieve a code from the database.
+	 *
+	 * @param  string $code
+	 *
+	 * @return array
+	 */
 	public function retrieveByCode($code)
 	{
 		$dt = Carbon::now();
@@ -45,23 +60,52 @@ class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterf
 			->first();
 	}
 
+	/**
+	 * Delete a code from the database.
+	 *
+	 * @param  string $code
+	 *
+	 * @return int  number of affected rows
+	 */
 	public function delete($code)
 	{
 		return $this->findCodeQuery($code)->delete();
 	}
 
+	/**
+	 * Delete all codes belonging to a user.
+	 *
+	 * @param  ActivatableInterface $user
+	 *
+	 * @return int  number of affected rows
+	 */
 	public function deleteUser(ActivatableInterface $user)
 	{
 		return $this->newQuery()
-			->where('email', '=', $user->getActivationEmail());
+			->where('email', '=', $user->getActivationEmail())
+			->delete();
 	}
 
+	/**
+	 * Get a new query builder for a certain code.
+	 *
+	 * @param  string $code
+	 *
+	 * @return \Illuminate\Database\Query\Builder
+	 */
 	protected function findCodeQuery($code)
 	{
 		return $this->newQuery()
 			->where('code', '=', $code);
 	}
 
+	/**
+	 * Get a new query builder for a certain code.
+	 *
+	 * @param  string $code
+	 *
+	 * @return \Illuminate\Database\Query\Builder
+	 */
 	protected function newQuery()
 	{
 		return $this->db->table($this->table);

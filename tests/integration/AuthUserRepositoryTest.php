@@ -64,6 +64,56 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 		$this->assertFalse($user->is_active, 'User is not active.');
 	}
 
+	public function testUpdateWithBlankPassword()
+	{
+		$repo = $this->makeRepository();
+		$this->validator->shouldReceive('setKey')->once();
+		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
+
+		$user = $this->createUser('name', 'pass');
+		$oldpw = $user->password;
+		$input = ['name' => 'New Name', 'password' => ''];
+
+		$repo->update($user, $input);
+
+		$this->assertEquals('New Name', $user->name);
+		$this->assertEquals($oldpw, $user->password);
+	}
+
+	public function testUpdateWithNewPassword()
+	{
+		$repo = $this->makeRepository();
+		$this->validator->shouldReceive('setKey')->once();
+		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
+
+		$user = $this->createUser('name', 'pass');
+		$oldpw = $user->password;
+		$input = ['name' => 'New Name', 'password' => 'newpass'];
+
+		$repo->update($user, $input);
+
+		$this->assertEquals('New Name', $user->name);
+		$this->assertNotEquals($oldpw, $user->password);
+	}
+
+	public function testUpdateProfileUpdatesCorrectFields()
+	{
+		$repo = $this->makeRepository();
+		$this->validator->shouldReceive('setKey')->once();
+		$this->validator->shouldReceive('validProfileUpdate')->once()->andReturn(true);
+
+		$user = $this->createUser('name', 'pass', 'user');
+		$oldpw = $user->password;
+		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'admin', 'username' => 'newname'];
+
+		$repo->updateProfile($user, $input);
+
+		$this->assertEquals('New Name', $user->name);
+		$this->assertNotEquals($oldpw, $user->password);
+		$this->assertEquals('name', $user->username);
+		$this->assertEquals('user', $user->user_type);
+	}
+
 	protected function makeRepository()
 	{
 		$this->model = new User;

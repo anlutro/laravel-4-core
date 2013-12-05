@@ -140,7 +140,7 @@ class UserRepository extends \c\EloquentRepository
 	public function activate($activationCode)
 	{
 		if (empty($activationCode)) {
-			throw new \InvalidArgumentException;
+			throw new \InvalidArgumentException('Activation code missing');
 		}
 
 		return Activation::activate($activationCode);
@@ -183,8 +183,14 @@ class UserRepository extends \c\EloquentRepository
 		}
 
 		$model->fill($attributes);
-		$model->username = $attributes['username'];
-		$model->user_type = $attributes['user_type'];
+
+		if (!empty($attributes['username'])) {
+			$model->username = $attributes['username'];
+		}
+		
+		if (!empty($attributes['user_type'])) {
+			$model->user_type = $attributes['user_type'];
+		}
 
 		if (isset($attributes['is_active']) && $attributes['is_active'] !== false) {
 			return $model->activate();

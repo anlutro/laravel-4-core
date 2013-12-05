@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Database\Migration;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
 class CreateUserActivationTable extends Migration
