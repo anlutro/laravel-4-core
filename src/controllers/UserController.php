@@ -286,16 +286,15 @@ class UserController extends \c\Controller
 		return $this->users->getUserTypes();
 	}
 
+	/**
+	 * Check if user activation is enabled.
+	 *
+	 * @return boolean
+	 */
 	private function activationEnabled()
 	{
-		$loadedProviders = App::getLoadedProviders();
-
-		if (!isset($loadedProviders['c\Auth\Activation\ActivationServiceProvider'])) {
-			return false;
-		}
-
-		// return Config::get('c::user.activation-enabled', false);
-		
-		return true;
+		$loaded = App::getLoadedProviders();
+		$provider = 'c\Auth\Activation\ActivationServiceProvider';
+		return isset($loadedProviders[$provider]);
 	}
 }
