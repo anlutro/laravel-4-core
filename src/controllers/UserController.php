@@ -279,7 +279,7 @@ class UserController extends \c\Controller
 	 */
 	private function getUserTypes()
 	{
-		if (!Auth::check() || !Auth::user()->hasAccess('*')) {
+		if (!Auth::check() || !Auth::user()->hasAccess('admin')) {
 			return false;
 		}
 
