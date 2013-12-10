@@ -229,10 +229,14 @@ abstract class EloquentRepository
 		$this->prepareQuery($query);
 
 		if ($this->paginate === false) {
-			return $query->get();
+			$results = $query->get();
+			$this->prepareCollection($results);
 		} else {
-			return $query->paginate($this->paginate);
+			$results = $query->paginate($this->paginate);
+			$this->preparePaginator($results);
 		}
+
+		return $results;
 	}
 
 	/**
@@ -247,21 +251,57 @@ abstract class EloquentRepository
 		$this->prepareQuery($query);
 
 		if ($this->throwExceptions === true) {
-			return $query->firstOrFail();
+			$result = $query->firstOrFail();
+		} else {
+			$result = $query->first();
 		}
 
-		return $query->first();
+		$this->prepareModel($result);
+
+		return $result;
 	}
 
 	/**
 	 * This method is called before fetchMany and fetchSingle. Use it to add
 	 * functionality that should be present on every query.
 	 *
-	 * @param  $query  query builder instance/reference
+	 * @param  \Illuminate\Database\Eloquent\Builder $query
 	 *
 	 * @return void
 	 */
 	protected function prepareQuery($query) {}
+
+	/**
+	 * This method is called after fetchMany when pagination === false. Use it
+	 * to perform operations on a collection of models before it is returned
+	 * from the repository.
+	 *
+	 * @param  \Illuminate\Database\Eloquent\Collection $collection
+	 *
+	 * @return void
+	 */
+	protected function prepareCollection($collection) {}
+
+	/**
+	 * This method is called after fetchMany when pagination is enabled. Use it
+	 * to perform operations on a paginator object before it is returned from
+	 * the repository.
+	 *
+	 * @param  \Illuminate\Pagination\Paginator $paginator
+	 *
+	 * @return void
+	 */
+	protected function preparePaginator($paginator) {}
+
+	/**
+	 * This method is called after fetchSingle. Use it to prepare a model before
+	 * it is returned by the repository.
+	 *
+	 * @param  \Illuminate\Database\Eloquent\Model $model
+	 *
+	 * @return void
+	 */
+	protected function prepareModel($model) {}
 
 	/**
 	 * Get the validation errors.
