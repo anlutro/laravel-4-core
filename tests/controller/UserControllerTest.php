@@ -205,7 +205,7 @@ class UserControllerTest extends TestCase
 
 	public function testCreate()
 	{
-		$this->users->shouldReceive('getNew')->once()
+		$this->users->shouldReceive('newInstance')->once()
 			->andReturn($this->getMockUser());
 
 		$this->getAction('create');
