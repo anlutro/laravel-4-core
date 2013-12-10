@@ -234,6 +234,6 @@ class AuthController extends \c\Controller
 	{
 		$loaded = App::getLoadedProviders();
 		$provider = 'c\Auth\Reminders\ReminderServiceProvider';
-		return isset($loadedProviders[$provider]);
+		return isset($loaded[$provider]);
 	}
 }

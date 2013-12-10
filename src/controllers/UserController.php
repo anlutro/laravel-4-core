@@ -295,6 +295,6 @@ class UserController extends \c\Controller
 	{
 		$loaded = App::getLoadedProviders();
 		$provider = 'c\Auth\Activation\ActivationServiceProvider';
-		return isset($loadedProviders[$provider]);
+		return isset($loaded[$provider]);
 	}
 }
