@@ -187,6 +187,18 @@ abstract class EloquentRepository
 	}
 
 	/**
+	 * Get a new model instance.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function newInstance(array $attributes = array())
+	{
+		return $this->model->newInstance($attributes);
+	}
+
+	/**
 	 * Create a new model instance and save it to the database.
 	 *
 	 * @param  array  $attributes optional
