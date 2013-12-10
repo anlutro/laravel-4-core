@@ -233,8 +233,7 @@ class UserController extends \c\Controller
 	{
 		return View::make('c::user.form', [
 			'pageTitle'  => Lang::get('c::user.admin-newuser'),
-			// 'user'       => $this->users->newInstance(),
-			'user'       => [],
+			'user'       => $this->users->newInstance(),
 			'userTypes'  => $this->getUserTypes(),
 			'formAction' => $this->url('store'),
 			'backUrl'    => $this->url('index'),
