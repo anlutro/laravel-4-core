@@ -46,7 +46,7 @@ class AuthController extends \c\Controller
 			'formAction' => $this->url('attemptLogin'),
 		];
 
-		if ($this->routeExists('reminder')) {
+		if ($this->remindersEnabled()) {
 			$viewData['resetUrl'] = $this->url('reminder');
 		}
 		
@@ -226,12 +226,14 @@ class AuthController extends \c\Controller
 	}
 
 	/**
-	 * Check if a route exists.
+	 * Check if user activation is enabled.
+	 *
+	 * @return boolean
 	 */
-	private function routeExists($action)
+	private function remindersEnabled()
 	{
-		$action = $this->parseAction($action);
-		return \Illuminate\Support\Facades\Route::getRoutes()
-			->getByAction($action) !== null;
+		$loaded = App::getLoadedProviders();
+		$provider = 'c\Auth\Reminders\ReminderServiceProvider';
+		return isset($loadedProviders[$provider]);
 	}
 }
