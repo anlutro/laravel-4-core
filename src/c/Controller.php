@@ -24,19 +24,12 @@ abstract class Controller extends \Illuminate\Routing\Controller
 	 *
 	 * @param  string $action name of the action to look for
 	 * @param  array  $params route parameters
-	 * @param  array  $get    GET parameters
 	 *
 	 * @return string         the URL to the action.
 	 */
-	protected function url($action, $params = array(), $get = array())
+	protected function url($action, $params = array())
 	{
-		$url = URL::action($this->parseAction($action), $params);
-
-		if (!empty($get)) {
-			$url .= '?' . http_build_query($get);
-		}
-
-		return $url;
+		return URL::action($this->parseAction($action), $params);
 	}
 
 	/**
@@ -57,9 +50,9 @@ abstract class Controller extends \Illuminate\Routing\Controller
 	 *
 	 * @return Redirect       a Redirect response.
 	 */
-	protected function redirect($action, $params = array(), $get = array())
+	protected function redirect($action, $params = array())
 	{
-		return Redirect::to($this->url($action, $params, $get));
+		return Redirect::to($this->url($action, $params));
 	}
 
 	/**
