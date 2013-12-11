@@ -177,7 +177,7 @@ abstract class EloquentRepository
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function getNew(array $attributes = array())
+	public function makeNew(array $attributes = array())
 	{
 		if (!$this->validator->validCreate($attributes)) {
 			return false;
@@ -193,7 +193,7 @@ abstract class EloquentRepository
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function newInstance(array $attributes = array())
+	public function getNew(array $attributes = array())
 	{
 		return $this->model->newInstance($attributes);
 	}
@@ -207,7 +207,7 @@ abstract class EloquentRepository
 	 */
 	public function create(array $attributes = array())
 	{
-		$model = $this->getNew($attributes);
+		$model = $this->makeNew($attributes);
 
 		if (!$model) {
 			return false;

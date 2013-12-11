@@ -61,6 +61,31 @@ class AuthControllerTest extends TestCase
 		$this->assertRedirectedToAction('login');
 	}
 
+	public function testRegisterView()
+	{
+		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+
+		$this->repo->shouldReceive('getNew')->andReturn($this->getMockUser());
+
+		$this->getAction('register');
+
+		$this->assertResponseOk();
+	}
+
+	public function testRegisterSubmit()
+	{
+		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+
+		$input = ['foo' => 'bar'];
+		$this->repo->shouldReceive('create')->once()
+			->with($input)->andReturn(true);
+
+		$this->postAction('attemptRegistration', $input);
+
+		$this->assertRedirectedToAction('login');
+		$this->assertSessionHas('success');
+	}
+
 	public function testResetStepOneForm()
 	{
 		$this->getAction('reminder');

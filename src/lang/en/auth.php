@@ -2,6 +2,8 @@
 return array(
 
 	'access-denied' => 'You do not have access to this part of the site.',
+	'activate-title' => 'Activate your account',
+	'activate-text' => 'Your account needs to be activated before you can log in. Click the link below to activate your account now.',
 	'confirm-password' => 'Confirm password',
 	'invalid-password' => 'Invalid password.',
 	'login-failure' => 'Invalid login, please try again.',

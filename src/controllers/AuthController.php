@@ -94,7 +94,7 @@ class AuthController extends \c\Controller
 	 */
 	public function register()
 	{
-		return View::make('auth.register', [
+		return View::make('c::auth.register', [
 			'user'       => $this->users->getNew(),
 			'formAction' => $this->url('attemptRegistration'),
 		]);
@@ -226,7 +226,7 @@ class AuthController extends \c\Controller
 	}
 
 	/**
-	 * Check if user activation is enabled.
+	 * Check if password reminders are enabled.
 	 *
 	 * @return boolean
 	 */
