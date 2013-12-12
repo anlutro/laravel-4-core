@@ -9,8 +9,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.1.x",
-        "illuminate/database": "4.1.x",
+        "illuminate/support": "*",
+        "illuminate/database": "*",
         "nesbot/carbon": "*"
     },
     "require-dev": {
