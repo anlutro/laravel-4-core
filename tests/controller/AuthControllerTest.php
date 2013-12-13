@@ -80,7 +80,7 @@ class AuthControllerTest extends TestCase
 		$this->repo->shouldReceive('create')->once()
 			->with($input)->andReturn(true);
 
-		$this->postAction('attemptRegistration', $input);
+		$this->postAction('attemptRegistration', [], $input);
 
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHas('success');
