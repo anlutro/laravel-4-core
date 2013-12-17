@@ -128,7 +128,7 @@ abstract class EloquentRepository
 	public function getByKey($key)
 	{
 		$query = $this->model->newQuery()
-			->where($this->model->getKeyName(), $key);
+			->where($this->model->getQualifiedKeyName(), $key);
 
 		return $this->fetchSingle($query);
 	}
