@@ -46,7 +46,7 @@ class UserRepository extends \c\EloquentRepository
 	 * Prepare the query. This function is called before every getAll() and
 	 * other functions that utilize $this->runQuery()
 	 */
-	protected function prepareQuery($query)
+	protected function prepareQuery($query, $many)
 	{
 		if ($this->search) {
 			$query->searchFor($this->search);
