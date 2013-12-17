@@ -226,7 +226,7 @@ abstract class EloquentRepository
 	 */
 	protected function fetchMany($query)
 	{
-		$this->prepareQuery($query);
+		$this->prepareQuery($query, true);
 
 		if ($this->paginate === false) {
 			$results = $query->get();
@@ -248,7 +248,7 @@ abstract class EloquentRepository
 	 */
 	protected function fetchSingle($query)
 	{
-		$this->prepareQuery($query);
+		$this->prepareQuery($query, false);
 
 		if ($this->throwExceptions === true) {
 			$result = $query->firstOrFail();
@@ -266,10 +266,11 @@ abstract class EloquentRepository
 	 * functionality that should be present on every query.
 	 *
 	 * @param  \Illuminate\Database\Eloquent\Builder $query
+	 * @param  boolean $many  Whether the query is fetching one or many rows
 	 *
 	 * @return void
 	 */
-	protected function prepareQuery($query) {}
+	protected function prepareQuery($query, $many) {}
 
 	/**
 	 * This method is called after fetchMany when pagination === false. Use it

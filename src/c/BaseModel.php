@@ -7,4 +7,9 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model implements \JsonSeri
 	{
 		return $this->toArray();
 	}
+
+	public function newCollection(array $models = array())
+	{
+		return new \c\BaseCollection($models);
+	}
 }
