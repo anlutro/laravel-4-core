@@ -256,8 +256,10 @@ abstract class EloquentRepository
 			$result = $query->first();
 		}
 
-		$this->prepareModel($result);
-
+		if ($result) {
+			$this->prepareModel($result);
+		}
+		
 		return $result;
 	}
 
