@@ -17,11 +17,40 @@ use Carbon\Carbon;
 
 class CoreServiceProvider extends ServiceProvider
 {
+	/**
+	 * Whether or not the service provider should be deferred/lazy loaded.
+	 *
+	 * @var boolean
+	 */
 	protected $defer = false;
+
+	/**
+	 * The name of the package.
+	 *
+	 * @var string
+	 */
 	protected $package;
+
+	/**
+	 * The namespace that should be registered with the config, translator,
+	 * view finder and so on.
+	 *
+	 * @var string
+	 */
 	protected $namespace;
+
+	/**
+	 * The path to the packages's src directory.
+	 *
+	 * @var string
+	 */
 	protected $srcPath;
 
+	/**
+	 * Register IoC bindings.
+	 *
+	 * @return void
+	 */
 	public function register()
 	{
 		$this->commands([
@@ -30,6 +59,11 @@ class CoreServiceProvider extends ServiceProvider
 		]);
 	}
 
+	/**
+	 * Run on application boot.
+	 *
+	 * @return void
+	 */
 	public function boot()
 	{
 		$this->package = 'anlutro/l4-core';
@@ -46,11 +80,21 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerUserEvents($userModel);
 	}
 
+	/**
+	 * Register our language file location with the translator.
+	 *
+	 * @return void
+	 */
 	protected function registerLangFiles()
 	{
 		$this->app['translator']->addNamespace($this->namespace, $this->srcPath . '/lang');
 	}
 
+	/**
+	 * Register our views with the view file loader.
+	 *
+	 * @return void
+	 */
 	protected function registerViewFiles()
 	{
 		$appView = $this->getAppViewPath($this->package, $this->namespace);
@@ -62,6 +106,13 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app['view']->addNamespace($this->namespace, $this->srcPath . '/views');
 	}
 
+	/**
+	 * Include the route file for the correct locale.
+	 *
+	 * @param  string $file
+	 *
+	 * @return void
+	 */
 	protected function requireRouteFile($file)
 	{
 		$locale = $this->app['translator']->getLocale();
@@ -74,12 +125,22 @@ class CoreServiceProvider extends ServiceProvider
 		require $path . '/' . $file . '.php';
 	}
 
+	/**
+	 * Add route filters.
+	 * 
+	 * @return void
+	 */
 	protected function addRouteFilters()
 	{
 		$this->registerAuthFilter();
 		$this->registerAccessFilter();
 	}
 
+	/**
+	 * Register our custom auth filter.
+	 *
+	 * @return void
+	 */
 	protected function registerAuthFilter()
 	{
 		$this->app['router']->filter('auth', function($route, $request) {
@@ -96,6 +157,11 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	/**
+	 * Register the access level filter.
+	 *
+	 * @return void
+	 */
 	protected function registerAccessFilter()
 	{
 		$this->app['router']->filter('access', function($route, $request, $params) {
@@ -118,6 +184,13 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	/**
+	 * Register the user model events.
+	 *
+	 * @param  string $userModel
+	 *
+	 * @return void
+	 */
 	protected function registerUserEvents($userModel)
 	{
 		// set a random login token on creation.
