@@ -10,6 +10,8 @@
 namespace c;
 
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Contracts\MessageProviderInterface;
+use Illuminate\Support\Contracts\ArrayableInterface;
 
 /**
  * Abstract class for basic API functionality.
@@ -25,9 +27,7 @@ abstract class ApiController extends Controller
 	 */
 	protected function success($messages = null)
 	{
-		$data = ['status' => 'success'];
-		$this->addMessages($messages, $data);
-
+		$data = $this->getStatusData('success', $messages);
 		return Response::json($data, 200);
 	}
 
@@ -40,12 +40,7 @@ abstract class ApiController extends Controller
 	 */
 	protected function error($errors)
 	{
-		if ($errors instanceof ArrayableInterface) {
-			$errors = $errors->toArray();
-		}
-
-		$data = ['status' => 'error', 'errors' => $errors];
-
+		$data = $this->getStatusData('error', $messages, 'errors');
 		return Response::json($data, 400);
 	}
 
@@ -58,28 +53,35 @@ abstract class ApiController extends Controller
 	 */
 	protected function notFound($messages = null)
 	{
-		$data = ['status' => 'not-found'];
-		$this->addMessages($messages, $data);
-
+		$data = $this->getStatusData('not-found', $messages);
 		return Response::json($data, 404);
 	}
 
 	/**
-	 * Add messages to an array of response data.
+	 * Get an array of a status message response.
 	 *
+	 * @param  string $status
 	 * @param  mixed  $messages optional
-	 * @param  array &$data     the data that is sent to Response::json later on
+	 * @param  string $msgKey   optional
 	 *
-	 * @return void
+	 * @return array
 	 */
-	protected function addMessages($messages, &$data)
+	protected function getStatusData($status, $messages = null, $msgKey = 'messages')
 	{
+		$data = ['status' => $status];
+
 		if ($messages !== null) {
+			if ($errors instanceof MessageProviderInterface) {
+				$errors = $errors->getMessageBag();
+			}
+
 			if ($messages instanceof ArrayableInterface) {
 				$messages = $messages->toArray();
 			}
 
-			$data['messages'] = $messages;
+			$data[$key] = $messages;
 		}
+
+		return $data;
 	}
 }
