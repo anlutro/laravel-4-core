@@ -53,7 +53,7 @@ abstract class Validator
 	{
 		$rules = $this->prepareRules($rules);
 		$this->validator = VFactory::make($attributes, $rules);
-		$this->prepareValidator($v);
+		$this->prepareValidator($this->validator);
 		return $this->validator->passes();
 	}
 
@@ -109,11 +109,11 @@ abstract class Validator
 	 * Prepare the validator class before checking if it passes or not. Useful
 	 * for adding sometimes() calls or similar.
 	 *
-	 * @param  \Illuminate\Validation\Validator $v
+	 * @param  \Illuminate\Validation\Validator $validator
 	 *
 	 * @return void
 	 */
-	protected function prepareValidator($v) {}
+	protected function prepareValidator($validator) {}
 
 	/**
 	 * Missing method calls to this class will be passed on to the underlying
