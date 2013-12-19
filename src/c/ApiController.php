@@ -40,7 +40,7 @@ abstract class ApiController extends \Illuminate\Routing\Controller
 	 */
 	protected function error($errors)
 	{
-		$data = $this->getStatusData('error', $messages, 'errors');
+		$data = $this->getStatusData('error', $errors, 'errors');
 		return Response::json($data, 400);
 	}
 
@@ -71,15 +71,15 @@ abstract class ApiController extends \Illuminate\Routing\Controller
 		$data = ['status' => $status];
 
 		if ($messages !== null) {
-			if ($errors instanceof MessageProviderInterface) {
-				$errors = $errors->getMessageBag();
+			if ($messages instanceof MessageProviderInterface) {
+				$messages = $messages->getMessageBag();
 			}
 
 			if ($messages instanceof ArrayableInterface) {
 				$messages = $messages->toArray();
 			}
 
-			$data[$key] = $messages;
+			$data[$msgKey] = $messages;
 		}
 
 		return $data;
