@@ -53,7 +53,7 @@ class UserRepository extends \c\EloquentRepository
 		}
 
 		if ($this->filter) {
-			$query->filterUserType($this->filter);
+			$query->whereUserType($this->filter);
 		}
 	}
 

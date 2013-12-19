@@ -72,10 +72,18 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	/**
 	 * Filter user types.
 	 * 
-	 * $query->filterUserType('superuser')->get();
+	 * $query->whereUserType('superuser')->get();
 	 */
-	public function scopeFilterUserLevel($query, $level)
+	public function scopeWhereUserType($query, $level)
 	{
+		if (!is_int($level)) {
+			if (!array_key_exists($level, static::$accessLevels)) {
+				throw new \InvalidArgumentException("Invalid access level: $level");
+			}
+
+			$level = static::$accessLevels[$level];
+		}
+
 		return $query->where('user_level', '>=', $level);
 	}
 
@@ -88,7 +96,7 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	}
 
 	/**
-	 * Make sure is_active returns the proper boolean.
+	 * Getter for is_active.
 	 */
 	public function getIsActiveAttribute($value)
 	{
@@ -228,7 +236,7 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 
 	public function deactivate()
 	{
-		$this->attributes['is_active'] = false;
+		$this->is_active = false;
 		return $this->save();
 	}
 
