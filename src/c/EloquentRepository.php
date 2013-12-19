@@ -17,12 +17,12 @@ use Illuminate\Database\Eloquent\Model;
 abstract class EloquentRepository
 {
 	/**
-	 * @var Illuminate\Database\Eloquent\Model
+	 * @var \Illuminate\Database\Eloquent\Model
 	 */
 	protected $model;
 
 	/**
-	 * @var c\Validator
+	 * @var \c\Validator
 	 */
 	protected $validator;
 
@@ -41,9 +41,8 @@ abstract class EloquentRepository
 	protected $throwExceptions = false;
 
 	/**
-	 * Dependency inject the model.
-	 *
-	 * @param Illuminate\Database\Eloquent\Model $model
+	 * @param \Illuminate\Database\Eloquent\Model $model
+	 * @param \c\Validator $validator
 	 */
 	public function __construct(Model $model, Validator $validator)
 	{
@@ -55,7 +54,7 @@ abstract class EloquentRepository
 	 * Toggle pagination. False or no arguments to disable pagination, otherwise
 	 * provide a number of items to show per page.
 	 *
-	 * @param  mixed $paginate
+	 * @param  false|int $paginate
 	 *
 	 * @return void
 	 */
