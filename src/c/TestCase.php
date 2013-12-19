@@ -137,12 +137,12 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 	 *
 	 * @return void
 	 */
-	public function assertInputHasValue($id, $value)
+	public function assertInputHasValue($id, $expected)
 	{
-		$realValue = $this->crawler->filter('input#'.$id)->first()->attr('value');
+		$value = $this->crawler->filter('input#'.$id)->first()->attr('value');
 
-		$this->assertEquals($realValue, $value,
-			"Unexpected value in input#{$id}: $realValue -- expected $value");
+		$this->assertEquals($expected, $value,
+			"Unexpected value in input#{$id}: $value -- expected $expected");
 	}
 
 	/**
