@@ -49,10 +49,11 @@ abstract class Validator
 	 *
 	 * @return boolean
 	 */
-	protected function valid($rules, $attributes)
+	protected function valid(array $rules, array $attributes)
 	{
 		$rules = $this->prepareRules($rules);
 		$this->validator = VFactory::make($attributes, $rules);
+		$this->prepareValidator($v);
 		return $this->validator->passes();
 	}
 
@@ -64,7 +65,7 @@ abstract class Validator
 	 *
 	 * @return boolean
 	 */
-	protected function dynamicValidCall($method, $args)
+	protected function dynamicValidCall($method, array $args)
 	{
 		$action = substr($method, 5);
 		$property = lcfirst($action) . 'Rules';
@@ -103,6 +104,16 @@ abstract class Validator
 
 		return $rules;
 	}
+
+	/**
+	 * Prepare the validator class before checking if it passes or not. Useful
+	 * for adding sometimes() calls or similar.
+	 *
+	 * @param  \Illuminate\Validation\Validator $v
+	 *
+	 * @return void
+	 */
+	protected function prepareValidator($v) {}
 
 	/**
 	 * Missing method calls to this class will be passed on to the underlying
