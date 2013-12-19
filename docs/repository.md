@@ -10,11 +10,11 @@ The repository comes with some standard methods already, like getByKey and getAl
 - getByKey($key)
 - update($model, $attributes) - does update validation
 - delete($model)
-- newInstance($attributes)
-- getNew($attributes) - does create validation
-- create($attributes) - does create validation
+- getNew($attributes) - no validation, simply a new model instance
+- makeNew($attributes) - does create validation, doesn't save to database
+- create($attributes) - does create validation, saves to database
 
-You can toggle pagination on and off by using paginate(false) or paginate(20). You can toggle exceptions with the toggleExceptions query - this will make sure that firstOrFail is called instead of first - useful for an API or where you otherwise have a generic error handler for the ModelNotFound exception. These methods can be chained, so you can for example do paginate(20)->getAll().
+You can toggle pagination on and off by using paginate(false) or paginate(20). You can toggle exceptions with the toggleExceptions methd - this will make sure that firstOrFail is called instead of first - useful for an API or where you otherwise have a generic error handler for the ModelNotFound exception. These methods can be chained, so you can for example do paginate(20)->getAll().
 
 The repository utilizes the fetchSingle and fetchMany methods to run queries. Before the query is ran, prepareQuery is called with the query builder instance - this way, you can add default behaviour to all queries being ran through the repository - this can be used to limit results to rows related to the logged in user, utilize search or filtering and so on.
 
