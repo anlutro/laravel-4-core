@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Validator as VFactory;
 abstract class Validator
 {
 	protected $commonRules = [];
-	protected $key = 'null';
+	protected $key = 'NULL';
 	protected $validator;
 
 	/**
