@@ -164,7 +164,11 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 			return $this->controller . '@' . $action;
 		} elseif (strpos($action, '\\') === false) {
 			$namespace = substr($this->controller, 0, strrpos($this->controller, '\\'));
-			return $namespace . '\\' . $action;
+			if (!empty($namespace)) {
+				return $namespace . '\\' . $action;
+			} else {
+				return $action;
+			}
 		} else {
 			return $action;
 		}

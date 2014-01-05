@@ -136,7 +136,7 @@ class AuthController extends \c\Controller
 
 		if ($user = $this->users->activate($code)) {
 			Auth::login($user);
-			return $this->redirect('profile');
+			return $this->redirect('UserController@profile');
 		} else {
 			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.activation-failed'));

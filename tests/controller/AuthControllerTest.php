@@ -91,7 +91,8 @@ class AuthControllerTest extends AppTestCase
 	{
 		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
 
-		$this->repo->shouldReceive('activate')->with('foo')->once()->andReturn(true);
+		$this->repo->shouldReceive('activate')->with('foo')->once()->andReturn('bar');
+		Facades\Auth::shouldReceive('login')->once()->with('bar');
 		
 		$this->getAction('activate', ['activation_code' => 'foo']);
 
