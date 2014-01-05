@@ -29,8 +29,9 @@ class AuthControllerTest extends AppTestCase
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
 		$credentials = array_only($input, ['username', 'password']) + ['is_active' => true];
-		Facades\Auth::shouldReceive('attempt')->once()
-			->with($credentials)->andReturn(true);
+		Facades\Auth::shouldReceive('attempt')->once()->with($credentials)->andReturn(true);
+		Facades\Auth::shouldReceive('user')->andReturn(m::mock(['getAuthPassword' => 'foo']));
+		Facades\Hash::shouldReceive('needsRehash')->once()->andReturn(false);
 
 		$this->postAction('login', [], $input);
 
@@ -85,6 +86,17 @@ class AuthControllerTest extends AppTestCase
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHas('success');
 	}
+
+	// public function testActivation()
+	// {
+	// 	$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+
+	// 	$this->repo->shouldReceive('activate')->with('foo')->once()->andReturn(true);
+		
+	// 	$this->getAction('activate', ['activation_code' => 'foo']);
+
+	// 	$this->assertRedirectedToAction('UserController@profile');
+	// }
 
 	public function testResetStepOneForm()
 	{
