@@ -87,16 +87,16 @@ class AuthControllerTest extends AppTestCase
 		$this->assertSessionHas('success');
 	}
 
-	// public function testActivation()
-	// {
-	// 	$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+	public function testActivation()
+	{
+		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
 
-	// 	$this->repo->shouldReceive('activate')->with('foo')->once()->andReturn(true);
+		$this->repo->shouldReceive('activate')->with('foo')->once()->andReturn(true);
 		
-	// 	$this->getAction('activate', ['activation_code' => 'foo']);
+		$this->getAction('activate', ['activation_code' => 'foo']);
 
-	// 	$this->assertRedirectedToAction('UserController@profile');
-	// }
+		$this->assertRedirectedToAction('UserController@profile');
+	}
 
 	public function testResetStepOneForm()
 	{
