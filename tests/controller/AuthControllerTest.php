@@ -2,7 +2,7 @@
 use Mockery as m;
 use Illuminate\Support\Facades;
 
-class AuthControllerTest extends TestCase
+class AuthControllerTest extends AppTestCase
 {
 	protected $controller = 'AuthController';
 
@@ -234,6 +234,6 @@ class AuthControllerTest extends TestCase
 
 	protected function getMockUser()
 	{
-		return m::mock('App\User')->makePartial();
+		return m::mock('c\Auth\UserModel')->makePartial();
 	}
 }

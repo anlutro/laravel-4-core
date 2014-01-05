@@ -1,7 +1,7 @@
 <?php
 use Mockery as m;
 
-class UserControllerTest extends TestCase
+class UserControllerTest extends AppTestCase
 {
 	protected $controller = 'UserController';
 
@@ -262,7 +262,7 @@ class UserControllerTest extends TestCase
 
 	protected function getMockUser()
 	{
-		$user = m::mock('App\User')->makePartial();
+		$user = m::mock('c\Auth\UserModel')->makePartial();
 		$user->is_active = '1';
 		return $user;
 	}
