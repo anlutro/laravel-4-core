@@ -10,6 +10,7 @@
 namespace c;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\MessageBag;
 
 /**
  * Abstract repository that provides some basic functionality.
@@ -25,6 +26,11 @@ abstract class EloquentRepository
 	 * @var \c\Validator
 	 */
 	protected $validator;
+
+	/**
+	 * @var \Illuminate\Support\MessageBag
+	 */
+	protected $errors;
 
 	/**
 	 * How the repository should paginate.
@@ -48,6 +54,7 @@ abstract class EloquentRepository
 	{
 		$this->model = $model;
 		$this->validator = $validator;
+		$this->errors = new MessageBag;
 	}
 
 	/**
@@ -148,7 +155,7 @@ abstract class EloquentRepository
 
 		$this->validator->setKey($model->getKey());
 		
-		if (!$this->validator->validUpdate($attributes)) {
+		if (!$this->valid('update', $attributes)) {
 			return false;
 		}
 
@@ -179,7 +186,7 @@ abstract class EloquentRepository
 	 */
 	public function makeNew(array $attributes = array())
 	{
-		if (!$this->validator->validCreate($attributes)) {
+		if (!$this->valid('create', $attributes)) {
 			return false;
 		}
 
@@ -266,6 +273,24 @@ abstract class EloquentRepository
 	}
 
 	/**
+	 * Check if a set of input attributes are valid for a certain action.
+	 * Merges any validation errors into the repository's messages.
+	 *
+	 * @param  string $action
+	 * @param  array  $attributes
+	 *
+	 * @return bool
+	 */
+	protected function valid($action, array $attributes)
+	{
+		$method = 'valid' . ucfirst($action);
+		$passes = $this->validator->$method($attributes);
+		$this->errors->merge($this->validator->errors());
+
+		return $passes;
+	}
+
+	/**
 	 * This method is called before a model is saved in the create() method.
 	 *
 	 * @param  \Illuminate\Database\Eloquent\Model $model
@@ -331,6 +356,6 @@ abstract class EloquentRepository
 	 */
 	public function errors()
 	{
-		return $this->validator->errors();
+		return $this->errors;
 	}
 }
