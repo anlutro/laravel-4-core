@@ -144,10 +144,11 @@ abstract class EloquentRepository
 	 *
 	 * @param  Illuminate\Database\Eloquent\Model $model
 	 * @param  array $attributes
+	 * @param  bool  $save
 	 *
 	 * @return boolean
 	 */
-	public function update(Model $model, array $attributes)
+	public function update(Model $model, array $attributes, $save = true)
 	{
 		if (!$model->exists) {
 			throw new \RuntimeException('Cannot update non-existing model');
@@ -162,7 +163,7 @@ abstract class EloquentRepository
 		$model->fill($attributes);
 		$this->prepareUpdate($model);
 
-		return $model->save();
+		return $save ? $model->save() : true;
 	}
 
 	/**
@@ -208,11 +209,12 @@ abstract class EloquentRepository
 	/**
 	 * Create a new model instance and save it to the database.
 	 *
-	 * @param  array  $attributes optional
+	 * @param  array $attributes
+	 * @param  bool  $save
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function create(array $attributes = array())
+	public function create(array $attributes = array(), $save = true)
 	{
 		$model = $this->makeNew($attributes);
 
@@ -221,7 +223,7 @@ abstract class EloquentRepository
 		}
 
 		$this->prepareCreate($model);
-		$model->save();
+		if ($save) $model->save();
 
 		return $model;
 	}
