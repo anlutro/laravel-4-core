@@ -153,6 +153,7 @@ abstract class EloquentRepository
 		}
 
 		$model->fill($attributes);
+		$this->prepareUpdate($model);
 
 		return $model->save();
 	}
@@ -212,7 +213,9 @@ abstract class EloquentRepository
 			return false;
 		}
 
+		$this->prepareCreate($model);
 		$model->save();
+
 		return $model;
 	}
 
@@ -261,6 +264,24 @@ abstract class EloquentRepository
 		
 		return $result;
 	}
+
+	/**
+	 * This method is called before a model is saved in the create() method.
+	 *
+	 * @param  \Illuminate\Database\Eloquent\Model $model
+	 *
+	 * @return void
+	 */
+	protected function prepareCreate($model) {}
+
+	/**
+	 * This method is called before a model is saved in the update() method.
+	 *
+	 * @param  \Illuminate\Database\Eloquent\Model $model
+	 *
+	 * @return void
+	 */
+	protected function prepareUpdate($model) {}
 
 	/**
 	 * This method is called before fetchMany and fetchSingle. Use it to add
