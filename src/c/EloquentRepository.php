@@ -167,6 +167,14 @@ abstract class EloquentRepository
 	}
 
 	/**
+	 * Alias for update($model, $attributes, false)
+	 */
+	public function dryUpdate(Model $model, array $attributes)
+	{
+		return $this->update($model, $attributes, false);
+	}
+
+	/**
 	 * Delete an existing model instance.
 	 *
 	 * @param  Model  $model
