@@ -113,6 +113,58 @@ abstract class EloquentRepository
 	}
 
 	/**
+	 * Get a new model instance.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function getNew(array $attributes = array())
+	{
+		$attributes = $this->transformInput($attributes);
+
+		return $this->model->newInstance($attributes);
+	}
+
+	/**
+	 * Create and validate a new model instance without saving it.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function makeNew(array $attributes = array())
+	{
+		if (!$this->valid('create', $attributes)) {
+			return false;
+		}
+
+		return $this->getNew($attributes);
+	}
+
+	/**
+	 * Create a new model instance and save it to the database.
+	 *
+	 * @param  array $attributes
+	 * @param  bool  $save
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function create(array $attributes = array(), $save = true)
+	{
+		$model = $this->makeNew($attributes);
+
+		if (!$model) {
+			return false;
+		}
+
+		$this->prepareCreate($model);
+		if ($save) $model->save();
+
+		return $model;
+	}
+
+	/**
 	 * Get all the rows from the database.
 	 *
 	 * @return mixed
@@ -187,56 +239,6 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * Create and validate a new model instance without saving it.
-	 *
-	 * @param  array  $attributes
-	 *
-	 * @return Illuminate\Database\Eloquent\Model
-	 */
-	public function makeNew(array $attributes = array())
-	{
-		if (!$this->valid('create', $attributes)) {
-			return false;
-		}
-
-		return $this->model->newInstance($attributes);
-	}
-
-	/**
-	 * Get a new model instance.
-	 *
-	 * @param  array  $attributes
-	 *
-	 * @return Illuminate\Database\Eloquent\Model
-	 */
-	public function getNew(array $attributes = array())
-	{
-		return $this->model->newInstance($attributes);
-	}
-
-	/**
-	 * Create a new model instance and save it to the database.
-	 *
-	 * @param  array $attributes
-	 * @param  bool  $save
-	 *
-	 * @return Illuminate\Database\Eloquent\Model
-	 */
-	public function create(array $attributes = array(), $save = true)
-	{
-		$model = $this->makeNew($attributes);
-
-		if (!$model) {
-			return false;
-		}
-
-		$this->prepareCreate($model);
-		if ($save) $model->save();
-
-		return $model;
-	}
-
-	/**
 	 * Run a query builder and return a collection of rows.
 	 *
 	 * @param  $query  query builder instance/reference
@@ -299,6 +301,16 @@ abstract class EloquentRepository
 
 		return $passes;
 	}
+
+	/**
+	 * This method is called at the start of create/update and does any
+	 * necessary transformation of input before passing it to the model.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return array
+	 */
+	public function transformInput(array $attributes) {}
 
 	/**
 	 * This method is called before a model is saved in the create() method.
