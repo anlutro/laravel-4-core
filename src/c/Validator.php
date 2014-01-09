@@ -42,6 +42,16 @@ abstract class Validator
 	}
 
 	/**
+	 * Get the key of the active model.
+	 *
+	 * @return mixed
+	 */
+	public function getKey()
+	{
+		return $this->key;
+	}
+
+	/**
 	 * Prepare rules, make the validator and check if it passes.
 	 *
 	 * @param  array  $rules

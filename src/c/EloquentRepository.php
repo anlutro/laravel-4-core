@@ -139,7 +139,11 @@ abstract class EloquentRepository
 			return false;
 		}
 
-		return $this->getNew($attributes);
+		$model = $this->getNew($attributes);
+
+		$this->prepareCreate($model);
+
+		return $model;
 	}
 
 	/**
@@ -158,7 +162,6 @@ abstract class EloquentRepository
 			return false;
 		}
 
-		$this->prepareCreate($model);
 		if ($save) $model->save();
 
 		return $model;
