@@ -91,6 +91,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
 		$validator->shouldReceive('validCreate')->andReturn(false);
+		$validator->shouldReceive('errors->all')->andReturn([]);
 
 		$this->assertFalse($repo->create(array()));
 	}
@@ -110,7 +111,7 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function testUpdateWhenNotExists()
 	{
 		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
-		$updateModel = new ModelStub;
+		$updateModel = new RepoTestModelStub;
 		$updateModel->exists = false;
 
 		$repo->update($updateModel, []);
@@ -119,11 +120,12 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 	public function testUpdateValidationFails()
 	{
 		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
-		$updateModel = new ModelStub;
+		$updateModel = new RepoTestModelStub;
 		$updateModel->id = 'foo';
 		$updateModel->exists = true;
 		$validator->shouldReceive('setKey')->with('foo');
 		$validator->shouldReceive('validUpdate')->andReturn(false);
+		$validator->shouldReceive('errors->all')->andReturn([]);
 
 		$this->assertFalse($repo->update($updateModel, array()));
 	}
@@ -149,13 +151,6 @@ class EloquentRepositoryTest extends PHPUnit_Framework_TestCase
 		$model->shouldReceive('delete')->once()->andReturn(true);
 
 		$this->assertTrue($repo->delete($model));
-	}
-
-	public function testErrors()
-	{
-		list($model, $validator, $repo) = $this->make('RepoWithPrepares');
-		$validator->shouldReceive('errors')->andReturn('foo');
-		$this->assertEquals('foo', $repo->errors());
 	}
 
 	protected function make($class = 'RepoStub')
@@ -208,7 +203,7 @@ class RepoWithPrepares extends \c\EloquentRepository
 	}
 }
 
-class ModelStub extends Illuminate\Database\Eloquent\Model
+class RepoTestModelStub extends Illuminate\Database\Eloquent\Model
 {
 
 }

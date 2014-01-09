@@ -297,7 +297,11 @@ abstract class EloquentRepository
 	{
 		$method = 'valid' . ucfirst($action);
 		$passes = $this->validator->$method($attributes);
-		$this->errors->merge($this->validator->errors());
+
+		if (!$passes) {
+			$errors = $this->validator->errors()->all();
+			$this->errors->merge($errors);
+		};
 
 		return $passes;
 	}
@@ -310,7 +314,10 @@ abstract class EloquentRepository
 	 *
 	 * @return array
 	 */
-	public function transformInput(array $attributes) {}
+	public function transformInput(array $attributes)
+	{
+		return $attributes;
+	}
 
 	/**
 	 * This method is called before a model is saved in the create() method.

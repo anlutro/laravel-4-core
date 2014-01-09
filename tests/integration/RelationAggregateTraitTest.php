@@ -41,7 +41,7 @@ class RelationAggregateTraitTest extends SQLiteTestCase
 
 	public function testModelsWork()
 	{
-		$m = ModelStub::create(['name' => 'foo']);
+		$m = RelAggrModelStub::create(['name' => 'foo']);
 		$r = RelatedStub::create(['name' => 'bar']);
 		$m->mtmrelation()->attach($r->id);
 
@@ -52,7 +52,7 @@ class RelationAggregateTraitTest extends SQLiteTestCase
 
 	public function testLoadRelationCount()
 	{
-		$m = ModelStub::create(['name' => 'foo']);
+		$m = RelAggrModelStub::create(['name' => 'foo']);
 		$r = new RelatedStub(['name' => 'bar']);
 		$r->btrelation()->associate($m);
 		$r->save();
@@ -67,7 +67,7 @@ class RelationAggregateTraitTest extends SQLiteTestCase
 
 	public function testLoadAggregate()
 	{
-		$m = ModelStub::create(['name' => 'foo']);
+		$m = RelAggrModelStub::create(['name' => 'foo']);
 		$r = new RelatedStub(['name' => 'bar']);
 		$r->btrelation()->associate($m);
 		$r->save();
@@ -83,31 +83,31 @@ class RelationAggregateTraitTest extends SQLiteTestCase
 
 	public function testEagerLoadRelationCount()
 	{
-		$m = ModelStub::create(['name' => 'foo']);
+		$m = RelAggrModelStub::create(['name' => 'foo']);
 		$r = RelatedStub::create(['name' => 'bar']);
 		$m->mtmrelation()->attach($r->id);
 		$r = RelatedStub::create(['name' => 'baz']);
 		$m->mtmrelation()->attach($r->id);
 
-		$models = ModelStub::withRelationCount('mtmrelation');
+		$models = RelAggrModelStub::withRelationCount('mtmrelation');
 		$this->assertEquals(2, $models->first()->mtmrelation_count);
 	}
 
 	public function testEagerLoadRelationAggregate()
 	{
-		$m = ModelStub::create(['name' => 'foo']);
+		$m = RelAggrModelStub::create(['name' => 'foo']);
 		$r = RelatedStub::create(['name' => 'bar']);
 		$m->mtmrelation()->attach($r->id);
 		$r = RelatedStub::create(['name' => 'baz']);
 		$m->mtmrelation()->attach($r->id);
 
-		$models = ModelStub::withRelationAggregate(['mtmrelation' => ['sum', 'id']]);
+		$models = RelAggrModelStub::withRelationAggregate(['mtmrelation' => ['sum', 'id']]);
 		$this->assertEquals(3, $models->first()->mtmrelation_sum_id);
 	}
 
 	public function testEagerLoadRelationAggregateWithConstraint()
 	{
-		$m = ModelStub::create(['name' => 'foo']);
+		$m = RelAggrModelStub::create(['name' => 'foo']);
 		$r = RelatedStub::create(['name' => 'bar']);
 		$m->mtmrelation()->attach($r->id);
 		$r = RelatedStub::create(['name' => 'baz']);
@@ -117,12 +117,12 @@ class RelationAggregateTraitTest extends SQLiteTestCase
 			$query->where('id', '=', 1);
 		};
 
-		$models = ModelStub::withRelationAggregate(['mtmrelation' => ['sum', 'id', $constraint]]);
+		$models = RelAggrModelStub::withRelationAggregate(['mtmrelation' => ['sum', 'id', $constraint]]);
 		$this->assertEquals(1, $models->first()->mtmrelation_sum_id);
 	}
 }
 
-class ModelStub extends \Illuminate\Database\Eloquent\Model
+class RelAggrModelStub extends \Illuminate\Database\Eloquent\Model
 {
 	protected $table = 'models';
 	public $timestamps = false;
@@ -156,6 +156,6 @@ class RelatedStub extends \Illuminate\Database\Eloquent\Model
 
 	public function btrelation()
 	{
-		return $this->belongsTo('ModelStub', 'model_id');
+		return $this->belongsTo('RelAggrModelStub', 'model_id');
 	}
 }

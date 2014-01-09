@@ -228,16 +228,16 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	 *    Activation    *
 	 ********************/
 
-	public function activate()
+	public function activate($save = true)
 	{
 		$this->is_active = true;
-		return $this->save();
+		if ($save) return $this->save();
 	}
 
-	public function deactivate()
+	public function deactivate($save = true)
 	{
 		$this->is_active = false;
-		return $this->save();
+		if ($save) return $this->save();
 	}
 
 	public function getActivationEmail()

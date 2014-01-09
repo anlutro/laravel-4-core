@@ -24,8 +24,7 @@ class UserRepository extends \c\EloquentRepository
 
 	public function __construct(UserModel $model, UserValidator $validator)
 	{
-		$this->model = $model;
-		$this->validator = $validator;
+		parent::__construct($model, $validator);
 	}
 
 	public function search($search)
@@ -166,7 +165,7 @@ class UserRepository extends \c\EloquentRepository
 	 *
 	 * @return boolean
 	 */
-	public function update(Model $model, array $attributes)
+	public function update(Model $model, array $attributes, $save = true)
 	{
 		if (isset($attributes['password']) && $attributes['password'] == '') {
 			unset($attributes['password']);
@@ -193,9 +192,9 @@ class UserRepository extends \c\EloquentRepository
 		}
 
 		if (isset($attributes['is_active']) && $attributes['is_active'] !== false) {
-			return $model->activate();
+			return $model->activate($save);
 		} else {
-			return $model->deactivate();
+			return $model->deactivate($save);
 		}
 	}
 

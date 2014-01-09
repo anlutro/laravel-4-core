@@ -51,7 +51,7 @@ abstract class Validator
 	 */
 	protected function valid(array $rules, array $attributes)
 	{
-		$rules = $this->prepareRules($rules, $attributes);
+		$rules = $this->parseRules($rules, $attributes);
 		$this->validator = VFactory::make($attributes, $rules);
 		$this->prepareValidator($this->validator);
 		return $this->validator->passes();
@@ -82,18 +82,31 @@ abstract class Validator
 	}
 
 	/**
-	 * Prepare the rules - merging with common rules and replacing keys and
-	 * table with the model's key and table
+	 * Parse the rules of the validator.
 	 *
 	 * @param  array  $rules
 	 * @param  array  $attributes
 	 *
 	 * @return array
 	 */
-	protected function prepareRules(array $rules, array $attributes)
+	protected function parseRules(array $rules, array $attributes)
 	{
 		$rules = $rules + $this->commonRules;
+		$rules = $this->prepareRules($rules, $attributes);
+		$rules = $this->replaceRuleVariables($rules, $attributes);
+		return $rules;
+	}
 
+	/**
+	 * Dynamically replace variables in the rules.
+	 *
+	 * @param  array  $rules
+	 * @param  array  $attributes
+	 *
+	 * @return array
+	 */
+	protected function replaceRuleVariables(array $rules, array $attributes)
+	{
 		array_walk_recursive($rules, function(&$item, $key) use($attributes) {
 			if (strpos($item, '<key>') !== false) {
 				$item = str_replace('<key>', $this->key, $item);
@@ -110,6 +123,20 @@ abstract class Validator
 			}
 		});
 
+		return $rules;
+	}
+
+	/**
+	 * Prepare the rules before replacing variables and passing it to the
+	 * validator factory.
+	 *
+	 * @param  array  $rules
+	 * @param  array  $attributes
+	 *
+	 * @return array
+	 */
+	protected function prepareRules(array $rules, array $attributes)
+	{
 		return $rules;
 	}
 
