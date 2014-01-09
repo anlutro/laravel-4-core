@@ -51,7 +51,7 @@ abstract class Validator
 	 */
 	protected function valid(array $rules, array $attributes)
 	{
-		$rules = $this->prepareRules($rules);
+		$rules = $this->prepareRules($rules, $attributes);
 		$this->validator = VFactory::make($attributes, $rules);
 		$this->prepareValidator($this->validator);
 		return $this->validator->passes();
@@ -89,7 +89,7 @@ abstract class Validator
 	 *
 	 * @return array
 	 */
-	protected function prepareRules(array $rules)
+	protected function prepareRules(array $rules, $attributes)
 	{
 		$rules = $rules + $this->commonRules;
 
@@ -97,8 +97,15 @@ abstract class Validator
 			if (strpos($item, '<key>') !== false) {
 				$item = str_replace('<key>', $this->key, $item);
 			}
+
 			if (strpos($item, '<table>') !== false) {
 				$item = str_replace('<table>', $this->model->getTable(), $item);
+			}
+
+			foreach ($attributes as $key => $value) {
+				if (strpos($item, "[$key]") !== false) {
+					$item = str_replace("[$key]", $value, $item);
+				}
 			}
 		});
 
