@@ -86,14 +86,15 @@ abstract class Validator
 	 * table with the model's key and table
 	 *
 	 * @param  array  $rules
+	 * @param  array  $attributes
 	 *
 	 * @return array
 	 */
-	protected function prepareRules(array $rules, $attributes)
+	protected function prepareRules(array $rules, array $attributes)
 	{
 		$rules = $rules + $this->commonRules;
 
-		array_walk_recursive($rules, function(&$item, $key) {
+		array_walk_recursive($rules, function(&$item, $key) use($attributes) {
 			if (strpos($item, '<key>') !== false) {
 				$item = str_replace('<key>', $this->key, $item);
 			}
