@@ -162,7 +162,7 @@ trait RelationAggregates
 
 		$relQuery = $instance->getRelated()->newQuery();
 
-		$relCountQuery = $instance->getRelationCountQuery($relQuery);
+		$relCountQuery = $instance->getRelationCountQuery($relQuery, $this->newQuery());
 		
 		if ($constraint !== null) {
 			$constraint($relCountQuery);
@@ -193,7 +193,7 @@ trait RelationAggregates
 
 		// get the query builder for the aggregate
 		$subQuery = $this->$relation()
-			->getRelationCountQuery($builder)
+			->getRelationCountQuery($builder, $this->newQuery())
 			->select($expression)
 			->getQuery();
 

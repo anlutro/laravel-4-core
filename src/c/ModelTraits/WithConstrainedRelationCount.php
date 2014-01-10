@@ -51,7 +51,7 @@ trait WithConstrainedRelationCount
 			$relQuery = $instance->getRelated()
 				->newQuery();
 
-			$relCountQuery = $instance->getRelationCountQuery($relQuery);
+			$relCountQuery = $instance->getRelationCountQuery($relQuery, $this->newQuery());
 			
 			$constraint($relCountQuery);
 

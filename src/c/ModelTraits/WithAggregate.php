@@ -56,7 +56,7 @@ trait WithAggregate
 
 		// get the query builder for the aggregate
 		$subQuery = $this->$relation()
-			->getRelationCountQuery($builder)
+			->getRelationCountQuery($builder, $this->newQuery())
 			->select($expression)
 			->getQuery();
 

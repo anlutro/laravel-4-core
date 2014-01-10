@@ -43,7 +43,7 @@ trait WithRelationCount
 		foreach ($relations as $relation) {
 			$instance = $this->$relation();
 			$relQuery = $instance->getRelated()->newQuery();
-			$relCountQuery = $instance->getRelationCountQuery($relQuery);
+			$relCountQuery = $instance->getRelationCountQuery($relQuery, $this->newQuery());
 			$sql = $relCountQuery->toSql();
 
 			$query->mergeBindings($relCountQuery->getQuery())
