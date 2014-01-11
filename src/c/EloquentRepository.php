@@ -156,12 +156,11 @@ abstract class EloquentRepository
 		}
 
 		$model = $this->getNew($attributes);
+		$this->prepareCreate($model);
 
 		if (!$this->readyForSave($model) || !$this->readyForCreate($model)) {
 			return false;
 		}
-
-		$this->prepareCreate($model);
 
 		return $model;
 	}
@@ -177,11 +176,7 @@ abstract class EloquentRepository
 	{
 		$model = $this->makeNew($attributes);
 
-		if (!$model) {
-			return false;
-		}
-
-		return $model->save();
+		return $model ? $model->save() : false;
 	}
 
 	/**
