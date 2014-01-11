@@ -9,8 +9,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "*",
-        "illuminate/database": "*",
+        "illuminate/framework": "4.1.*",
         "nesbot/carbon": "*"
     },
     "require-dev": {
@@ -29,5 +28,5 @@
             "src/helpers.php"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
