@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel 4 Core - Eloquent repository class
+ * Laravel 4 Core
  *
  * @author    Andreas Lutro <anlutro@gmail.com>
  * @license   http://opensource.org/licenses/MIT
@@ -58,6 +58,36 @@ abstract class EloquentRepository
 	}
 
 	/**
+	 * Get the repository's model.
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function getModel()
+	{
+		return $this->model;
+	}
+
+	/**
+	 * Get the repository's validator.
+	 *
+	 * @return c\Validator
+	 */
+	public function getValidator()
+	{
+		return $this->validator;
+	}
+
+	/**
+	 * Get the validation errors.
+	 * 
+	 * @return Illuminate\Support\MessageBag
+	 */
+	public function errors()
+	{
+		return $this->errors;
+	}
+
+	/**
 	 * Toggle pagination. False or no arguments to disable pagination, otherwise
 	 * provide a number of items to show per page.
 	 *
@@ -91,25 +121,13 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * Get the repository's model.
+	 * Get a new query builder instance.
 	 *
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @return Illuminate\Database\Eloquent\Builder
 	 */
-	public function getModel()
+	public function newQuery()
 	{
-		return $this->model;
-	}
-
-	/**
-	 * Set the repository's model.
-	 *
-	 * @param Illuminate\Database\Eloquent\Model $model
-	 */
-	public function setModel(Model $model)
-	{
-		$this->model = $model;
-
-		return $this;
+		return $this->model->newQuery();
 	}
 
 	/**
@@ -121,8 +139,6 @@ abstract class EloquentRepository
 	 */
 	public function getNew(array $attributes = array())
 	{
-		$attributes = $this->transformInput($attributes);
-
 		return $this->model->newInstance($attributes);
 	}
 
@@ -141,6 +157,10 @@ abstract class EloquentRepository
 
 		$model = $this->getNew($attributes);
 
+		if (!$this->readyForSave($model) || !$this->readyForCreate($model)) {
+			return false;
+		}
+
 		$this->prepareCreate($model);
 
 		return $model;
@@ -150,11 +170,10 @@ abstract class EloquentRepository
 	 * Create a new model instance and save it to the database.
 	 *
 	 * @param  array $attributes
-	 * @param  bool  $save
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function create(array $attributes = array(), $save = true)
+	public function create(array $attributes = array())
 	{
 		$model = $this->makeNew($attributes);
 
@@ -162,9 +181,7 @@ abstract class EloquentRepository
 			return false;
 		}
 
-		if ($save) $model->save();
-
-		return $model;
+		return $model->save();
 	}
 
 	/**
@@ -174,9 +191,7 @@ abstract class EloquentRepository
 	 */
 	public function getAll()
 	{
-		$query = $this->model->newQuery();
-
-		return $this->fetchMany($query);
+		return $this->fetchMany($this->newQuery());
 	}
 
 	/**
@@ -188,29 +203,31 @@ abstract class EloquentRepository
 	 */
 	public function getByKey($key)
 	{
-		$query = $this->model->newQuery()
+		$query = $this->newQuery()
 			->where($this->model->getQualifiedKeyName(), $key);
 
 		return $this->fetchSingle($query);
 	}
 
 	/**
-	 * Save changes an existing model instance.
+	 * Update a model without saving it.
 	 *
-	 * @param  Illuminate\Database\Eloquent\Model $model
-	 * @param  array $attributes
-	 * @param  bool  $save
+	 * @param  Model  $model
+	 * @param  array  $attributes
 	 *
-	 * @return boolean
+	 * @return Model|false
 	 */
-	public function update(Model $model, array $attributes, $save = true)
+	public function dryUpdate(Model $model, array $attributes)
 	{
 		if (!$model->exists) {
 			throw new \RuntimeException('Cannot update non-existing model');
 		}
 
+		if (!$this->canBeUpdated($model, $attributes)) {
+			return false;
+		}
+
 		$this->validator->setKey($model->getKey());
-		
 		if (!$this->valid('update', $attributes)) {
 			return false;
 		}
@@ -218,15 +235,24 @@ abstract class EloquentRepository
 		$model->fill($attributes);
 		$this->prepareUpdate($model);
 
-		return $save ? $model->save() : true;
+		if (!$this->readyForSave($model) || !$this->readyForUpdate($model)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
-	 * Alias for update($model, $attributes, false)
+	 * Save changes an existing model instance.
+	 *
+	 * @param  Illuminate\Database\Eloquent\Model $model
+	 * @param  array $attributes
+	 *
+	 * @return boolean
 	 */
-	public function dryUpdate(Model $model, array $attributes)
+	public function update(Model $model, array $attributes)
 	{
-		return $this->update($model, $attributes, false);
+		return $this->dryUpdate($model, $attributes) ? $model->save() : false;
 	}
 
 	/**
@@ -310,16 +336,53 @@ abstract class EloquentRepository
 	}
 
 	/**
-	 * This method is called at the start of create/update and does any
-	 * necessary transformation of input before passing it to the model.
+	 * Determine if a model is ready to be saved to the database, regardless of
+	 * create or update.
 	 *
+	 * @param  Model $model
+	 *
+	 * @return boolean
+	 */
+	protected function readyForSave($model)
+	{
+		return true;
+	}
+
+	/**
+	 * Determine if a model is ready to be created in the database.
+	 *
+	 * @param  Model $model
+	 *
+	 * @return boolean
+	 */
+	protected function readyForCreate($model)
+	{
+		return true;
+	}
+
+	/**
+	 * Determine if a model can be updated.
+	 *
+	 * @param  Model  $model
 	 * @param  array  $attributes
 	 *
-	 * @return array
+	 * @return boolean
 	 */
-	public function transformInput(array $attributes)
+	protected function canBeUpdated($model, $attributes)
 	{
-		return $attributes;
+		return true;
+	}
+
+	/**
+	 * Determine if a model is ready to be saved to the database after an update.
+	 *
+	 * @param  Model  $model
+	 *
+	 * @return boolean
+	 */
+	protected function readyForUpdate($model)
+	{
+		return true;
 	}
 
 	/**
@@ -382,12 +445,4 @@ abstract class EloquentRepository
 	 * @return void
 	 */
 	protected function prepareModel($model) {}
-
-	/**
-	 * Get the validation errors.
-	 */
-	public function errors()
-	{
-		return $this->errors;
-	}
 }
