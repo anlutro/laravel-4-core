@@ -15,3 +15,5 @@ foreach ($tryfiles as $file) {
 
 require_once __DIR__ . '/SQLiteTestCase.php';
 require_once __DIR__ . '/AppTestCase.php';
+
+date_default_timezone_set('UTC');
