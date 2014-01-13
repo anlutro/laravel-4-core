@@ -1,32 +1,33 @@
 {
-    "name": "anlutro/l4-core",
-    "description": "Core L4 functionality.",
-    "authors": [
-        {
-            "name": "Andreas Lutro",
-            "email": "anlutro@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "illuminate/framework": "4.1.*",
-        "nesbot/carbon": "*"
-    },
-    "require-dev": {
-        "mockery/mockery": "dev-master"
-    },
-    "autoload": {
-        "psr-0": {
-            "c\\": "src/"
-        },
-        "classmap": [
-            "src/controllers",
-            "src/migrations",
-            "tests/SQLiteTestCase.php"
-        ],
-        "files": [
-            "src/helpers.php"
-        ]
-    },
-    "minimum-stability": "stable"
+	"name": "anlutro/l4-core",
+	"description": "Core L4 functionality.",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Andreas Lutro",
+			"email": "anlutro@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"nesbot/carbon": "*",
+		"anlutro/l4-repository": "0.*",
+		"anlutro/l4-controller": "0.*"
+	},
+	"require-dev": {
+		"mockery/mockery": "dev-master"
+	},
+	"autoload": {
+		"psr-0": {
+			"c\\": "src/"
+		},
+		"classmap": [
+			"src/controllers",
+			"src/migrations"
+		],
+		"files": [
+			"src/helpers.php"
+		]
+	},
+	"minimum-stability": "stable"
 }

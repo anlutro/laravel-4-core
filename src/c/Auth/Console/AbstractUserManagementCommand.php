@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - Abstract user management command
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Console;
@@ -12,12 +12,20 @@ namespace c\Auth\Console;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Abstract command for managing users via the console.
+ */
 abstract class AbstractUserManagementCommand extends \c\Command
 {
+	/**
+	 * Get a user based on the input provided to the command.
+	 *
+	 * @return mixed
+	 */
 	public function getUser()
 	{
-		$model = $this->laravel['config']->get('auth.model');
-		$model = $this->laravel->make($model);
+		$class = $this->laravel['config']->get('auth.model');
+		$model = $this->laravel->make($class);
 		$query = $model->newQuery();
 
 		foreach ($this->option() as $key => $value) {

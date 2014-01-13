@@ -1,30 +1,39 @@
 <?php
 /**
- * Laravel 4 Core - User validator
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth;
 
+/**
+ * Validator for the user repository.
+ */
 class UserValidator extends \c\Validator
 {
-	protected $commonRules = [
-		'username' => ['required', 'min:4', 'alpha_dash', 'unique:<table>,username,<key>'],
-		'name' => ['required'],
-		'email' => ['required', 'email', 'unique:<table>,email,<key>'],
-		'phone' => ['numeric'],
-		'password' => ['confirmed', 'min:6'],
-	];
-
-	protected $createRules = [
-		'password' => ['required', 'confirmed', 'min:6']
-	];
-
 	public function __construct(UserModel $model)
 	{
-		$this->model = $model;
+		parent::__construct($model);
+	}
+
+	protected function getCommonRules()
+	{
+		return [
+			'username' => ['required', 'min:4', 'alpha_dash', 'unique:<table>,username,<key>'],
+			'name' => ['required'],
+			'email' => ['required', 'email', 'unique:<table>,email,<key>'],
+			'phone' => ['numeric'],
+			'password' => ['confirmed', 'min:6'],
+		];
+	}
+
+	protected function getCreateRules()
+	{
+		return [
+			'password' => ['required', 'confirmed', 'min:6']
+		];
 	}
 }

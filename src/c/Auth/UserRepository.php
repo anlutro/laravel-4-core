@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - User repository
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth;
@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use c\Auth\Activation\Activation;
 
+/**
+ * Repository for user models.
+ */
 class UserRepository extends \c\EloquentRepository
 {
 	protected $model;
@@ -81,7 +84,7 @@ class UserRepository extends \c\EloquentRepository
 			}
 		}
 
-		return $query->first();
+		return $this->fetchSingle($query);
 	}
 
 	/**
@@ -111,22 +114,37 @@ class UserRepository extends \c\EloquentRepository
 	 *
 	 * @return false|Model
 	 */
-	public function create(array $attributes = array(), $activate = false)
+	public function makeNew(array $attributes = array())
+	{
+		if (!$this->valid('create', $attributes)) {
+			return false;
+		}
+
+		$user = $this->getNew($attributes);
+		$user->username = $attributes['username'];
+		$user->user_type = $attributes['user_type'];
+		$this->prepareCreate($user);
+
+		if (!$this->readyForSave($user) || !$this->readyForCreate($user)) {
+			return false;
+		}
+
+		return $user;
+	}
+
+	public function create(array $attributes = array(), $activate = true)
 	{
 		if (!$user = $this->makeNew($attributes)) {
 			return false;
 		}
 		
-		$user->username = $attributes['username'];
-		$user->user_type = $attributes['user_type'];
-
 		if ($activate) {
 			$user->activate();
 		} else {
 			Activation::generate($user);
 		}
 		
-		return $user;
+		return $user->save() ? $user : false;
 	}
 
 	/**
@@ -158,44 +176,51 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * Update an existing user.
+	 * Dry update an existing user.
+	 *
+	 * @param  Model  $user
+	 * @param  array  $attributes
+	 *
+	 * @return boolean
+	 */
+	public function dryUpdate(Model $user, array $attributes, $action = 'update')
+	{
+		if (isset($attributes['password']) && $attributes['password'] == '') {
+			unset($attributes['password']);
+		}
+
+		if (!parent::dryUpdate($user, $attributes)) {
+			return false;
+		}
+
+		if (!empty($attributes['username'])) {
+			$user->username = $attributes['username'];
+		}
+		
+		if (!empty($attributes['user_type'])) {
+			$user->user_type = $attributes['user_type'];
+		}
+
+		if (isset($attributes['is_active']) && (bool) $attributes['is_active'] !== false) {
+			$user->activate();
+		} else {
+			$user->deactivate();
+		}
+
+		return $user;
+	}
+
+	/**
+	 * Dry update a user's profile.
 	 *
 	 * @param  Model  $model
 	 * @param  array  $attributes
 	 *
 	 * @return boolean
 	 */
-	public function update(Model $model, array $attributes, $save = true)
+	public function dryUpdateProfile(Model $model, array $attributes)
 	{
-		if (isset($attributes['password']) && $attributes['password'] == '') {
-			unset($attributes['password']);
-		}
-
-		if (!$model->exists) {
-			throw new \RuntimeException('Cannot update non-existing model');
-		}
-
-		$this->validator->setKey($model->getKey());
-		
-		if (!$this->validator->validUpdate($attributes)) {
-			return false;
-		}
-
-		$model->fill($attributes);
-
-		if (!empty($attributes['username'])) {
-			$model->username = $attributes['username'];
-		}
-		
-		if (!empty($attributes['user_type'])) {
-			$model->user_type = $attributes['user_type'];
-		}
-
-		if (isset($attributes['is_active']) && $attributes['is_active'] !== false) {
-			return $model->activate($save);
-		} else {
-			return $model->deactivate($save);
-		}
+		return parent::dryUpdate($model, $attributes, 'profileUpdate');
 	}
 
 	/**
@@ -208,17 +233,7 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function updateProfile(Model $model, array $attributes)
 	{
-		if (isset($attributes['password']) && $attributes['password'] == '') {
-			unset($attributes['password']);
-		}
-
-		$this->validator->setKey($model->getKey());
-
-		if (!$this->validator->validProfileUpdate($attributes, $model->getKey())) {
-			return false;
-		}
-		
-		return $model->update($attributes);
+		return $this->dryUpdateProfile($model, $attributes) ? $model->save() : false;
 	}
 
 	/**
@@ -233,7 +248,7 @@ class UserRepository extends \c\EloquentRepository
 	{
 		$method = 'executeBulk' . ucfirst($action);
 		if (!method_exists($this, $method)) {
-			throw new \InvalidArgumentException('');
+			throw new \InvalidArgumentException("Invalid bulk action: $action ($method does not exist)");
 		}
 
 		$query = $this->model

@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - Acrivation code repository utilizing datbaase
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Activation;
@@ -24,12 +24,7 @@ class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterf
 	}
 
 	/**
-	 * Create a new activation code row in the database.
-	 *
-	 * @param  ActivatableInterface $user
-	 * @param  string               $code
-	 *
-	 * @return int  number of inserted rows
+	 * {@inheritdoc}
 	 */
 	public function create(ActivatableInterface $user, $code)
 	{
@@ -41,47 +36,39 @@ class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterf
 			'expires' => $dt,
 		];
 
-		return $this->newQuery()->insert($data);
+		return (bool) $this->newQuery()->insert($data);
 	}
 
 	/**
-	 * Retrieve a code from the database.
-	 *
-	 * @param  string $code
-	 *
-	 * @return array
+	 * {@inheritdoc}
 	 */
-	public function retrieveByCode($code)
+	public function retrieveEmailByCode($code)
 	{
 		$dt = Carbon::now();
 
-		return $this->findCodeQuery($code)
+		$result = $this->findCodeQuery($code)
 			->where('expires', '>', $dt)
 			->first();
+
+		if ($result === null) return null;
+
+		return $result['email'];
 	}
 
 	/**
-	 * Delete a code from the database.
-	 *
-	 * @param  string $code
-	 *
-	 * @return int  number of affected rows
+	 * {@inheritdoc}
 	 */
 	public function delete($code)
 	{
-		return $this->findCodeQuery($code)->delete();
+		return (bool) $this->findCodeQuery($code)->delete();
 	}
 
 	/**
-	 * Delete all codes belonging to a user.
-	 *
-	 * @param  ActivatableInterface $user
-	 *
-	 * @return int  number of affected rows
+	 * {@inheritdoc}
 	 */
 	public function deleteUser(ActivatableInterface $user)
 	{
-		return $this->newQuery()
+		return (bool) $this->newQuery()
 			->where('email', '=', $user->getActivationEmail())
 			->delete();
 	}

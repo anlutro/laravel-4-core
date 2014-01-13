@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
+ */
+
 return array(
 
 	'access-denied' => 'You do not have access to this part of the site.',

@@ -37,8 +37,8 @@ class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
 			->with('expires', '>', m::type('Carbon\Carbon'))
 			->andReturn(m::self())->getMock()
 			->shouldReceive('first')->once()
-			->andReturn('bar');
-		$result = $this->repo->retrieveByCode('foo');
+			->andReturn(['email' => 'bar']);
+		$result = $this->repo->retrieveEmailByCode('foo');
 
 		$this->assertEquals('bar', $result);
 	}

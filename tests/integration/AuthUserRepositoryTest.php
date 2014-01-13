@@ -49,6 +49,7 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
 		$user = $repo->create($input, true);
+		$this->assertInstanceOf('c\Auth\UserModel', $user);
 		$this->assertTrue($user->exists, 'User does not exist.');
 		$this->assertTrue($user->is_active, 'User is not active.');
 	}

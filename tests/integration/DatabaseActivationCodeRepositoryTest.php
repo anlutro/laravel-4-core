@@ -27,8 +27,8 @@ class DatabaseActivationCodeRepositoryTest extends SQLiteTestCase
 
 		$this->assertEquals(1, $repo->create($user, 'foo'));
 
-		$code = $repo->retrieveByCode('foo');
-		$this->assertEquals('test@test.com', $code['email']);
+		$email = $repo->retrieveEmailByCode('foo');
+		$this->assertEquals('test@test.com', $email);
 	}
 
 	public function testDeleteCode()
@@ -38,7 +38,7 @@ class DatabaseActivationCodeRepositoryTest extends SQLiteTestCase
 		$repo->create($user, 'foo');
 		$repo->delete('foo');
 		
-		$this->assertNull($repo->retrieveByCode('foo'));
+		$this->assertNull($repo->retrieveEmailByCode('foo'));
 	}
 
 	public function testDeleteUser()
@@ -48,7 +48,7 @@ class DatabaseActivationCodeRepositoryTest extends SQLiteTestCase
 		$repo->create($user, 'foo');
 		$repo->deleteUser($user);
 		
-		$this->assertNull($repo->retrieveByCode('foo'));
+		$this->assertNull($repo->retrieveEmailByCode('foo'));
 	}
 
 	protected function makeRepo()

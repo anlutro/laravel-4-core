@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - Create user command
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Console;
@@ -13,6 +13,9 @@ use c\Auth\UserRepository;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Command for creating a new user via the console.
+ */
 class CreateUserCommand extends \c\Command
 {
 	protected $name = 'auth:createuser';

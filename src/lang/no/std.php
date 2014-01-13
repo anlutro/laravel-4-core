@@ -1,5 +1,11 @@
 <?php
 /**
+ * Laravel 4 Core
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
+ *
  * This file contains every localization string used by the L4 Base files, as
  * well as some handy re-usable localizations like success, failure messages
  * where you provide your own model string.

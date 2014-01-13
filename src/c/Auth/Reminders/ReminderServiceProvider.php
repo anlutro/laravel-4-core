@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - PasswordBroker replacement
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Reminders;
@@ -52,7 +52,7 @@ class ReminderServiceProvider extends BaseProvider
 			$mailer = $app['mailer'];
 			$config = [
 				'email-view' => $app['config']->get('auth.reminder.email') ?: 'c::auth.reset-email',
-				'queue-email' => (bool) $app['config']->get('auth.reminder.queue', false),
+				'queue-email' => (bool) $app['config']->get('c::queue-reminder-mail', false),
 			];
 
 			return new PasswordBroker($users, $reminders, $mailer, $config);
@@ -63,9 +63,36 @@ class ReminderServiceProvider extends BaseProvider
 	public function boot()
 	{
 		$this->srcPath = __DIR__ . '/../../..';
-		$this->requireRouteFile('reminders');
+		$this->registerRoutes('reminders');
 	}
 
+	/**
+	 * Register routes for the pacakage.
+	 *
+	 * @param  string $file
+	 *
+	 * @return void
+	 */
+	protected function registerRoutes($file)
+	{
+		$prefix = $this->app['config']->get('c::route-prefix');
+
+		if ($prefix) {
+			$this->app['router']->group(['prefix' => $prefix], function() {
+				$this->requireRouteFile($file);
+			});
+		} else {
+			$this->requireRouteFile($file);
+		}
+	}
+
+	/**
+	 * Include the route file for the correct locale.
+	 *
+	 * @param  string $file
+	 *
+	 * @return void
+	 */
 	protected function requireRouteFile($file)
 	{
 		$locale = $this->app['translator']->getLocale();

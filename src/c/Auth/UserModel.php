@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - Base User class
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth;
@@ -14,6 +14,9 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * User model.
+ */
 class UserModel extends \c\BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	/**

@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - User activation service
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Activation;
@@ -86,19 +86,19 @@ class ActivationService
 	 */
 	public function activate($code)
 	{
-		$code = $this->codes->retrieveByCode($code);
+		$email = $this->codes->retrieveEmailByCode($code);
 
-		if (!$code) {
+		if (!$email) {
 			return false;
 		}
 
-		$user = $this->findUserByCode($code);
+		$user = $this->findUserByEmail($email);
 
 		if (!$user) {
 			return false;
 		}
 
-		return ($this->activateUser($user) && $this->codes->delete($code->code));
+		return ($this->activateUser($user) && $this->codes->delete($code));
 	}
 
 	/**
@@ -108,9 +108,9 @@ class ActivationService
 	 *
 	 * @return mixed
 	 */
-	protected function findUserByCode($code)
+	protected function findUserByEmail($email)
 	{
-		$credentials = ['email' => $code->email];
+		$credentials = ['email' => $email];
 		return $this->users->retrieveByCredentials($credentials);
 	}
 

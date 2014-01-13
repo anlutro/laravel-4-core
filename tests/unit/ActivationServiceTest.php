@@ -32,11 +32,10 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 	public function testActivate()
 	{
 		$user = $this->getMockUser();
-		$code = new StdClass; $code->code = 'bar'; $code->email = 'test@example.com';
-		$this->codes->shouldReceive('retrieveByCode')->with('foo')->andReturn($code);
+		$this->codes->shouldReceive('retrieveEmailByCode')->with('foo')->andReturn('test@example.com');
 		$this->users->shouldReceive('retrieveByCredentials')->with(['email' => 'test@example.com'])->andReturn($user);
 		$user->shouldReceive('activate')->once()->andReturn(true);
-		$this->codes->shouldReceive('delete')->once()->with('bar')->andReturn(true);
+		$this->codes->shouldReceive('delete')->once()->with('foo')->andReturn(true);
 
 		$this->assertTrue($this->activation->activate('foo'));
 	}

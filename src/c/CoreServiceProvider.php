@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - Service provider
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c;
@@ -70,14 +70,25 @@ class CoreServiceProvider extends ServiceProvider
 		$this->namespace = 'c';
 		$this->srcPath = __DIR__ . '/..';
 
+		$this->registerConfigFiles();
 		$this->registerLangFiles();
 		$this->registerViewFiles();
-		$this->requireRouteFile('core');
+		$this->registerRoutes('core');
 		$this->addRouteFilters();
 
 		$userModel = $this->app['config']->get('auth.model', 'c\Auth\UserModel');
 		$this->app->bind('c\Auth\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
+	}
+
+	/**
+	 * Register our config file location with the config repository.
+	 *
+	 * @return void
+	 */
+	protected function registerConfigFiles()
+	{
+		$this->app['config']->addNamespace($this->namespace, $this->srcPath . '/config');
 	}
 
 	/**
@@ -104,6 +115,26 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		$this->app['view']->addNamespace($this->namespace, $this->srcPath . '/views');
+	}
+
+	/**
+	 * Register routes for the pacakage.
+	 *
+	 * @param  string $file
+	 *
+	 * @return void
+	 */
+	protected function registerRoutes($file)
+	{
+		$prefix = $this->app['config']->get('c::route-prefix');
+
+		if ($prefix) {
+			$this->app['router']->group(['prefix' => $prefix], function() {
+				$this->requireRouteFile($file);
+			});
+		} else {
+			$this->requireRouteFile($file);
+		}
 	}
 
 	/**

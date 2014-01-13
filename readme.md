@@ -8,6 +8,13 @@ I also can't recommend using these exact classes in your project, instead try to
 
 All classes reside in the "c\" namespace (except controllers which are in the global namespace) for the sake of convenience. If you don't like this, don't use the package.
 
+Also check out the following repositories, which contains classes that this package uses:
+
+- https://github.com/anlutro/laravel-repository
+- https://github.com/anlutro/laravel-validation
+- https://github.com/anlutro/laravel-controller
+- https://github.com/anlutro/laravel-testing
+
 ## Installation
 
 `composer require anlutro/l4-core`
@@ -25,3 +32,25 @@ You have two layouts available: `layout.main` and `layout.fullwidth`. Fullwidth 
 Your layouts define the sections 'title', 'content' and 'scripts' (for javascript).
 
 You have a Bootstrap 3-derived stylesheet.
+
+## Activation
+
+Similar to the Password:: functionality, Activation:: is a simple way to require your users to activate their accounts.
+
+`Activation::generate($user)` generates an activation code for $user and sends an email with instructions on how to activate their account.
+
+`Activation::activate($code)` activates the user which $code belongs to.
+
+## Improved password reminders
+
+The functions on the Password:: class have changed.
+
+`Password::requestReset($user)` generates a reset token for $user and sends said user an email with instructions. It returns false or true depending on whether or not the mail was successfully sent.
+
+`Password::resetUser($user, $token, $newPassword)` makes an attempt at resetting $user's password. Will return false if $token does not belong to said user.
+
+## Contact
+Open an issue on GitHub if you have any problems or suggestions.
+
+## License
+The contents of this repository is released under the [MIT license](http://opensource.org/licenses/MIT).

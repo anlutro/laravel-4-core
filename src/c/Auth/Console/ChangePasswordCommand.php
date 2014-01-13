@@ -1,14 +1,17 @@
 <?php
 /**
- * Laravel 4 Core - Change user password command
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Console;
 
+/**
+ * Command for changing a user's password via the console.
+ */
 class ChangePasswordCommand extends AbstractUserManagementCommand
 {
 	protected $name = 'auth:changepass';

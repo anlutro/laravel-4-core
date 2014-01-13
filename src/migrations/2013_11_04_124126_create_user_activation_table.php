@@ -1,4 +1,11 @@
 <?php
+/**
+ * Laravel 4 Core
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
+ */
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;

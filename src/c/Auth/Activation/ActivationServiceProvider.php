@@ -1,10 +1,10 @@
 <?php
 /**
- * Laravel 4 Core - User activation service provider
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Activation;
@@ -39,16 +39,42 @@ class ActivationServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		$this->srcPath = __DIR__ . '/../../..';
-		$this->requireRouteFile('activation');
+		$this->registerRoutes('activation');
 	}
 
+	/**
+	 * Register routes for the pacakage.
+	 *
+	 * @param  string $file
+	 *
+	 * @return void
+	 */
+	protected function registerRoutes($file)
+	{
+		$prefix = $this->app['config']->get('c::route-prefix');
+
+		if ($prefix) {
+			$this->app['router']->group(['prefix' => $prefix], function() {
+				$this->requireRouteFile($file);
+			});
+		} else {
+			$this->requireRouteFile($file);
+		}
+	}
+
+	/**
+	 * Include the route file for the correct locale.
+	 *
+	 * @param  string $file
+	 *
+	 * @return void
+	 */
 	protected function requireRouteFile($file)
 	{
 		$locale = $this->app['translator']->getLocale();
-
 		$path = $this->srcPath . '/routes/' . $locale;
 
-		if (!is_dir($path) || !$locale) {
+		if (!is_dir($path)) {
 			$path = $this->srcPath . '/routes/en';
 		}
 

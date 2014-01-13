@@ -1,15 +1,18 @@
 <?php
 /**
- * Laravel 4 Core - Base model class
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c;
 
-class BaseModel extends \Illuminate\Database\Eloquent\Model implements \JsonSerializable
+use JsonSerializable;
+use Illuminate\Database\Eloquent\Model;
+
+class BaseModel extends Model implements JsonSerializable
 {
 	/**
 	 * Is used when json_encode is called on the model.

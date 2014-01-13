@@ -1,14 +1,17 @@
 <?php
 /**
- * Laravel 4 Core - Send password reminder command
+ * Laravel 4 Core
  *
- * @author    Andreas Lutro <anlutro@gmail.com>
- * @license   http://opensource.org/licenses/MIT
- * @package   Laravel 4 Core
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
  */
 
 namespace c\Auth\Console;
 
+/**
+ * Command for sending a password reset email to a user.
+ */
 class SendPasswordReminderCommand extends AbstractUserManagementCommand
 {
 	protected $name = 'auth:send-reminder';
