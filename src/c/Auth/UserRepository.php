@@ -220,6 +220,10 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function updateProfile(Model $model, array $attributes)
 	{
+		if (isset($attributes['password']) && $attributes['password'] == '') {
+			unset($attributes['password']);
+		}
+		
 		return parent::dryUpdate($model, $attributes, 'profileUpdate') ? $model->save() : false;
 	}
 
