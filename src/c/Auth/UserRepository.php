@@ -211,19 +211,6 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * Dry update a user's profile.
-	 *
-	 * @param  Model  $model
-	 * @param  array  $attributes
-	 *
-	 * @return boolean
-	 */
-	public function dryUpdateProfile(Model $model, array $attributes)
-	{
-		return parent::dryUpdate($model, $attributes, 'profileUpdate');
-	}
-
-	/**
 	 * Update a user's profile.
 	 *
 	 * @param  Model  $model
@@ -233,7 +220,7 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function updateProfile(Model $model, array $attributes)
 	{
-		return $this->dryUpdateProfile($model, $attributes) ? $model->save() : false;
+		return parent::dryUpdate($model, $attributes, 'profileUpdate') ? $model->save() : false;
 	}
 
 	/**
