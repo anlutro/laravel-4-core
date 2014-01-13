@@ -14,18 +14,30 @@ class _NAME_Validator extends \c\Validator
 	/**
 	 * Common rules are ran on every validation call.
 	 */
-	protected $commonRules = [
-	];
+	protected function getCommonRules()
+	{
+		return [
+
+		];
+	}
 
 	/**
 	 * Create rules are only ran when creating a new model.
 	 */
-	protected $createRules = [
-	];
+	protected function getCreateRules()
+	{
+		return [
+			
+		];
+	}
 
 	/**
 	 * Update rules are only ran when updating an existing model.
 	 */
-	protected $updateRules = [
-	];
+	protected function getUpdateRules()
+	{
+		return [
+			
+		];
+	}
 }
