@@ -9,6 +9,11 @@
 
 return array(
 	/**
+	 * Whether to enable the package's routes.
+	 */
+	'enable-routes' => true,
+
+	/**
 	 * The URL prefix to put in front of all the package's routes.
 	 */
 	'route-prefix' => null,
