@@ -26,7 +26,7 @@ class ViewServiceProvider extends ServiceProvider
 			$view->with('sidebar', array());
 		});
 
-		$this->app['view']->composer('partial.menu', function($view) {
+		$this->app['view']->composer('c::menu', function($view) {
 			if ($this->app['auth']->check()) {
 				$username = $this->app['auth']->user()->name;
 				$item = $this->app['menubuilder']->makeDropdown('user', $username, 'user');
