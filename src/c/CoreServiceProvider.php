@@ -17,6 +17,8 @@ use Carbon\Carbon;
 
 class CoreServiceProvider extends ServiceProvider
 {
+	use \c\RouteProviderTrait;
+
 	/**
 	 * Whether or not the service provider should be deferred/lazy loaded.
 	 *
@@ -88,7 +90,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerConfigFiles()
 	{
-		$this->app['config']->addNamespace($this->namespace, $this->srcPath . '/config');
+		$this->app['config']->package('anlutro/l4-core', $this->srcPath . '/config', 'c');
 	}
 
 	/**
@@ -115,45 +117,6 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		$this->app['view']->addNamespace($this->namespace, $this->srcPath . '/views');
-	}
-
-	/**
-	 * Register routes for the pacakage.
-	 *
-	 * @param  string $file
-	 *
-	 * @return void
-	 */
-	protected function registerRoutes($file)
-	{
-		$prefix = $this->app['config']->get('c::route-prefix');
-
-		if ($prefix) {
-			$this->app['router']->group(['prefix' => $prefix], function() {
-				$this->requireRouteFile($file);
-			});
-		} else {
-			$this->requireRouteFile($file);
-		}
-	}
-
-	/**
-	 * Include the route file for the correct locale.
-	 *
-	 * @param  string $file
-	 *
-	 * @return void
-	 */
-	protected function requireRouteFile($file)
-	{
-		$locale = $this->app['translator']->getLocale();
-		$path = $this->srcPath . '/routes/' . $locale;
-
-		if (!is_dir($path)) {
-			$path = $this->srcPath . '/routes/en';
-		}
-
-		require $path . '/' . $file . '.php';
 	}
 
 	/**

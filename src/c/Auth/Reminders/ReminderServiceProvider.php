@@ -13,6 +13,8 @@ use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;
 
 class ReminderServiceProvider extends BaseProvider
 {
+	use \c\RouteProviderTrait;
+	
 	protected $defer = false;
 	protected $srcPath;
 
@@ -64,44 +66,5 @@ class ReminderServiceProvider extends BaseProvider
 	{
 		$this->srcPath = __DIR__ . '/../../..';
 		$this->registerRoutes('reminders');
-	}
-
-	/**
-	 * Register routes for the pacakage.
-	 *
-	 * @param  string $file
-	 *
-	 * @return void
-	 */
-	protected function registerRoutes($file)
-	{
-		$prefix = $this->app['config']->get('c::route-prefix');
-
-		if ($prefix) {
-			$this->app['router']->group(['prefix' => $prefix], function() {
-				$this->requireRouteFile($file);
-			});
-		} else {
-			$this->requireRouteFile($file);
-		}
-	}
-
-	/**
-	 * Include the route file for the correct locale.
-	 *
-	 * @param  string $file
-	 *
-	 * @return void
-	 */
-	protected function requireRouteFile($file)
-	{
-		$locale = $this->app['translator']->getLocale();
-		$path = $this->srcPath . '/routes/' . $locale;
-
-		if (!is_dir($path)) {
-			$path = $this->srcPath . '/routes/en';
-		}
-
-		require $path . '/' . $file . '.php';
 	}
 }
