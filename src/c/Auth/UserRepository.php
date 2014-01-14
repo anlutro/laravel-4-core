@@ -213,18 +213,18 @@ class UserRepository extends \c\EloquentRepository
 	/**
 	 * Update a user's profile.
 	 *
-	 * @param  Model  $model
+	 * @param  Model  $user
 	 * @param  array  $attributes
 	 *
 	 * @return boolean
 	 */
-	public function updateProfile(Model $model, array $attributes)
+	public function updateProfile(Model $user, array $attributes)
 	{
 		if (isset($attributes['password']) && $attributes['password'] == '') {
 			unset($attributes['password']);
 		}
-		
-		return parent::dryUpdate($model, $attributes, 'profileUpdate') ? $model->save() : false;
+
+		return parent::dryUpdate($user, $attributes, 'profileUpdate') ? $user->save() : false;
 	}
 
 	/**
