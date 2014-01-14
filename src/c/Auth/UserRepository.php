@@ -183,7 +183,7 @@ class UserRepository extends \c\EloquentRepository
 	 *
 	 * @return boolean
 	 */
-	public function dryUpdate(Model $user, array $attributes, $action = 'update')
+	public function dryUpdate($user, array $attributes, $action = 'update')
 	{
 		if (isset($attributes['password']) && $attributes['password'] == '') {
 			unset($attributes['password']);
@@ -218,7 +218,7 @@ class UserRepository extends \c\EloquentRepository
 	 *
 	 * @return boolean
 	 */
-	public function updateProfile(Model $user, array $attributes)
+	public function updateProfile($user, array $attributes)
 	{
 		if (isset($attributes['password']) && $attributes['password'] == '') {
 			unset($attributes['password']);
