@@ -41,6 +41,13 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	protected $fillable = ['name', 'email', 'phone', 'password'];
 
 	/**
+	 * Attributes that are hidden from toArray (and by extension, from toJson)
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['password', 'login_token'];
+
+	/**
 	 * Hash the password automatically when setting it.
 	 */
 	public function setPasswordAttribute($value)
