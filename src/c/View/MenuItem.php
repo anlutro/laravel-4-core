@@ -74,11 +74,7 @@ class MenuItem
 		if ($this->hasSubMenu()) {
 			$html .= '<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">';
 		} else {
-			$html .= '<li>';
-
-			if (!empty($this->url)) {
-				$html .= '<a href="'.$this->url.'">';
-			}
+			$html .= '<li><a href="'.$this->url.'">';
 		}
 
 		if (!empty($this->glyph)) {
@@ -89,7 +85,7 @@ class MenuItem
 
 		if ($this->hasSubMenu()) {
 			$html .= '<b class="caret"></b></a>' . $this->subMenu->render(['class' => 'dropdown-menu']);
-		} elseif (!empty($this->url)) {
+		} else {
 			$html .= '</a>';
 		}
 
