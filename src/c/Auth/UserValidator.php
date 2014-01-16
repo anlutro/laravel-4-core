@@ -14,11 +14,6 @@ namespace c\Auth;
  */
 class UserValidator extends \c\Validator
 {
-	public function __construct(UserModel $model)
-	{
-		parent::__construct($model);
-	}
-
 	protected function getCommonRules()
 	{
 		return [
