@@ -120,6 +120,7 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	{
 		$this->model = new User;
 		$this->validator = m::mock('c\Auth\UserValidator');
+		$this->validator->shouldReceive('setTable')->with($this->model->getTable());
 		return new UserRepository($this->model, $this->validator);
 	}
 

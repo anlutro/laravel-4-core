@@ -1,9 +1,9 @@
 <?php
 if (!class_exists('TestCase')) {
-	class TestCase extends \c\TestCase {}
+	class TestCase extends \c\L4TestCase {}
 }
 
-class AppTestCase extends c\TestCase
+class AppTestCase extends c\L4TestCase
 {
 	public function createApplication()
 	{
