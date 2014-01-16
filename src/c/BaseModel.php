@@ -15,6 +15,45 @@ use Illuminate\Database\Eloquent\Model;
 class BaseModel extends Model implements JsonSerializable
 {
 	/**
+	 * Whether or not the model is frozen.
+	 *
+	 * @see freeze()
+	 *
+	 * @var boolean
+	 */
+	protected $frozen = false;
+
+	/**
+	 * Freeze the model, preventing it from writing to the database.
+	 *
+	 * @return [type] [description]
+	 */
+	public function freeze()
+	{
+		$this->frozen = true;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function save(array $options = array())
+	{
+		if ($this->frozen) throw new \RuntimeException('Model is frozen.');
+
+		return parent::save();
+	}
+
+	/**
+	 * Convert the model to an StdClass.
+	 *
+	 * @return StdClass
+	 */
+	public function toStdClass()
+	{
+		return json_decode(json_encode($this->toArray()));
+	}
+
+	/**
 	 * Is used when json_encode is called on the model.
 	 *
 	 * @return array
