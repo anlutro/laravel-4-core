@@ -45,7 +45,7 @@ class UserControllerTest extends AppTestCase
 		$curUser = $this->expectCurrentUser();
 		$curUser->shouldReceive('confirmPassword')
 			->andReturn(true);
-		$this->users->shouldReceive('updateProfile')
+		$this->users->shouldReceive('update')
 			->with($curUser, $input)
 			->andReturn($result);
 	}
@@ -173,7 +173,7 @@ class UserControllerTest extends AppTestCase
 	protected function setupUpdateExpectation($input, $id, $result)
 	{
 		$user = $this->expectFindUser($id);
-		$this->users->shouldReceive('update')->once()
+		$this->users->shouldReceive('updateAsAdmin')->once()
 			->with($user, $input)
 			->andReturn($result);
 		return $user;

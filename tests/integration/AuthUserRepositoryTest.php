@@ -48,7 +48,8 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
-		$user = $repo->create($input, true);
+		$input['is_active'] = '1';
+		$user = $repo->create($input);
 		$this->assertInstanceOf('c\Auth\UserModel', $user);
 		$this->assertTrue($user->exists, 'User does not exist.');
 		$this->assertTrue($user->is_active, 'User is not active.');
@@ -102,13 +103,13 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	{
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('setKey')->once();
-		$this->validator->shouldReceive('validProfileUpdate')->once()->andReturn(true);
+		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
 
 		$user = $this->createUser('name', 'pass', 'user');
 		$oldpw = $user->password;
 		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'admin', 'username' => 'newname'];
 
-		$repo->updateProfile($user, $input);
+		$repo->update($user, $input);
 
 		$this->assertEquals('New Name', $user->name);
 		$this->assertNotEquals($oldpw, $user->password);

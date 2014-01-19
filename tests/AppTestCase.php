@@ -52,12 +52,10 @@ class AppTestCase extends c\L4TestCase
 	public function addMissingViews()
 	{
 		if (
-			true ||
 			!$this->app['view']->exists('layout.main') ||
 			!$this->app['view']->exists('layout.fullwidth')
 		) {
-			$this->app['view']->addLocation(__DIR__ . '/../test_resources/views');
-			// dd($this->app['view']->getFinder()->getPaths());
+			$this->app['view']->addLocation(__DIR__ . '/resources/views');
 		}
 	}
 }

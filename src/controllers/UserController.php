@@ -70,7 +70,7 @@ class UserController extends \c\Controller
 
 		$input = Input::all();
 
-		if ($this->users->updateProfile($user, $input)) {
+		if ($this->users->update($user, $input)) {
 			return $redirect->with('success', Lang::get('c::user.profile-update-success'));
 		} else {
 			return $redirect->withErrors($this->users->errors());
@@ -195,7 +195,7 @@ class UserController extends \c\Controller
 		$input = Input::all();
 		$redirect = $this->redirect('edit', [$user->id]);
 
-		if ($this->users->update($user, $input)) {
+		if ($this->users->updateAsAdmin($user, $input)) {
 			return $redirect->with('success', Lang::get('c::user.update-success'));
 		} else {
 			return $redirect->withErrors($this->users->errors());

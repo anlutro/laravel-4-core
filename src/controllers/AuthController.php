@@ -70,7 +70,7 @@ class AuthController extends \c\Controller
 		if (Auth::attempt($credentials)) {
 			// rehash password if necessary
 			if (Hash::needsRehash(Auth::user()->getAuthPassword())) {
-				Auth::user()->update(['password' => Hash::make($credentials['password'])]);
+				$this->users->rehashPassword(Auth::user(), $credentials['password']);
 			}
 
 			return Redirect::intended('/')

@@ -45,8 +45,7 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * Prepare the query. This function is called before every getAll() and
-	 * other functions that utilize $this->runQuery()
+	 * {@inheritdoc}
 	 */
 	protected function prepareQuery($query, $many)
 	{
@@ -76,7 +75,7 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function getByCredentials(array $credentials)
 	{
-		$query = $this->model->newQuery();
+		$query = $this->newQuery();
 
 		foreach ($credentials as $key => $value) {
 			if (strpos($key, 'password') === false) {
@@ -107,44 +106,40 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * Create a new user.
-	 *
-	 * @param  array   $attributes
-	 * @param  boolean $activate
-	 *
-	 * @return false|Model
+	 * {@inheritdoc}
 	 */
-	public function makeNew(array $attributes = array())
+	public function prepareCreate($user, $attributes)
 	{
-		if (!$this->valid('create', $attributes)) {
-			return false;
-		}
-
-		$user = $this->getNew($attributes);
+		// set the username manually as it is not fillable
 		$user->username = $attributes['username'];
-		$user->user_type = $attributes['user_type'];
-		$this->prepareCreate($user);
 
-		if (!$this->readyForSave($user) || !$this->readyForCreate($user)) {
-			return false;
+		// set the user level
+		if (isset($attributes['user_type']) && !empty($attributes['user_type'])) {
+			$user->user_type = $attributes['user_type'];
+		} elseif (isset($attributes['user_level']) && !empty($attributes['user_level'])) {
+			$user->user_level = $attributes['user_level'];
 		}
 
-		return $user;
-	}
-
-	public function create(array $attributes = array(), $activate = true)
-	{
-		if (!$user = $this->makeNew($attributes)) {
-			return false;
-		}
-		
-		if ($activate) {
+		// either activate directly or send an activation code
+		if (isset($attributes['is_active']) && $attributes['is_active']) {
 			$user->activate();
 		} else {
 			Activation::generate($user);
 		}
-		
-		return $user->save() ? $user : false;
+	}
+
+	/**
+	 * Rehash a user's password.
+	 *
+	 * @param  c\Auth\UserModel  $user
+	 * @param  string  $password
+	 *
+	 * @return boolean
+	 */
+	public function rehashPassword(UserModel $user, $password)
+	{
+		$user->password = $password;
+		return $user->save();
 	}
 
 	/**
@@ -176,29 +171,39 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * Dry update an existing user.
+	 * {@inheritdoc}
+	 */
+	public function dryUpdate($user, array $attributes, $action = 'update')
+	{
+		if (isset($attributes['password']) && empty($attributes['password'])) {
+			unset($attributes['password']);
+		}
+
+		return parent::dryUpdate($user, $attributes, $action);
+	}
+
+	/**
+	 * Update a user as an admin.
 	 *
-	 * @param  Model  $user
+	 * @param  c\Auth\UserModel  $user
 	 * @param  array  $attributes
 	 *
 	 * @return boolean
 	 */
-	public function dryUpdate($user, array $attributes, $action = 'update')
+	public function updateAsAdmin($user, array $attributes)
 	{
-		if (isset($attributes['password']) && $attributes['password'] == '') {
-			unset($attributes['password']);
-		}
-
-		if (!parent::dryUpdate($user, $attributes)) {
+		if (!$this->dryUpdate($user, $attributes)) {
 			return false;
 		}
 
-		if (!empty($attributes['username'])) {
+		if (isset($attributes['username']) && !empty($attributes['username'])) {
 			$user->username = $attributes['username'];
 		}
 		
-		if (!empty($attributes['user_type'])) {
+		if (isset($attributes['user_type']) && !empty($attributes['user_type'])) {
 			$user->user_type = $attributes['user_type'];
+		} elseif (isset($attributes['user_level']) && !empty($attributes['user_level'])) {
+			$user->user_level = $attributes['user_level'];
 		}
 
 		if (isset($attributes['is_active']) && (bool) $attributes['is_active'] !== false) {
@@ -207,24 +212,7 @@ class UserRepository extends \c\EloquentRepository
 			$user->deactivate();
 		}
 
-		return $user;
-	}
-
-	/**
-	 * Update a user's profile.
-	 *
-	 * @param  Model  $user
-	 * @param  array  $attributes
-	 *
-	 * @return boolean
-	 */
-	public function updateProfile($user, array $attributes)
-	{
-		if (isset($attributes['password']) && $attributes['password'] == '') {
-			unset($attributes['password']);
-		}
-
-		return parent::dryUpdate($user, $attributes, 'profileUpdate') ? $user->save() : false;
+		return $user->save();
 	}
 
 	/**
