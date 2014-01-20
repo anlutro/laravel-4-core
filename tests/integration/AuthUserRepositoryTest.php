@@ -70,10 +70,10 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	public function testUpdateWithBlankPassword()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('setKey')->once();
 		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
 
 		$user = $this->createUser('name', 'pass');
+		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
 		$oldpw = $user->password;
 		$input = ['name' => 'New Name', 'password' => ''];
 
@@ -86,10 +86,10 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	public function testUpdateWithNewPassword()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('setKey')->once();
 		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
 
 		$user = $this->createUser('name', 'pass');
+		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
 		$oldpw = $user->password;
 		$input = ['name' => 'New Name', 'password' => 'newpass'];
 
@@ -102,10 +102,10 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	public function testUpdateProfileUpdatesCorrectFields()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('setKey')->once();
 		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
 
 		$user = $this->createUser('name', 'pass', 'user');
+		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
 		$oldpw = $user->password;
 		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'admin', 'username' => 'newname'];
 
@@ -121,7 +121,7 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	{
 		$this->model = new User;
 		$this->validator = m::mock('c\Auth\UserValidator');
-		$this->validator->shouldReceive('setTable')->with($this->model->getTable());
+		$this->validator->shouldReceive('replace')->with('table', $this->model->getTable());
 		return new UserRepository($this->model, $this->validator);
 	}
 
