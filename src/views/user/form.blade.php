@@ -51,7 +51,7 @@
 		<div class="col-sm-5 col-sm-offset-2">
 			<div class="checkbox">
 				<label>
-					{{ Form::checkbox('is_active', $user->is_active) }}
+					{{ Form::checkbox('is_active') }}
 					@lang('c::user.active-field')
 				</label>
 			</div>
