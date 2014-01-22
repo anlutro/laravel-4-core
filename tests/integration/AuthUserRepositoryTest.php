@@ -51,20 +51,18 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 		$input['is_active'] = '1';
 		$user = $repo->create($input);
 		$this->assertInstanceOf('c\Auth\UserModel', $user);
-		$this->assertTrue($user->exists, 'User does not exist.');
-		$this->assertTrue($user->is_active, 'User is not active.');
+		$this->assertTrue($user->exists, 'User should exist.');
+		$this->assertTrue($user->is_active, 'User should be active.');
 	}
 
 	public function testCreateWithoutActivation()
 	{
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
-		c\Auth\Activation\Activation::setFacadeApplication(null);
-		c\Auth\Activation\Activation::shouldReceive('generate')->once();
-		c\Auth\Activation\Activation::setFacadeApplication($this->app);
 		$input = $this->getUserAttributes('foo');
 		$user = $repo->create($input, false);
-		$this->assertFalse($user->is_active, 'User is not active.');
+		$this->assertInstanceOf('c\Auth\UserModel', $user);
+		$this->assertFalse($user->is_active, 'User should not be active.');
 	}
 
 	public function testUpdateWithBlankPassword()

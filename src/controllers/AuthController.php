@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+
 use c\Auth\UserRepository;
+use c\Auth\Activation\Activation;
 
 /**
  * Controller for authentication actions.
@@ -34,6 +36,18 @@ class AuthController extends \c\Controller
 	public function __construct(UserRepository $users)
 	{
 		$this->users = $users;
+
+		$this->beforeFilter(function() {
+			if (!$this->activationEnabled()) {
+				throw new \RuntimeException('Activation/registration is not enabled');
+			}
+		}, ['only' => ['register', 'attemptRegistration', 'activate']]);
+
+		$this->beforeFilter(function() {
+			if (!$this->remindersEnabled()) {
+				throw new \RuntimeException('Reminders are not enabled');
+			}
+		}, ['only' => ['reminder', 'sendReminder', 'reset', 'attemptReset']]);
 	}
 
 	/**
@@ -134,9 +148,9 @@ class AuthController extends \c\Controller
 	{
 		$code = Input::get('activation_code');
 
-		if ($user = $this->users->activate($code)) {
-			Auth::login($user);
-			return $this->redirect('UserController@profile');
+		if (Activation::activate($code)) {
+			$msg = Lang::get('c::auth.activation-success');
+			return $this->redirect('login')->with('success', $msg);
 		} else {
 			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.activation-failed'));
@@ -229,6 +243,18 @@ class AuthController extends \c\Controller
 		} else {
 			return $redirect->withErrors(Lang::get('reminders.token'));
 		}
+	}
+
+	/**
+	 * Check if password reminders are enabled.
+	 *
+	 * @return boolean
+	 */
+	private function activationEnabled()
+	{
+		$loaded = App::getLoadedProviders();
+		$provider = 'c\Auth\Activation\ActivationServiceProvider';
+		return isset($loaded[$provider]);
 	}
 
 	/**

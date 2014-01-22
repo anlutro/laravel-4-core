@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+
 use c\Auth\UserRepository;
+use c\Auth\Activation\Activation;
 
 /**
  * Controller for managing users, not including authentication.
@@ -136,7 +138,7 @@ class UserController extends \c\Controller
 	public function show($userId)
 	{
 		if (!$user = $this->users->getByKey($userId)) {
-			return $this->notFoundRedirect();
+			return $this->notFound();
 		}
 
 		$viewData = [
@@ -165,7 +167,7 @@ class UserController extends \c\Controller
 	public function edit($userId)
 	{
 		if (!$user = $this->users->getByKey($userId)) {
-			return $this->notFoundRedirect();
+			return $this->notFound();
 		}
 
 		return View::make('c::user.form', [
@@ -189,7 +191,7 @@ class UserController extends \c\Controller
 	public function update($userId)
 	{
 		if (!$user = $this->users->getByKey($userId)) {
-			return $this->notFoundRedirect();
+			return $this->notFound();
 		}
 
 		$input = Input::all();
@@ -212,7 +214,7 @@ class UserController extends \c\Controller
 	public function delete($userId)
 	{
 		if (!$user = $this->users->getByKey($userId)) {
-			return $this->notFoundRedirect();
+			return $this->notFound();
 		}
 
 		if ($this->users->delete($user)) {
@@ -248,9 +250,11 @@ class UserController extends \c\Controller
 	public function store()
 	{
 		$input = Input::all();
-		$activate = $this->activationEnabled() ? Input::has('activate') : true;
 
-		if ($user = $this->users->create($input, $activate)) {
+		if ($user = $this->users->create($input)) {
+			if ($this->activationEnabled() && !$user->is_active) {
+				Activation::generate($user);
+			}
 			return $this->redirect('edit', [$user->id])
 				->with('success', Lang::get('c::user.create-success'));
 		} else {
@@ -265,7 +269,7 @@ class UserController extends \c\Controller
 	 *
 	 * @return Redirect
 	 */
-	private function notFoundRedirect()
+	private function notFound()
 	{
 		return $this->redirect('index')
 			->withErrors(Lang::get('c::user.not-found'));

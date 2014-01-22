@@ -218,7 +218,7 @@ class UserControllerTest extends AppTestCase
 		$input = ['foo' => 'bar'];
 		$user = $this->getMockUser(); $user->id = 1;
 		$this->users->shouldReceive('create')->once()
-			->with($input, true)->andReturn($user);
+			->with($input)->andReturn($user);
 
 		$this->postAction('store', [], $input);
 
@@ -228,10 +228,10 @@ class UserControllerTest extends AppTestCase
 
 	public function testStoreActivateSuccess()
 	{
-		$input = ['foo' => 'bar', 'activate' => '1'];
+		$input = ['foo' => 'bar', 'is_active' => '1'];
 		$user = $this->getMockUser(); $user->id = 1;
 		$this->users->shouldReceive('create')->once()
-			->with($input, true)->andReturn($user);
+			->with($input)->andReturn($user);
 
 		$this->postAction('store', [], $input);
 
@@ -243,7 +243,7 @@ class UserControllerTest extends AppTestCase
 	{
 		$input = ['foo' => 'bar'];
 		$this->users->shouldReceive('create')->once()
-			->with($input, m::any())->andReturn(false);
+			->with($input)->andReturn(false);
 		$this->users->shouldReceive('errors')->once()
 			->andReturn('baz');
 

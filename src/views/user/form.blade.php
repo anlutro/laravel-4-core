@@ -47,16 +47,14 @@
 		</div>
 	</div>
 
-	@if (isset($isActive))
 	<div class="checkbox">
 		<label class="col-sm-5 col-sm-offset-2">
 			{{ Form::checkbox('is_active', $user->is_active) }}
 			@lang('c::user.active-field')
 		</label>
 	</div>
-	@endif
 
-	@if($user->exists)
+	@if ($user->exists)
 	<hr>
 	<div class="row">
 		<div class="col-sm-10 col-sm-offset-2">

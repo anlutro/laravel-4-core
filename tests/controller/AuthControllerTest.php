@@ -1,6 +1,7 @@
 <?php
 use Mockery as m;
 use Illuminate\Support\Facades;
+use c\Auth\Activation\Activation;
 
 class AuthControllerTest extends AppTestCase
 {
@@ -91,12 +92,11 @@ class AuthControllerTest extends AppTestCase
 	{
 		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
 
-		$this->repo->shouldReceive('activate')->with('foo')->once()->andReturn('bar');
-		Facades\Auth::shouldReceive('login')->once()->with('bar');
+		Activation::shouldReceive('activate')->with('foo')->once()->andReturn(true);
 		
 		$this->getAction('activate', ['activation_code' => 'foo']);
 
-		$this->assertRedirectedToAction('UserController@profile');
+		$this->assertRedirectedToAction('AuthController@login');
 	}
 
 	public function testResetStepOneForm()

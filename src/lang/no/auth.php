@@ -12,6 +12,8 @@ return array(
 	'access-denied' => 'Du har ikke tilgang til denne delen av siden.',
 	'activate-title' => 'Aktiver konto',
 	'activate-text' => 'Kontoen din må aktiveres før du kan logge inn. Klikk lenken under for å aktivere kontoen din nå.',
+	'activation-success' => 'Kontoen din ble aktivert og du kan nå logge inn.',
+	'activation-failed' => 'Kontoen din kunne ikke aktiveres.',
 	'confirm-password' => 'Bekreft passord',
 	'invalid-password' => 'Ugyldig passord.',
 	'login-failure' => 'Ugyldig brukernavn eller passord, vennligst prøv igjen.',

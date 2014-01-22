@@ -123,8 +123,6 @@ class UserRepository extends \c\EloquentRepository
 		// either activate directly or send an activation code
 		if (isset($attributes['is_active']) && $attributes['is_active']) {
 			$user->activate();
-		} else {
-			Activation::generate($user);
 		}
 	}
 
@@ -140,22 +138,6 @@ class UserRepository extends \c\EloquentRepository
 	{
 		$user->password = $password;
 		return $user->save();
-	}
-
-	/**
-	 * Activate user with a certain activation code.
-	 *
-	 * @param  string $activationCode
-	 *
-	 * @return boolean
-	 */
-	public function activate($activationCode)
-	{
-		if (empty($activationCode)) {
-			throw new \InvalidArgumentException('Activation code missing');
-		}
-
-		return Activation::activate($activationCode);
 	}
 
 	/**
