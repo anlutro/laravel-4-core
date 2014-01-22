@@ -47,11 +47,15 @@
 		</div>
 	</div>
 
-	<div class="checkbox">
-		<label class="col-sm-5 col-sm-offset-2">
-			{{ Form::checkbox('is_active', $user->is_active) }}
-			@lang('c::user.active-field')
-		</label>
+	<div class="form-group">
+		<div class="col-sm-5 col-sm-offset-2">
+			<div class="checkbox">
+				<label>
+					{{ Form::checkbox('is_active', $user->is_active) }}
+					@lang('c::user.active-field')
+				</label>
+			</div>
+		</div>
 	</div>
 
 	@if ($user->exists)
