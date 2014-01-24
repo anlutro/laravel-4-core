@@ -7,8 +7,8 @@ Usage:
 """
 
 from docopt import docopt
-from os.path import realpath, dirname, basename, exists, join
-from os import listdir
+from os.path import realpath, dirname, basename, exists, join, isdir
+from os import listdir, makedirs
 
 def replace_filename(path, name):
 	return path.replace('_NAME_', name)
@@ -28,6 +28,9 @@ def copyfile(src, target, name, namespace):
 
 def scaffold(name, target_dir, namespace='MyName\MyApp'):
 	skel_path = dirname(realpath(__file__)) + '/skel'
+
+	if not isdir(target_dir):
+		makedirs(target_dir)
 
 	for f in listdir(skel_path):
 		src_path = realpath(join(skel_path, f))
