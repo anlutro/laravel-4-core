@@ -6,11 +6,6 @@ namespace _NAMESPACE_;
  */
 class _NAME_Validator extends \c\Validator
 {
-	public function __construct(_NAME_Model $model)
-	{
-		parent::__construct($model);
-	}
-
 	/**
 	 * Common rules are ran on every validation call.
 	 */

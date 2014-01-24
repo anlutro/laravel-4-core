@@ -10,4 +10,9 @@ class _NAME_Model extends \c\BaseModel
 	{
 		return new _NAME_QueryBuilder($query);
 	}
+
+	public function newCollection($models)
+	{
+		return new _NAME_Collection($models);
+	}
 }
