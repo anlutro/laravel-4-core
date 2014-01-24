@@ -28,7 +28,7 @@ trait RouteProviderTrait
 		$prefix = $this->app['config']->get('c::route-prefix');
 
 		if ($prefix) {
-			$this->app['router']->group(['prefix' => $prefix], function() {
+			$this->app['router']->group(['prefix' => $prefix], function() use($file) {
 				$this->requireRouteFile($file);
 			});
 		} else {
