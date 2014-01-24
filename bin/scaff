@@ -27,7 +27,7 @@ def copyfile(src, target, name, namespace):
 	trgfile.close()
 
 def scaffold(name, target_dir, namespace='MyName\MyApp'):
-	skel_path = dirname(__file__) + '/skel'
+	skel_path = dirname(realpath(__file__)) + '/skel'
 
 	for f in listdir(skel_path):
 		src_path = realpath(join(skel_path, f))
