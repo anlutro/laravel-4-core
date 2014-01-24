@@ -3,7 +3,7 @@
 """L4 Scaffolding
 
 Usage:
-  l4s.py <name> <path> [<namespace>]
+  scaff <name> <path> [<namespace>]
 """
 
 from docopt import docopt
