@@ -22,4 +22,9 @@ return array(
 	 * Whether to queue password reminder emails.
 	 */
 	'queue-reminder-mail' => false,
+
+	/**
+	 * Where to redirect after login if no "intended" URL is in session.
+	 */
+	'redirect-login' => '/',
 );
