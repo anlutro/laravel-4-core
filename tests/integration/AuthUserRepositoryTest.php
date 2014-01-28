@@ -39,7 +39,7 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 	{
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(false);
-		$this->validator->shouldReceive('errors->all')->once()->andReturn([]);
+		$this->validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
 		$this->assertFalse($repo->create());
 	}
 
