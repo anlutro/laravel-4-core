@@ -6,6 +6,12 @@ namespace _NAMESPACE_;
  */
 class _NAME_Model extends \c\BaseModel
 {
+	public $timestamps = true;
+	protected $table = '';
+	protected $softDelete = true;
+	protected $fillable = [];
+	protected $dates = [];
+
 	public function newEloquentBuilder($query)
 	{
 		return new _NAME_QueryBuilder($query);
