@@ -191,11 +191,15 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	 */
 	public function getUserTypeAttribute()
 	{
-		$types = static::$accessLevels;
+		static $type;
+
+		if ($type !== null) return $type;
+
+		$types = array_reverse(static::$accessLevels);
 		$level = $this->user_level;
 
 		foreach ($types as $name => $min) {
-			if ($level <= $min) {
+			if ($level >= $min) {
 				return $name;
 			}
 		}
