@@ -2,6 +2,8 @@
 
 """L4 Scaffolding
 
+Example: scaff BlogPost ./src/Blog/Posts MyName\\MyApp\\Blog\\Posts
+
 Usage:
   scaff <name> <path> [<namespace>]
 """
@@ -20,7 +22,6 @@ def copyfile(src, target, name, namespace):
 	for line in srcfile:
 		line = line.replace('_NAME_', name)
 		line = line.replace('_NAMESPACE_', namespace)
-		# print(line)
 		trgfile.write(line)
 
 	srcfile.close()
@@ -28,6 +29,7 @@ def copyfile(src, target, name, namespace):
 
 def scaffold(name, target_dir, namespace='MyName\MyApp'):
 	skel_path = dirname(realpath(__file__)) + '/skel'
+	target_dir = realpath(target_dir)
 
 	if not isdir(target_dir):
 		makedirs(target_dir)
