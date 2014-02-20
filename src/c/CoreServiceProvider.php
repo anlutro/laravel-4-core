@@ -130,6 +130,12 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		$this->registerAuthFilter();
 		$this->registerAccessFilter();
+		$this->app['router']->before(function($request) {
+			if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
+				$this->app->bind('c\Controllers\AuthController', 'c\Controllers\ApiAuthController');
+				$this->app->bind('c\Controllers\UserController', 'c\Controllers\ApiUserController');
+			}
+		});
 	}
 
 	/**

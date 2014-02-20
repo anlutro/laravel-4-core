@@ -9,18 +9,13 @@
 
 namespace c\Controllers;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
 use c\Auth\UserManager;
-use c\Auth\Activation\Activation;
 
 /**
  * Controller for managing users, not including authentication.
@@ -65,7 +60,7 @@ class UserController extends \c\Controller
 	{
 		$redirect = $this->redirect('profile');
 
-		if ($this->users->updateCurrentProfile($this->input())) {
+		if ($this->users->updateCurrentProfile(Input::all())) {
 			return $redirect->with('success', Lang::get('c::user.profile-update-success'));
 		} else {
 			return $redirect->withErrors($this->users->errors());
@@ -235,9 +230,6 @@ class UserController extends \c\Controller
 		$input = Input::all();
 
 		if ($user = $this->users->create($input)) {
-			if ($this->activationEnabled() && !$user->is_active) {
-				Activation::generate($user);
-			}
 			return $this->redirect('edit', [$user->id])
 				->with('success', Lang::get('c::user.create-success'));
 		} else {
@@ -283,17 +275,5 @@ class UserController extends \c\Controller
 			'-'      => '-',
 			'delete' => Lang::get('c::std.delete'),
 		];
-	}
-
-	/**
-	 * Check if user activation is enabled.
-	 *
-	 * @return boolean
-	 */
-	private function activationEnabled()
-	{
-		$loaded = App::getLoadedProviders();
-		$provider = 'c\Auth\Activation\ActivationServiceProvider';
-		return isset($loaded[$provider]);
 	}
 }
