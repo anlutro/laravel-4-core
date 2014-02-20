@@ -64,6 +64,19 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	}
 
 	/**
+	 * Check if the user's password needs rehashing.
+	 */
+	public function rehashPassword($password)
+	{
+		if (!Hash::needsRehash($this->attributes['password'])) return;
+
+		if (!$this->confirmPassword($password)) return;
+
+		$this->password = $password;
+		return $this->save();
+	}
+
+	/**
 	 * Add some simple search functionality.
 	 * 
 	 * $query->searchFor('admin')->get();
@@ -242,13 +255,13 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 	 *    Activation    *
 	 ********************/
 
-	public function activate($save = true)
+	public function activate($save = false)
 	{
 		$this->is_active = true;
 		if ($save) return $this->save();
 	}
 
-	public function deactivate($save = true)
+	public function deactivate($save = false)
 	{
 		$this->is_active = false;
 		if ($save) return $this->save();

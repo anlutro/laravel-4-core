@@ -10,8 +10,10 @@ class AuthControllerTest extends AppTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$this->repo = m::mock('c\Auth\UserRepository');
-		$this->app->instance('c\Auth\UserRepository', $this->repo);
+		$this->manager = m::mock('c\Auth\UserManager');
+		$this->app->instance('c\Auth\UserManager', $this->manager);
+		// $this->app->bind('c\Auth\UserModel', 'c\Auth\UserModel');
+		// $this->app['config']->set('auth.model', null);
 	}
 
 	public function tearDown()
@@ -21,6 +23,8 @@ class AuthControllerTest extends AppTestCase
 
 	public function testLogin()
 	{
+		$this->manager->shouldReceive('remindersEnabled')->once()->andReturn(true);
+
 		$this->getAction('login');
 
 		$this->assertResponseOk();
@@ -29,10 +33,8 @@ class AuthControllerTest extends AppTestCase
 	public function testLoginSuccess()
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
-		$credentials = array_only($input, ['username', 'password']) + ['is_active' => true];
-		Facades\Auth::shouldReceive('attempt')->once()->with($credentials)->andReturn(true);
-		Facades\Auth::shouldReceive('user')->andReturn(m::mock(['getAuthPassword' => 'foo']));
-		Facades\Hash::shouldReceive('needsRehash')->once()->andReturn(false);
+		$credentials = array_only($input, ['username', 'password']);
+		$this->manager->shouldReceive('login')->with($credentials)->andReturn(true);
 
 		$this->postAction('login', [], $input);
 
@@ -43,10 +45,8 @@ class AuthControllerTest extends AppTestCase
 	public function testLoginFailure()
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
-		$credentials = array_only($input, ['username', 'password']) + ['is_active' => true];
-		Facades\Auth::shouldReceive('attempt')->once()
-			->with($credentials)
-			->andReturn(false);
+		$credentials = array_only($input, ['username', 'password']);
+		$this->manager->shouldReceive('login')->with($credentials)->andReturn(false);
 
 		$this->postAction('login', [], $input);
 
@@ -56,7 +56,7 @@ class AuthControllerTest extends AppTestCase
 
 	public function testLogout()
 	{
-		Facades\Auth::shouldReceive('logout')->once();
+		$this->manager->shouldReceive('logout')->andReturn(false);
 
 		$this->getAction('logout');
 
@@ -65,9 +65,10 @@ class AuthControllerTest extends AppTestCase
 
 	public function testRegisterView()
 	{
+		$this->manager->shouldReceive('setActivationService')->once();
 		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
 
-		$this->repo->shouldReceive('getNew')->andReturn($this->getMockUser());
+		$this->manager->shouldReceive('getNew')->andReturn($this->getMockUser());
 
 		$this->getAction('register');
 
@@ -76,10 +77,11 @@ class AuthControllerTest extends AppTestCase
 
 	public function testRegisterSubmit()
 	{
+		$this->manager->shouldReceive('setActivationService')->once();
 		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
 
 		$input = ['foo' => 'bar'];
-		$this->repo->shouldReceive('create')->once()
+		$this->manager->shouldReceive('register')->once()
 			->with($input)->andReturn(true);
 
 		$this->postAction('attemptRegistration', [], $input);
@@ -90,9 +92,10 @@ class AuthControllerTest extends AppTestCase
 
 	public function testActivation()
 	{
+		$this->manager->shouldReceive('setActivationService')->once();
 		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
 
-		Activation::shouldReceive('activate')->with('foo')->once()->andReturn(true);
+		$this->manager->shouldReceive('activateByCode')->with('foo')->once()->andReturn(true);
 		
 		$this->getAction('activate', ['activation_code' => 'foo']);
 
@@ -106,32 +109,11 @@ class AuthControllerTest extends AppTestCase
 		$this->assertResponseOk();
 	}
 
-	public function testResetStepOneNotFound()
-	{
-		$input = ['email' => 'foo', 'bar' => 'baz'];
-		$credentials = array_only($input, ['email']);
-
-		$this->swapPasswordBrokerDependencies();
-		$this->repo->shouldReceive('getByCredentials')->once()
-			->with($credentials)->andReturn(false);
-
-		$this->postAction('sendReminder', [], $input);
-
-		$this->assertRedirectedToAction('reminder');
-		$this->assertSessionHasErrors();
-	}
-
 	public function testResetStepOneFailure()
 	{
 		$input = ['email' => 'foo', 'bar' => 'baz'];
-		$credentials = array_only($input, ['email']);
-		$mockUser = $this->getMockUser();
-
-		$this->swapPasswordBrokerDependencies();
-		$this->repo->shouldReceive('getByCredentials')->once()
-			->with($credentials)->andReturn($mockUser);
-		Facades\Password::shouldReceive('requestReset')->once()
-			->with($mockUser)->andReturn(false);
+		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
+			->with($input['email'])->andReturn(false);
 
 		$this->postAction('sendReminder', [], $input);
 
@@ -142,14 +124,9 @@ class AuthControllerTest extends AppTestCase
 	public function testResetStepOneSuccess()
 	{
 		$input = ['email' => 'foo', 'bar' => 'baz'];
-		$credentials = array_only($input, ['email']);
 		$mockUser = $this->getMockUser();
-
-		$this->swapPasswordBrokerDependencies();
-		$this->repo->shouldReceive('getByCredentials')->once()
-			->with($credentials)->andReturn($mockUser);
-		Facades\Password::shouldReceive('requestReset')->once()
-			->with($mockUser)->andReturn(true);
+		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
+			->with($input['email'])->andReturn(true);
 
 		$this->postAction('sendReminder', [], $input);
 
@@ -171,39 +148,13 @@ class AuthControllerTest extends AppTestCase
 		$this->assertRedirectedToAction('login');
 	}
 
-	protected function setupResetExpectations(array $input, $result, $validates = true)
+	protected function setupResetExpectations(array $input, $result)
 	{
 		$credentials = array_only($input, ['username']);
+		$passwords = array_only($input, ['password', 'password_confirmation']);
 		$token = $input['token'];
-		$newPassword = $input['password'];
-		
-		Validator::shouldReceive('make')->once()
-			->andReturn(m::mock(['fails' => (!$validates)]));
-		if ($validates) {
-			$this->swapPasswordBrokerDependencies();
-			$user = $this->getMockUser();
-			$this->repo->shouldReceive('getByCredentials')->andReturn($user);
-			Facades\Password::shouldReceive('resetUser')->once()
-				->with($user, $token, $newPassword)
-				->andReturn($result);
-		}
-	}
-
-	public function testResetValidationFails()
-	{
-		$input = [
-			'username' => 'bar',
-			'token' => 'baz',
-			'password' => 'foo',
-			'password_confirm' => 'bar',
-			'foo' => 'baz'
-		];
-		$this->setupResetExpectations($input, false, false);
-
-		$this->postAction('attemptReset', [], $input);
-
-		$this->assertRedirectedToAction('reset', ['token' => 'baz']);
-		$this->assertSessionHasErrors();
+		$this->manager->shouldReceive('resetPasswordForCredentials')->once()
+			->with($credentials, $passwords, $token)->andReturn($result);
 	}
 
 	public function testResetFailure()
@@ -212,7 +163,7 @@ class AuthControllerTest extends AppTestCase
 			'username' => 'bar',
 			'token' => 'baz',
 			'password' => 'foo',
-			'password_confirm' => 'bar',
+			'password_confirmation' => 'bar',
 			'foo' => 'baz'
 		];
 		$this->setupResetExpectations($input, false);
@@ -229,7 +180,7 @@ class AuthControllerTest extends AppTestCase
 			'username' => 'bar',
 			'token' => 'baz',
 			'password' => 'foo',
-			'password_confirm' => 'bar',
+			'password_confirmation' => 'bar',
 			'foo' => 'baz'
 		];
 		$this->setupResetExpectations($input, true);
@@ -238,11 +189,6 @@ class AuthControllerTest extends AppTestCase
 
 		$this->assertRedirectedTo('login');
 		$this->assertSessionHas('success');
-	}
-
-	public function swapPasswordBrokerDependencies()
-	{
-		$this->app['auth.reminder.repository'] = m::mock('Illuminate\Auth\Reminders\ReminderRepositoryInterface');
 	}
 
 	protected function getMockUser()

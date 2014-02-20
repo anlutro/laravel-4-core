@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
-use c\Auth\UserRepository;
+use c\Auth\UserManager;
 use c\Auth\Activation\Activation;
 
 /**
@@ -33,7 +33,7 @@ class UserController extends \c\Controller
 	/**
 	 * @param UserRepository $users
 	 */
-	public function __construct(UserRepository $users)
+	public function __construct(UserManager $users)
 	{
 		$this->users = $users;
 	}
@@ -46,8 +46,6 @@ class UserController extends \c\Controller
 	public function profile()
 	{
 		$user = $this->users->getCurrentUser();
-
-		$url = URL::action('UserController@profile');
 
 		return View::make('c::user.profile', [
 			'user'       => $user,
@@ -63,16 +61,9 @@ class UserController extends \c\Controller
 	 */
 	public function updateProfile()
 	{
-		$user = $this->users->getCurrentUser();
 		$redirect = $this->redirect('profile');
 
-		if (!$user->confirmPassword(Input::get('old_password'))) {
-			return $redirect->withErrors(Lang::get('c::auth.invalid-password'));
-		}
-
-		$input = Input::all();
-
-		if ($this->users->update($user, $input)) {
+		if ($this->users->updateCurrentProfile($this->input())) {
 			return $redirect->with('success', Lang::get('c::user.profile-update-success'));
 		} else {
 			return $redirect->withErrors($this->users->errors());
@@ -86,7 +77,7 @@ class UserController extends \c\Controller
 	 */
 	public function index()
 	{
-		if (Input::has('search')) {
+		if (Input::get('search')) {
 			$this->users->search(Input::get('search'));
 		}
 
@@ -98,15 +89,12 @@ class UserController extends \c\Controller
 			->paginate(20)
 			->getAll();
 		$types = ['all' => Lang::get('c::user.usertype-all')]
-			+ $this->users->getUserTypes();
+			+ $this->getUserTypes();
 
 		return View::make('c::user.list', [
 			'users'       => $users,
 			'userTypes'   => $types,
-			'bulkActions' => [
-				'-'      => '-',
-				'delete' => Lang::get('c::std.delete'),
-			],
+			'bulkActions' => $this->getBulkActions(),
 			'editAction'  => $this->parseAction('edit'),
 			'newUrl'      => $this->url('create'),
 			'backUrl'     => URL::to('/'),
@@ -141,20 +129,10 @@ class UserController extends \c\Controller
 			return $this->notFound();
 		}
 
-		$viewData = [
-			'user' => $user,
+		return View::make('c::user.show', [
+			'user'    => $user,
 			'backUrl' => URL::to('/'),
-		];
-
-		$isAdmin = $this->users
-			->getCurrentUser()
-			->hasAccess('*');
-
-		if ($isAdmin) {
-			$viewData['editUrl'] = $this->url('edit', [$user->id]);
-		}
-
-		return View::make('c::user.show', $viewData);
+		]);
 	}
 
 	/**
@@ -170,7 +148,9 @@ class UserController extends \c\Controller
 			return $this->notFound();
 		}
 
-		return View::make('c::user.form', [
+		$this->users->checkPermissions($user);
+
+		$viewData = [
 			'pageTitle'  => Lang::get('c::user.admin-edituser'),
 			'user'       => $user,
 			'isActive'   => (bool) $user->is_active,
@@ -178,7 +158,9 @@ class UserController extends \c\Controller
 			'formAction' => $this->url('update', [$user->id]),
 			'deleteUrl'  => $this->url('delete', [$user->id]),
 			'backUrl'    => $this->url('index'),
-		]);
+		];
+
+		return View::make('c::user.form', $viewData);
 	}
 
 	/**
@@ -194,10 +176,9 @@ class UserController extends \c\Controller
 			return $this->notFound();
 		}
 
-		$input = Input::all();
 		$redirect = $this->redirect('edit', [$user->id]);
 
-		if ($this->users->updateAsAdmin($user, $input)) {
+		if ($this->users->updateAsAdmin($user, Input::all())) {
 			return $redirect->with('success', Lang::get('c::user.update-success'));
 		} else {
 			return $redirect->withErrors($this->users->errors());
@@ -276,18 +257,30 @@ class UserController extends \c\Controller
 	}
 
 	/**
-	 * Get a list of user types. Return false if not logged in or not allowed
-	 * to edit user types.
+	 * Get a list of user types.
 	 * 
 	 * @return array|false
 	 */
 	private function getUserTypes()
 	{
-		if (!Auth::check() || !Auth::user()->hasAccess('admin')) {
-			return false;
+		$types = $this->users->getUserTypes();
+		$strings = [];
+
+		foreach ($types as $type) {
+			if (!empty($type)) {
+				$strings[$type] = Lang::get('c::user.usertype-'.$type);
+			}
 		}
 
-		return $this->users->getUserTypes();
+		return $strings;
+	}
+
+	private function getBulkActions()
+	{
+		return [
+			'-'      => '-',
+			'delete' => Lang::get('c::std.delete'),
+		];
 	}
 
 	/**

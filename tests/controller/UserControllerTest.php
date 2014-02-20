@@ -8,8 +8,10 @@ class UserControllerTest extends AppTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$this->users = m::mock('c\Auth\UserRepository');
-		$this->app->instance('c\Auth\UserRepository', $this->users);
+		$this->users = m::mock('c\Auth\UserManager');
+		$this->app->instance('c\Auth\UserManager', $this->users);
+		$this->app->bind('c\Auth\UserModel', 'c\Auth\UserModel');
+		$this->app['config']->set('auth.model', null);
 	}
 
 	public function tearDown()
@@ -17,43 +19,37 @@ class UserControllerTest extends AppTestCase
 		m::close();
 	}
 
+	protected function setUpProfileUpdateExpectations($input, $result)
+	{
+		$this->users->shouldReceive('updateCurrentProfile')
+			->with($input)->andReturn($result);
+	}
+
+	protected function setupUpdateExpectation($input, $id, $result)
+	{
+		$user = $this->expectFindUser($id);
+		$this->users->shouldReceive('updateAsAdmin')->once()
+			->with($user, $input)
+			->andReturn($result);
+		return $user;
+	}
+
 	public function testViewProfile()
 	{
-		$curUser = $this->expectCurrentUser();
+		$user = $this->getMockUser();
+		$this->users->shouldReceive('getCurrentUser')->andReturn($user);
 
 		$this->getAction('profile');
 		$this->assertResponseOk();
 		$this->assertRouteHasFilter('auth');
-	}
-
-	public function testUpdateProfileWithIncorrectPassword()
-	{
-		$input = ['old_password' => 'foo'];
-		$curUser = $this->expectCurrentUser();
-		$curUser->shouldReceive('confirmPassword')
-			->with($input['old_password'])
-			->andReturn(false);
-
-		$this->postAction('updateProfile', [], $input);
-
-		$this->assertRedirectedToAction('profile');
-		$this->assertSessionHasErrors();
-	}
-
-	protected function setUpProfileUpdateExpectations($input, $result)
-	{
-		$curUser = $this->expectCurrentUser();
-		$curUser->shouldReceive('confirmPassword')
-			->andReturn(true);
-		$this->users->shouldReceive('update')
-			->with($curUser, $input)
-			->andReturn($result);
+		$this->assertViewHas('user', $user);
 	}
 
 	public function testUpdateProfileSuccess()
 	{
 		$input = ['foo' => 'bar'];
-		$this->setUpProfileUpdateExpectations($input, true);
+		$this->users->shouldReceive('updateCurrentProfile')
+			->with($input)->andReturn(true);
 
 		$this->postAction('updateProfile', [], $input);
 
@@ -64,7 +60,8 @@ class UserControllerTest extends AppTestCase
 	public function testUpdateProfileFailure()
 	{
 		$input = ['foo' => 'bar'];
-		$this->setUpProfileUpdateExpectations($input, false);
+		$this->users->shouldReceive('updateCurrentProfile')
+			->with($input)->andReturn(false);
 		$this->users->shouldReceive('errors')
 			->andReturn(['baz' => 'bar']);
 
@@ -74,12 +71,12 @@ class UserControllerTest extends AppTestCase
 		$this->assertSessionHasErrors('baz');
 	}
 
-	protected function setUpIndexExpectations()
+	protected function setUpIndexExpectations($results = array())
 	{
 		$this->users->shouldReceive('getUserTypes')->once()
 			->andReturn([]);
 		$this->users->shouldReceive('paginate->getAll')->once()
-			->andReturn([]);
+			->andReturn($results);
 	}
 
 	public function testIndex()
@@ -149,34 +146,23 @@ class UserControllerTest extends AppTestCase
 	public function testShow()
 	{
 		$id = 1; $user = $this->expectFindUser($id);
-		$curUser = $this->expectCurrentUser();
-		$curUser->shouldReceive('hasAccess')->with('*')->once()->andReturn(true);
 
 		$this->getAction('show', [$id]);
 
 		$this->assertResponseOk();
 		$this->assertViewHas('user', $user);
-		$this->assertViewHas('editUrl');
 	}
 
 	public function testEdit()
 	{
 		$id = 1; $user = $this->expectFindUser($id);
-		$this->users->shouldReceive('getUserTypes')->andReturn([]);
+		$this->users->shouldReceive('getUserTypes')->once()->andReturn([]);
+		$this->users->shouldReceive('checkPermissions')->once()->with($user);
 
 		$this->getAction('edit', [$id]);
 
 		$this->assertResponseOk();
 		$this->assertViewHas('user', $user);
-	}
-
-	protected function setupUpdateExpectation($input, $id, $result)
-	{
-		$user = $this->expectFindUser($id);
-		$this->users->shouldReceive('updateAsAdmin')->once()
-			->with($user, $input)
-			->andReturn($result);
-		return $user;
 	}
 
 	public function testUpdateSuccess()
@@ -207,6 +193,8 @@ class UserControllerTest extends AppTestCase
 	{
 		$this->users->shouldReceive('getNew')->once()
 			->andReturn($this->getMockUser());
+		$this->users->shouldReceive('getUserTypes')->once()
+			->andReturn([]);
 
 		$this->getAction('create');
 
@@ -251,13 +239,6 @@ class UserControllerTest extends AppTestCase
 
 		$this->assertRedirectedToAction('create');
 		$this->assertSessionHasErrors();
-	}
-
-	protected function expectCurrentUser()
-	{
-		$mockUser = $this->getMockUser();
-		$this->users->shouldReceive('getCurrentUser')->andReturn($mockUser);
-		return $mockUser;
 	}
 
 	protected function getMockUser()

@@ -24,6 +24,16 @@ class ReminderServiceProvider extends BaseProvider
 		$this->commands('c\Auth\Console\SendPasswordReminderCommand');
 	}
 
+	public function register()
+	{
+		parent::register();
+		
+		$this->app->extend('c\Auth\UserManager', function($manager, $app) {
+			$manager->setReminderService($app['auth.reminder']);
+			return $manager;
+		});
+	}
+
 	/**
 	 * Register the reminder repository implementation.
 	 *

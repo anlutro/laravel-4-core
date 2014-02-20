@@ -9,19 +9,11 @@
 
 namespace c\Auth;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use c\Auth\Activation\Activation;
-
 /**
  * Repository for user models.
  */
 class UserRepository extends \c\EloquentRepository
 {
-	protected $model;
-	protected $validator;
 	protected $search;
 	protected $filter;
 
@@ -33,14 +25,12 @@ class UserRepository extends \c\EloquentRepository
 	public function search($search)
 	{
 		$this->search = $search;
-
 		return $this;
 	}
 
 	public function filter($filter)
 	{
 		$this->filter = $filter;
-
 		return $this;
 	}
 
@@ -56,14 +46,6 @@ class UserRepository extends \c\EloquentRepository
 		if ($this->filter) {
 			$query->whereUserType($this->filter);
 		}
-	}
-
-	/**
-	 * We'll use the auth driver to get the currently logged in user.
-	 */
-	public function getCurrentUser()
-	{
-		return Auth::user();
 	}
 
 	/**
@@ -93,16 +75,7 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function getUserTypes()
 	{
-		$types = array_flip($this->model->getAccessLevels());
-		$strings = [];
-
-		foreach ($types as $type) {
-			if (!empty($type)) {
-				$strings[$type] = Lang::get('c::user.usertype-'.$type);
-			}
-		}
-
-		return $strings;
+		return array_flip($this->model->getAccessLevels());
 	}
 
 	/**
@@ -114,10 +87,10 @@ class UserRepository extends \c\EloquentRepository
 		$user->username = $attributes['username'];
 
 		// set the user level
-		if (isset($attributes['user_type']) && !empty($attributes['user_type'])) {
-			$user->user_type = $attributes['user_type'];
-		} elseif (isset($attributes['user_level']) && !empty($attributes['user_level'])) {
+		if (!empty($attributes['user_level'])) {
 			$user->user_level = $attributes['user_level'];
+		} elseif (!empty($attributes['user_type'])) {
+			$user->user_type = $attributes['user_type'];
 		}
 
 		// either activate directly or send an activation code
@@ -136,6 +109,10 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function rehashPassword(UserModel $user, $password)
 	{
+		if (!$user->confirmPassword($password)) {
+			return false;
+		}
+		
 		$user->password = $password;
 		return $user->save();
 	}

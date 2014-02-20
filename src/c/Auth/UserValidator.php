@@ -31,4 +31,9 @@ class UserValidator extends \c\Validator
 			'password' => ['required', 'confirmed', 'min:6']
 		];
 	}
+
+	public function validPasswordReset(array $attributes)
+	{
+		return $this->valid($this->getCreateRules(), $attributes, false);
+	}
 }

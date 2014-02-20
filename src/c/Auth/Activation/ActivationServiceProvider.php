@@ -36,6 +36,11 @@ class ActivationServiceProvider extends ServiceProvider
 			return new ActivationService($codes, $users, $mailer, $hashKey, $queue);
 
 		});
+
+		$this->app->extend('c\Auth\UserManager', function($manager, $app) {
+			$manager->setActivationService($app['auth.activation']);
+			return $manager;
+		});
 	}
 
 	public function boot()

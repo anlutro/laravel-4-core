@@ -59,6 +59,8 @@ class CoreServiceProvider extends ServiceProvider
 			'c\Auth\Console\CreateUserCommand',
 			'c\Auth\Console\ChangePasswordCommand',
 		]);
+
+		$this->app->bind('c\Auth\UserManager');
 	}
 
 	/**
@@ -78,7 +80,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
 
-		$userModel = $this->app['config']->get('auth.model', 'c\Auth\UserModel');
+		$userModel = $this->app['config']->get('auth.model') ?: 'c\Auth\UserModel';
 		$this->app->bind('c\Auth\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
 	}

@@ -18,14 +18,14 @@ class ActivationService
 	protected $users;
 	protected $mailer;
 	protected $hashKey;
-	protected $queue = false;
+	protected $queue;
 
 	public function __construct(
 		ActivationCodeRepositoryInterface $codes,
 		UserProviderInterface $users,
 		Mailer $mailer,
 		$hashKey,
-		$queue
+		$queue = false
 	) {
 		$this->codes = $codes;
 		$this->users = $users;

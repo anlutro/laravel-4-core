@@ -10,16 +10,13 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 
-use c\Auth\UserRepository;
-use c\Auth\Activation\Activation;
+use c\Auth\UserManager;
 
 /**
  * Controller for authentication actions.
@@ -27,14 +24,14 @@ use c\Auth\Activation\Activation;
 class AuthController extends \c\Controller
 {
 	/**
-	 * @var \c\Auth\UserRepository
+	 * @var \c\Auth\UserManager
 	 */
 	protected $users;
 
 	/**
-	 * @param \c\Auth\UserRepository $users
+	 * @param \c\Auth\UserManager $users
 	 */
-	public function __construct(UserRepository $users)
+	public function __construct(UserManager $users)
 	{
 		$this->users = $users;
 
@@ -79,17 +76,10 @@ class AuthController extends \c\Controller
 		$credentials = [
 			'username'  => Input::get('username'),
 			'password'  => Input::get('password'),
-			'is_active' => 1,
 		];
 
-		if (Auth::attempt($credentials)) {
-			// rehash password if necessary
-			if (Hash::needsRehash(Auth::user()->getAuthPassword())) {
-				$this->users->rehashPassword(Auth::user(), $credentials['password']);
-			}
-
-			$url = Config::get('c::redirect-login');
-
+		if ($this->users->login($credentials)) {
+			$url = Config::get('c::redirect-login', '/');
 			return Redirect::intended($url)
 				->with('success', Lang::get('c::auth.login-success'));
 		} else {
@@ -105,7 +95,7 @@ class AuthController extends \c\Controller
 	 */
 	public function logout()
 	{
-		Auth::logout();
+		$this->users->logout();
 		return $this->redirect('login')
 			->with('info', Lang::get('c::auth.logout-success'));
 	}
@@ -132,7 +122,7 @@ class AuthController extends \c\Controller
 	{
 		$input = Input::all();
 
-		if ($this->users->create($input)) {
+		if ($this->users->register($input)) {
 			return $this->redirect('login')
 				->with('success', Lang::get('c::auth.register-success'));
 		} else {
@@ -151,7 +141,7 @@ class AuthController extends \c\Controller
 	{
 		$code = Input::get('activation_code');
 
-		if (Activation::activate($code)) {
+		if ($this->users->activateByCode($code)) {
 			$msg = Lang::get('c::auth.activation-success');
 			return $this->redirect('login')->with('success', $msg);
 		} else {
@@ -179,15 +169,7 @@ class AuthController extends \c\Controller
 	 */
 	public function sendReminder()
 	{
-		$credentials = Input::only('email');
-		$user = $this->users->getByCredentials($credentials);
-
-		if (!$user) {
-			return $this->redirect('reminder')
-				->withErrors(Lang::get('c::auth.user-email-notfound'));
-		}
-
-		if (Password::requestReset($user)) {
+		if ($this->users->requestPasswordResetForEmail(Input::get('email'))) {
 			return $this->redirect('login')
 				->with('info', Lang::get('c::auth.reminder-sent'));
 		} else {
@@ -224,6 +206,18 @@ class AuthController extends \c\Controller
 		$token = Input::get('token');
 		$input = Input::only('password', 'password_confirmation');
 
+		if ($this->users->resetPasswordForCredentials($credentials, $input, $token)) {
+			return $this->redirect('login')
+				->with('success', Lang::get('c::auth.reset-success'));
+		} else {
+			return $this->redirect('login')
+				->withErrors(Lang::get('reminders.token'));
+		}
+
+		/**
+		 * OLD CODE BELOW
+		 */
+
 		$validator = Validator::make($input, [
 			'password' => ['required', 'confirmed', 'min:5'],
 		]);
@@ -241,7 +235,7 @@ class AuthController extends \c\Controller
 
 		$newPassword = Input::get('password');
 
-		if (Password::resetUser($user, $token, $newPassword)) {
+		if ($this->users->resetPassword($user, $newPassword, $token)) {
 			return $redirect->with('success', Lang::get('c::auth.reset-success'));
 		} else {
 			return $redirect->withErrors(Lang::get('reminders.token'));
@@ -255,6 +249,7 @@ class AuthController extends \c\Controller
 	 */
 	private function activationEnabled()
 	{
+		return $this->users->activationEnabled();
 		$loaded = App::getLoadedProviders();
 		$provider = 'c\Auth\Activation\ActivationServiceProvider';
 		return isset($loaded[$provider]);
@@ -267,6 +262,7 @@ class AuthController extends \c\Controller
 	 */
 	private function remindersEnabled()
 	{
+		return $this->users->remindersEnabled();
 		$loaded = App::getLoadedProviders();
 		$provider = 'c\Auth\Reminders\ReminderServiceProvider';
 		return isset($loaded[$provider]);
