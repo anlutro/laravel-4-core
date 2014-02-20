@@ -11,28 +11,28 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['before' => 'guest'], function()
 {
-	Route::get('/login', 'AuthController@login');
+	Route::get('/login', 'c\Controllers\AuthController@login');
 	Route::post('/login', [
 		'before' => 'csrf',
-		'uses' => 'AuthController@attemptLogin'
+		'uses' => 'c\Controllers\AuthController@attemptLogin'
 	]);
 });
 
 Route::group(['before' => 'auth'], function()
 {
-	Route::get('/my-profile', 'UserController@profile');
-	Route::post('/my-profile', 'UserController@updateProfile');
-	Route::get('/logout', 'AuthController@logout');
-	Route::get('/profile/{id}', 'UserController@show');
+	Route::get('/my-profile', 'c\Controllers\UserController@profile');
+	Route::post('/my-profile', 'c\Controllers\UserController@updateProfile');
+	Route::get('/logout', 'c\Controllers\AuthController@logout');
+	Route::get('/profile/{id}', 'c\Controllers\UserController@show');
 });
 
 Route::group(['prefix' => 'admin', 'before' => 'auth|access:admin'], function()
 {
-	Route::get('users', 'UserController@index');
-	Route::post('users', 'UserController@bulk');
-	Route::get('users/new', 'UserController@create');
-	Route::post('users/new', 'UserController@store');
-	Route::get('users/{id}', 'UserController@edit');
-	Route::post('users/{id}', 'UserController@update');
-	Route::delete('users/{id}', 'UserController@delete');
+	Route::get('users', 'c\Controllers\UserController@index');
+	Route::post('users', 'c\Controllers\UserController@bulk');
+	Route::get('users/new', 'c\Controllers\UserController@create');
+	Route::post('users/new', 'c\Controllers\UserController@store');
+	Route::get('users/{id}', 'c\Controllers\UserController@edit');
+	Route::post('users/{id}', 'c\Controllers\UserController@update');
+	Route::delete('users/{id}', 'c\Controllers\UserController@delete');
 });

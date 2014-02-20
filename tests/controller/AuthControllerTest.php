@@ -5,7 +5,7 @@ use c\Auth\Activation\Activation;
 
 class AuthControllerTest extends AppTestCase
 {
-	protected $controller = 'AuthController';
+	protected $controller = 'c\Controllers\AuthController';
 
 	public function setUp()
 	{
@@ -97,7 +97,7 @@ class AuthControllerTest extends AppTestCase
 		
 		$this->getAction('activate', ['activation_code' => 'foo']);
 
-		$this->assertRedirectedToAction('AuthController@login');
+		$this->assertRedirectedToAction('c\Controllers\AuthController@login');
 	}
 
 	public function testResetStepOneForm()

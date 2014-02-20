@@ -7,6 +7,8 @@
  * @package  l4-core
  */
 
+namespace c\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;

@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['before' => 'guest'], function()
 {
-	Route::get('/reminder', 'AuthController@reminder');
+	Route::get('/reminder', 'c\Controllers\AuthController@reminder');
 	Route::post('/reminder', [
 		'before' => 'csrf',
-		'uses' => 'AuthController@sendReminder'
+		'uses' => 'c\Controllers\AuthController@sendReminder'
 	]);
-	Route::get('/reset', 'AuthController@reset');
+	Route::get('/reset', 'c\Controllers\AuthController@reset');
 	Route::post('/reset', [
 		'before' => 'csrf',
-		'uses' => 'AuthController@attemptReset'
+		'uses' => 'c\Controllers\AuthController@attemptReset'
 	]);
 });

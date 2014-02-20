@@ -23,7 +23,6 @@
 			"c\\": "src/"
 		},
 		"classmap": [
-			"src/controllers",
 			"src/migrations"
 		],
 		"files": [

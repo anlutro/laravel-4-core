@@ -3,7 +3,7 @@ use Mockery as m;
 
 class UserControllerTest extends AppTestCase
 {
-	protected $controller = 'UserController';
+	protected $controller = 'c\Controllers\UserController';
 
 	public function setUp()
 	{
