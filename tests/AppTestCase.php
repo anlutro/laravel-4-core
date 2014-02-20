@@ -30,6 +30,8 @@ class AppTestCase extends c\L4TestCase
 	{
 		parent::setUp();
 		$this->app['db']->setDefaultConnection('sqlite');
+		$this->app['config']->set('auth.model', null);
+		$this->app->bind('c\Auth\UserModel', 'c\Auth\UserModel');
 		$this->loadCoreProviders();
 		$this->addMissingViews();
 	}
@@ -39,7 +41,6 @@ class AppTestCase extends c\L4TestCase
 		$loaded = $this->app->getLoadedProviders();
 		$providers = [
 			'c\CoreServiceProvider',
-			'c\Auth\Reminders\ReminderServiceProvider',
 		];
 
 		foreach ($providers as $provider) {

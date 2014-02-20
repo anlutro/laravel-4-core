@@ -28,12 +28,13 @@ class UserValidator extends \c\Validator
 	protected function getCreateRules()
 	{
 		return [
-			'password' => ['required', 'confirmed', 'min:6']
+			'password' => ['required'],
 		];
 	}
 
 	public function validPasswordReset(array $attributes)
 	{
-		return $this->valid($this->getCreateRules(), $attributes, false);
+		$rules = ['password' => ['required', 'confirmed', 'min:6']];
+		return $this->valid($rules, $attributes, false);
 	}
 }

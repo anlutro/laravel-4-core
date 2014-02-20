@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
+ */
+
 namespace c\Auth;
 
 use Illuminate\Auth\AuthManager;
@@ -7,6 +15,9 @@ use Illuminate\Translation\Translator;
 use c\Auth\Activation\ActivationService;
 use c\Auth\Reminders\PasswordBroker;
 
+/**
+ * Top-level user service class.
+ */
 class UserManager
 {
 	protected $users;
@@ -15,6 +26,11 @@ class UserManager
 	protected $activations;
 	protected $reminders;
 
+	/**
+	 * @param UserRepository $users
+	 * @param AuthManager    $auth
+	 * @param Translator     $translator
+	 */
 	public function __construct(
 		UserRepository $users,
 		AuthManager $auth,
@@ -25,36 +41,73 @@ class UserManager
 		$this->translator = $translator;
 	}
 
+	/**
+	 * Set the activation service.
+	 *
+	 * @param ActivationService $activations
+	 */
 	public function setActivationService(ActivationService $activations)
 	{
 		$this->activations = $activations;
 	}
 
+	/**
+	 * Check if activations are enabled.
+	 *
+	 * @return bool
+	 */
 	public function activationsEnabled()
 	{
 		return $this->activations !== null;
 	}
 
+	/**
+	 * Set the password reminder service.
+	 *
+	 * @param PasswordBroker $reminders
+	 */
 	public function setReminderService(PasswordBroker $reminders)
 	{
 		$this->reminders = $reminders;
 	}
 
+	/**
+	 * Check if password reminders are enabled.
+	 *
+	 * @return bool
+	 */
 	public function remindersEnabled()
 	{
 		return $this->reminders !== null;
 	}
 
-	public function setCurrentUser($user)
+	/**
+	 * Set the current user.
+	 *
+	 * @param UserModel $user
+	 */
+	public function setCurrentUser(UserModel $user)
 	{
 		$this->auth->setUser($user);
 	}
 
+	/**
+	 * Get the current user.
+	 *
+	 * @return UserModel
+	 */
 	public function getCurrentUser()
 	{
 		return $this->auth->getUser();
 	}
 
+	/**
+	 * Create a new user.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return UserModel|false
+	 */
 	public function create(array $attributes)
 	{
 		if (!empty($attributes['user_level'])) {
@@ -87,20 +140,34 @@ class UserManager
 		return $user;
 	}
 
+	/**
+	 * Register a new user and send an activation code.
+	 *
+	 * @param  array  $attributes
+	 *
+	 * @return UserModel|false
+	 */
 	public function register(array $attributes)
 	{
 		unset($attributes['user_level']);
 		unset($attributes['user_type']);
 		unset($attributes['is_active']);
 
-		$user = $this->users->create($attributes);
+		if (!$user = $this->users->create($attributes)) return false;
 
 		$this->sendActivationCode($user);
 
 		return $user;
 	}
 
-	public function updateCurrentProfile($attributes)
+	/**
+	 * Update the current user's profile.
+	 *
+	 * @param  array $attributes
+	 *
+	 * @return bool
+	 */
+	public function updateCurrentProfile(array $attributes)
 	{
 		$user = $this->getCurrentUser();
 
@@ -112,13 +179,28 @@ class UserManager
 		return $this->users->update($user, $attributes);
 	}
 
-	public function updateAsAdmin($user, $attributes)
+	/**
+	 * Update a user as an admin.
+	 *
+	 * @param  UserModel $user
+	 * @param  array     $attributes
+	 *
+	 * @return bool
+	 */
+	public function updateAsAdmin(UserModel $user, array $attributes)
 	{
 		$this->checkPermissions($user);
 
 		return $this->users->updateAsAdmin($user, $attributes);
 	}
 
+	/**
+	 * Delete a user.
+	 *
+	 * @param  UserModel $user
+	 *
+	 * @return bool
+	 */
 	public function delete($user)
 	{
 		$this->checkPermissions($user);
@@ -126,6 +208,15 @@ class UserManager
 		return $this->users->delete($user, $attributes);
 	}
 
+	/**
+	 * Check if the current user has permission to modify a user.
+	 *
+	 * @param  UserModel|int $against
+	 *
+	 * @return void
+	 * 
+	 * @throws AccessDeniedException
+	 */
 	public function checkPermissions($against)
 	{
 		if ($against instanceof UserModel) {
@@ -143,6 +234,13 @@ class UserManager
 		}
 	}
 
+	/**
+	 * Given correct credentials, log a user in.
+	 *
+	 * @param  array  $credentials
+	 *
+	 * @return bool
+	 */
 	public function login(array $credentials)
 	{
 		$credentials['is_active'] = 1;
@@ -155,11 +253,23 @@ class UserManager
 		}
 	}
 
+	/**
+	 * Log out the current user.
+	 *
+	 * @return void
+	 */
 	public function logout()
 	{
 		return $this->auth->logout();
 	}
 
+	/**
+	 * Send an activation code to a user.
+	 *
+	 * @param  UserModel $user
+	 *
+	 * @return bool
+	 */
 	public function sendActivationCode($user)
 	{
 		if ($this->activations === null) {
@@ -169,6 +279,13 @@ class UserManager
 		return $this->activations->generate($user);
 	}
 
+	/**
+	 * Given an activation code, activate the user.
+	 *
+	 * @param  string $code
+	 *
+	 * @return bool
+	 */
 	public function activateByCode($code)
 	{
 		if ($this->activations === null) {
@@ -178,6 +295,13 @@ class UserManager
 		return $this->activations->activate($code);
 	}
 
+	/**
+	 * Request a password reset for a given email.
+	 *
+	 * @param  string $email
+	 *
+	 * @return bool
+	 */
 	public function requestPasswordResetForEmail($email)
 	{
 		if ($this->reminders === null) {
@@ -191,6 +315,13 @@ class UserManager
 		return $this->reminders->requestReset($user);
 	}
 
+	/**
+	 * Request a password reset for a user.
+	 *
+	 * @param  UserModel $user
+	 *
+	 * @return bool
+	 */
 	public function requestPasswordReset($user)
 	{
 		if ($this->reminders === null) {
@@ -200,6 +331,15 @@ class UserManager
 		return $this->reminders->requestReset($user);
 	}
 
+	/**
+	 * Reset the password for a user of given credentials.
+	 *
+	 * @param  array  $credentials username, email...
+	 * @param  array  $attributes  password + confirmation
+	 * @param  string $token       password reset token
+	 *
+	 * @return bool
+	 */
 	public function resetPasswordForCredentials(array $credentials, array $attributes, $token)
 	{
 		if ($this->reminders === null) {
@@ -211,7 +351,16 @@ class UserManager
 		return $this->resetPassword($user, $attributes, $token);
 	}
 
-	public function resetPassword($user, array $attributes, $token)
+	/**
+	 * Reset the password of a user.
+	 *
+	 * @param  UserModel $user
+	 * @param  array     $attributes
+	 * @param  string    $token
+	 *
+	 * @return bool
+	 */
+	public function resetPassword(UserModel $user, array $attributes, $token)
 	{
 		if ($this->reminders === null) {
 			throw new \RuntimeException('Password reset service not set.');
@@ -235,8 +384,7 @@ class UserManager
 			return call_user_func_array([$this->users, $method], $args);
 		}
 
-		$self = get_class($this); // $self = substr($self, strrpos($self, '\\')+1);
-		$repo = get_class($this->users); // $repo = substr($repo, strrpos($repo, '\\')+1);
+		$self = get_class($this); $repo = get_class($this->users);
 		throw new \BadMethodCallException("The method $method does not exist on this class ($class) or its $repo");
 	}
 }

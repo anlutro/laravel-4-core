@@ -12,8 +12,6 @@ class AuthControllerTest extends AppTestCase
 		parent::setUp();
 		$this->manager = m::mock('c\Auth\UserManager');
 		$this->app->instance('c\Auth\UserManager', $this->manager);
-		// $this->app->bind('c\Auth\UserModel', 'c\Auth\UserModel');
-		// $this->app['config']->set('auth.model', null);
 	}
 
 	public function tearDown()
@@ -23,7 +21,7 @@ class AuthControllerTest extends AppTestCase
 
 	public function testLogin()
 	{
-		$this->manager->shouldReceive('remindersEnabled')->once()->andReturn(true);
+		$this->manager->shouldReceive('remindersEnabled')->once()->andReturn(false);
 
 		$this->getAction('login');
 
@@ -104,6 +102,9 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetStepOneForm()
 	{
+		$this->manager->shouldReceive('setReminderService')->once();
+		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+
 		$this->getAction('reminder');
 
 		$this->assertResponseOk();
@@ -111,6 +112,9 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetStepOneFailure()
 	{
+		$this->manager->shouldReceive('setReminderService')->once();
+		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+
 		$input = ['email' => 'foo', 'bar' => 'baz'];
 		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
 			->with($input['email'])->andReturn(false);
@@ -123,6 +127,9 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetStepOneSuccess()
 	{
+		$this->manager->shouldReceive('setReminderService')->once();
+		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+
 		$input = ['email' => 'foo', 'bar' => 'baz'];
 		$mockUser = $this->getMockUser();
 		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
@@ -136,6 +143,9 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetStepTwoForm()
 	{
+		$this->manager->shouldReceive('setReminderService')->once();
+		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+
 		$this->getAction('reset', [], ['token' => 'foobar']);
 
 		$this->assertResponseOk();
@@ -143,6 +153,9 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetStepTwoFormWithoutToken()
 	{
+		$this->manager->shouldReceive('setReminderService')->once();
+		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+
 		$this->getAction('reset', []);
 
 		$this->assertRedirectedToAction('login');
@@ -159,6 +172,9 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetFailure()
 	{
+		$this->manager->shouldReceive('setReminderService')->once();
+		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+
 		$input = [
 			'username' => 'bar',
 			'token' => 'baz',
@@ -176,6 +192,9 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetSuccess()
 	{
+		$this->manager->shouldReceive('setReminderService')->once();
+		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+
 		$input = [
 			'username' => 'bar',
 			'token' => 'baz',

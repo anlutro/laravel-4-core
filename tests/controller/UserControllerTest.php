@@ -10,8 +10,6 @@ class UserControllerTest extends AppTestCase
 		parent::setUp();
 		$this->users = m::mock('c\Auth\UserManager');
 		$this->app->instance('c\Auth\UserManager', $this->users);
-		$this->app->bind('c\Auth\UserModel', 'c\Auth\UserModel');
-		$this->app['config']->set('auth.model', null);
 	}
 
 	public function tearDown()
