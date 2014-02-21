@@ -10,12 +10,14 @@
 namespace c\Auth\Activation;
 
 use Illuminate\Support\ServiceProvider;
+use c\CoreServiceProvider;
 
 class ActivationServiceProvider extends ServiceProvider
 {
 	use \c\RouteProviderTrait;
 	
 	protected $defer = false;
+	protected static $resPath;
 
 	public function register()
 	{
@@ -45,7 +47,7 @@ class ActivationServiceProvider extends ServiceProvider
 
 	public function boot()
 	{
-		$this->srcPath = __DIR__ . '/../../..';
+		static::$resPath = CoreServiceProvider::getResPath();
 		$this->registerRoutes('activation');
 	}
 }

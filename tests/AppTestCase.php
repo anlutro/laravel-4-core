@@ -12,6 +12,7 @@ class AppTestCase extends c\L4TestCase
 		$testEnvironment = 'testing';
 
 		$tryfiles = [
+			__DIR__ . '/../vendor/laravel/laravel/bootstrap/start.php',
 			__DIR__ . '/../../../../../bootstrap/start.php',
 			__DIR__ . '/../../../../bootstrap/start.php',
 			__DIR__ . '/../../../bootstrap/start.php',
