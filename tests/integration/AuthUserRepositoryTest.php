@@ -127,6 +127,52 @@ class AuthUserRepositoryTest extends \c\EloquentTestCase
 		$this->assertEquals('user', $user->user_type);
 	}
 
+	public function testUpdateAsAdmin()
+	{
+		$repo = $this->makeRepository();
+		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
+		$user = $this->createUser('name', 'pass', 'user'); $oldpw = $user->password;
+		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
+		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'mod', 'username' => 'newname'];
+
+		$repo->updateAsAdmin($user, $input);
+
+		$this->assertEquals('New Name', $user->name);
+		$this->assertNotEquals($oldpw, $user->password);
+		$this->assertEquals('newname', $user->username);
+		$this->assertEquals('mod', $user->user_type);
+	}
+
+	public function testFilter()
+	{
+		$repo = $this->makeRepository();
+		$user = $this->createUser('username', 'pass', 'user');
+		$user = $this->createUser('adminname', 'pass', 'admin');
+
+		$users = $repo->filter('user')->getAll();
+		$this->assertEquals(1, $users->count());
+		$this->assertEquals('Username', $users->first()->name);
+
+		$users = $repo->filter('admin')->getAll();
+		$this->assertEquals(1, $users->count());
+		$this->assertEquals('Adminname', $users->first()->name);
+	}
+
+	public function testSearch()
+	{
+		$repo = $this->makeRepository();
+		$user = $this->createUser('Foo Bar');
+		$user = $this->createUser('Bar Baz');
+
+		$users = $repo->search('foo')->getAll();
+		$this->assertEquals(1, $users->count());
+		$this->assertEquals('Foo Bar', $users->first()->name);
+
+		$users = $repo->search('baz')->getAll();
+		$this->assertEquals(1, $users->count());
+		$this->assertEquals('Bar Baz', $users->first()->name);
+	}
+
 	protected function makeRepository()
 	{
 		$this->model = new c\Auth\UserModel;
