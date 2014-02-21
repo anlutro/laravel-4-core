@@ -1,57 +1,49 @@
 <?php
-// if (!class_exists('TestCase')) {
-// 	class TestCase extends \c\L4TestCase {}
-// }
 
-class AppTestCase extends c\L4TestCase
+/**
+ * Test case that boots the whole application.
+ */
+class AppTestCase extends \c\L4TestCase
 {
+	/**
+	 * Create the application.
+	 *
+	 * @return Illuminate\Foundation\Application
+	 */
 	public function createApplication()
 	{
 		$unitTesting = true;
 
 		$testEnvironment = 'testing';
 
-		$tryfiles = [
-			__DIR__ . '/../vendor/laravel/laravel/bootstrap/start.php',
-			__DIR__ . '/../../../../../bootstrap/start.php',
-			__DIR__ . '/../../../../bootstrap/start.php',
-			__DIR__ . '/../../../bootstrap/start.php',
-			__DIR__ . '/../../bootstrap/start.php',
-			__DIR__ . '/../bootstrap/start.php',
-		];
-
-		foreach ($tryfiles as $file) {
-			if (file_exists($file)) {
-				return require $file;
-			}
-		}
+		// require the bootstrap file from vendor
+		return require __DIR__.'/../vendor/laravel/laravel/bootstrap/start.php';
 	}
 
+	/**
+	 * Set up the test. This is ran before every test.
+	 */
 	public function setUp()
 	{
 		parent::setUp();
+
+		// set to sqlite simply because that's the only sql pdo driver I have
+		// installed on my dev laptop :)
 		$this->app['db']->setDefaultConnection('sqlite');
-		$this->app['config']->set('auth.model', null);
-		$this->app->bind('c\Auth\UserModel', 'c\Auth\UserModel');
-		$this->loadCoreProviders();
+
+		// every test will be testing stuff that depends on the coreservice-
+		// provider, so just register it.
+		$this->app->register('c\CoreServiceProvider');
+
+		// the package depends on some views, if these are missing we need to
+		// fix that by adding some dummy views
 		$this->addMissingViews();
 	}
 
-	private function loadCoreProviders()
-	{
-		$loaded = $this->app->getLoadedProviders();
-		$providers = [
-			'c\CoreServiceProvider',
-		];
-
-		foreach ($providers as $provider) {
-			if (!array_key_exists($provider, $loaded)) {
-				$this->app->register($provider);
-			}
-		}
-	}
-
-	public function addMissingViews()
+	/**
+	 * Check for missing views and make them available if necessary.
+	 */
+	protected function addMissingViews()
 	{
 		if (
 			!$this->app['view']->exists('layout.main') ||

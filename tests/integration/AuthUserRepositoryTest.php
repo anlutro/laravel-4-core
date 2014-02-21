@@ -1,26 +1,38 @@
 <?php
 
-use c\Auth\UserModel as User;
-use c\Auth\UserRepository;
-use Illuminate\Support\Facades\Facade;
 use Mockery as m;
 
-class AuthUserRepositoryTest extends SQLiteTestCase
+class AuthUserRepositoryTest extends \c\EloquentTestCase
 {
+	/**
+	 * The migrations the test depends on.
+	 */
+	protected function getMigrations()
+	{
+		return ['CreateUserTable'];
+	}
+
+	/**
+	 * Add the hasher to the fake application so that the Hash:: facace works.
+	 */
+	protected function makeFakeApp()
+	{
+		$app = parent::makeFakeApp();
+		$app['hash'] = new Illuminate\Hashing\BcryptHasher;
+		return $app;
+	}
+
+	/**
+	 * Call setUpFacades to make the Hash:: facade available throughout the test.
+	 */
 	public function setUp()
 	{
 		parent::setUp();
-		$this->app = [
-			'db' => $this->capsule,
-			'hash' => new Illuminate\Hashing\BcryptHasher,
-		];
-		Facade::setFacadeApplication($this->app);
-		(new CreateUserTable)->up();
+		$this->setUpFacades();
 	}
 
 	public function tearDown()
 	{
-		(new CreateUserTable)->down();
 		m::close();
 	}
 
@@ -117,16 +129,16 @@ class AuthUserRepositoryTest extends SQLiteTestCase
 
 	protected function makeRepository()
 	{
-		$this->model = new User;
+		$this->model = new c\Auth\UserModel;
 		$this->validator = m::mock('c\Auth\UserValidator');
 		$this->validator->shouldReceive('replace')->with('table', $this->model->getTable());
-		return new UserRepository($this->model, $this->validator);
+		return new c\Auth\UserRepository($this->model, $this->validator);
 	}
 
 	protected function createUser($name, $password = 'foo', $userLevel = 'user')
 	{
 		$attr = $this->getUserAttributes($name, $password, $userLevel);
-		$user = new User;
+		$user = new c\Auth\UserModel;
 		$user->username = $attr['username'];
 		$user->name = $attr['name'];
 		$user->password = $attr['password'];
