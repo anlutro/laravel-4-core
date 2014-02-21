@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['before' => 'guest'], function()
 {
-	Route::get('/glemt-passord', 'AuthController@reminder');
+	Route::get('/glemt-passord', 'c\Controllers\AuthController@reminder');
 	Route::post('/glemt-passord', [
 		'before' => 'csrf',
-		'uses' => 'AuthController@sendReminder'
+		'uses' => 'c\Controllers\AuthController@sendReminder'
 	]);
-	Route::get('/tilbakestill-passord', 'AuthController@reset');
+	Route::get('/tilbakestill-passord', 'c\Controllers\AuthController@reset');
 	Route::post('/tilbakestill-passord', [
 		'before' => 'csrf',
-		'uses' => 'AuthController@attemptReset'
+		'uses' => 'c\Controllers\AuthController@attemptReset'
 	]);
 });
