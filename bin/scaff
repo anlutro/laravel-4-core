@@ -9,7 +9,7 @@ Usage:
 """
 
 from docopt import docopt
-from os.path import realpath, dirname, basename, exists, join, isdir
+import os.path
 from os import listdir, makedirs
 
 def replace_filename(path, name):
@@ -27,20 +27,23 @@ def copyfile(src, target, name, namespace):
 	srcfile.close()
 	trgfile.close()
 
-def scaffold(name, target_dir, namespace='MyName\MyApp'):
-	skel_path = dirname(realpath(__file__)) + '/skel'
-	target_dir = realpath(target_dir)
+def scaffold(name, target_dir, namespace):
+	if not namespace:
+		namespace = 'MyApp\MyNamespace'
 
-	if not isdir(target_dir):
+	skel_path = os.path.dirname(os.path.realpath(__file__)) + '/skel'
+	target_dir = os.path.realpath(target_dir)
+
+	if not os.path.isdir(target_dir):
 		makedirs(target_dir)
 
 	for f in listdir(skel_path):
-		src_path = realpath(join(skel_path, f))
+		src_path = os.path.realpath(os.path.join(skel_path, f))
 
-		filename = replace_filename(basename(f), name)
+		filename = replace_filename(os.path.basename(f), name)
 		target_path = target_dir + '/' + filename
 		
-		if (exists(target_path)):
+		if (os.path.exists(target_path)):
 			print(filename, 'already exists, skipping')
 		else:
 			print('Copying', src_path, '->', target_path, '...')
@@ -48,7 +51,7 @@ def scaffold(name, target_dir, namespace='MyName\MyApp'):
 
 def main():
 	args = docopt(__doc__)
-	name, path = args['<name>'], realpath(args['<path>'])
+	name, path = args['<name>'], os.path.realpath(args['<path>'])
 	namespace = args['<namespace>']
 	
 	print('')
