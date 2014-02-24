@@ -1,23 +1,10 @@
 <?php
 
-use c\Auth\Activation\DatabaseActivationCodeRepository;
-use Illuminate\Support\Facades\Facade;
-use Mockery as m;
-
-class DatabaseActivationCodeRepositoryTest extends SQLiteTestCase
+class DatabaseActivationCodeRepositoryTest extends \c\EloquentTestCase
 {
-	public function setUp()
+	public function getMigrations()
 	{
-		parent::setUp();
-		$this->app = ['db' => $this->capsule];
-		Facade::setFacadeApplication($this->app);
-		(new CreateUserActivationTable)->up();
-	}
-
-	public function tearDown()
-	{
-		(new CreateUserActivationTable)->down();
-		m::close();
+		return ['CreateUserActivationTable'];
 	}
 
 	public function testCreateAndRetrieve()
@@ -53,11 +40,12 @@ class DatabaseActivationCodeRepositoryTest extends SQLiteTestCase
 
 	protected function makeRepo()
 	{
-		return new DatabaseActivationCodeRepository($this->app['db']->connection(), 'user_activation');
+		return new c\Auth\Activation\DatabaseActivationCodeRepository(
+			$this->capsule->connection(), 'user_activation');
 	}
 
 	public function makeUser(array $attr)
 	{
-		return new \c\Auth\UserModel($attr);
+		return new c\Auth\UserModel($attr);
 	}
 }

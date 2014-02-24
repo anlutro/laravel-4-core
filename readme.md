@@ -1,14 +1,10 @@
 # L4 Core
 
-This is my development boilerplate for Laravel 4. It includes user and authentication controllers and views as well as a bunch of base classes you can use.
+This is my personal development boilerplate for Laravel 4. It includes user management and authentication controllers, views, language files and more.
 
-I can't document every feature here so I recommend you just read the source code instead.
+As this is a repository mostly for my personal (re-)use, I do not recommend you ever install this into your project as I will never bother to document everything. Instead, draw inspiration from it, pick up tricks here and there from reading source code.
 
-I also can't recommend using these exact classes in your project, instead try to draw inspiration and make your own "core" package :)
-
-All classes reside in the "c\" namespace (except controllers which are in the global namespace) for the sake of convenience. If you don't like this, don't use the package.
-
-Also check out the following repositories, which contains classes that this package uses:
+Also check out the following repositories, which contains classes that this package uses. These are suited to be included in your own projects and are more thoroughly documented.
 
 - https://github.com/anlutro/laravel-repository
 - https://github.com/anlutro/laravel-validation
@@ -21,9 +17,12 @@ Also check out the following repositories, which contains classes that this pack
 
 Add `c\CoreServiceProvider` to the list of providers in `app/config/app.php`.
 
-If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `c\Auth\Reminders\ReminderServiceProvider`.
+If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `c\Auth\Reminders\ReminderServiceProvider`. If you want access to activation, add `c\Auth\Activation\ActivationServiceProvider` as well. Ideally you should never touch any of these but just let the `c\Auth\UserManager` class do its stuff.
 
-If you want access to activation, add `c\Auth\Activation\ActivationServiceProvider` as well. Optionally, add the alias `'Activation' => 'c\Auth\Activation\Activation'` to your list of aliases.
+The package does not use default config/migration paths, so in order to publish those you have to use the following commands:
+
+	php artisan config:publish --package=anlutro/l4-core --path=vendor/anlutro/l4-core/resources/config
+	cp ./vendor/anlutro/l4-core/resources/migrations/* ./app/database/migrations
 
 ## Assumptions about your app
 
@@ -33,24 +32,10 @@ Your layouts define the sections 'title', 'content' and 'scripts' (for javascrip
 
 You have a Bootstrap 3-derived stylesheet.
 
-## Activation
-
-Similar to the Password:: functionality, Activation:: is a simple way to require your users to activate their accounts.
-
-`Activation::generate($user)` generates an activation code for $user and sends an email with instructions on how to activate their account.
-
-`Activation::activate($code)` activates the user which $code belongs to.
-
-## Improved password reminders
-
-The functions on the Password:: class have changed.
-
-`Password::requestReset($user)` generates a reset token for $user and sends said user an email with instructions. It returns false or true depending on whether or not the mail was successfully sent.
-
-`Password::resetUser($user, $token, $newPassword)` makes an attempt at resetting $user's password. Will return false if $token does not belong to said user.
-
 ## Contact
-Open an issue on GitHub if you have any problems or suggestions.
+
+Open an issue on GitHub if you have any questions.
 
 ## License
+
 The contents of this repository is released under the [MIT license](http://opensource.org/licenses/MIT).

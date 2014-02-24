@@ -1,9 +1,3 @@
 # Contributing
 
-If you want to add a new feature, make an issue rather than a pull request.
-
-Code style is pretty much PSR-2, but with tabs instead of 4 spaces. Use common sense.
-
-Make separate pull requests for separate changes/issues.
-
-Please don't be offended if I don't merge a pull request :)
+This package is not really open to contribution as it is for my personal use only. However, feel free to use the issues as a place for discussion and questions.

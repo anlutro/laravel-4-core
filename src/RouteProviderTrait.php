@@ -46,10 +46,10 @@ trait RouteProviderTrait
 	protected function requireRouteFile($file)
 	{
 		$locale = $this->app['translator']->getLocale();
-		$path = $this->srcPath . '/routes/' . $locale;
+		$path = static::$resPath . '/routes/' . $locale;
 
 		if (!is_dir($path)) {
-			$path = $this->srcPath . '/routes/en';
+			$path = static::$resPath . '/routes/en';
 		}
 
 		require $path . '/' . $file . '.php';

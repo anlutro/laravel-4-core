@@ -100,24 +100,6 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * Rehash a user's password.
-	 *
-	 * @param  c\Auth\UserModel  $user
-	 * @param  string  $password
-	 *
-	 * @return boolean
-	 */
-	public function rehashPassword(UserModel $user, $password)
-	{
-		if (!$user->confirmPassword($password)) {
-			return false;
-		}
-		
-		$user->password = $password;
-		return $user->save();
-	}
-
-	/**
 	 * Directly activate a user.
 	 *
 	 * @param  UserModel $user

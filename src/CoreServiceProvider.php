@@ -46,7 +46,14 @@ class CoreServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	protected $srcPath;
+	protected static $srcPath;
+
+	/**
+	 * The path to the packages's resources directory.
+	 *
+	 * @var string
+	 */
+	protected static $resPath;
 
 	/**
 	 * Register IoC bindings.
@@ -55,6 +62,9 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+		static::$srcPath = __DIR__;
+		static::$resPath = __DIR__.'/../resources';
+
 		$this->commands([
 			'c\Auth\Console\CreateUserCommand',
 			'c\Auth\Console\ChangePasswordCommand',
@@ -72,7 +82,6 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		$this->package = 'anlutro/l4-core';
 		$this->namespace = 'c';
-		$this->srcPath = __DIR__ . '/..';
 
 		$this->registerConfigFiles();
 		$this->registerLangFiles();
@@ -92,7 +101,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerConfigFiles()
 	{
-		$this->app['config']->package('anlutro/l4-core', $this->srcPath . '/config', 'c');
+		$this->app['config']->package('anlutro/l4-core', static::$resPath . '/config', 'c');
 	}
 
 	/**
@@ -102,7 +111,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerLangFiles()
 	{
-		$this->app['translator']->addNamespace($this->namespace, $this->srcPath . '/lang');
+		$this->app['translator']->addNamespace($this->namespace, static::$resPath . '/lang');
 	}
 
 	/**
@@ -118,7 +127,7 @@ class CoreServiceProvider extends ServiceProvider
 			$this->app['view']->addNamespace($this->namespace, $appView);
 		}
 
-		$this->app['view']->addNamespace($this->namespace, $this->srcPath . '/views');
+		$this->app['view']->addNamespace($this->namespace, static::$resPath . '/views');
 	}
 
 	/**
@@ -209,4 +218,8 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	public static function getResPath()
+	{
+		return static::$resPath;
+	}
 }

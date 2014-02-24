@@ -107,7 +107,7 @@ class UserModel extends \c\BaseModel implements UserInterface, RemindableInterfa
 			$level = static::$accessLevels[$level];
 		}
 
-		return $query->where('user_level', '>=', $level);
+		return $query->where('user_level', '=', $level);
 	}
 
 	/**

@@ -1,16 +1,32 @@
 <?php
-class RelationAggregateTraitTest extends SQLiteTestCase
+
+class RelationAggregateTraitTest extends \c\EloquentTestCase
 {
 	public function setUp()
 	{
 		parent::setUp();
-		$this->migrateTables();
-		\Illuminate\Database\Eloquent\Model::unguard();
+
+		// unguard all models to allow mass assignment
+		Illuminate\Database\Eloquent\Model::unguard();
 	}
 
-	protected function migrateTables()
+	protected function getMigrations() {}
+
+	/**
+	 * Overwrite the runMigrations method as we won't be using the default
+	 * class-based migration system for this test.
+	 */
+	protected function runMigrations($direction)
 	{
 		$schema = $this->capsule->schema();
+
+		if ($direction == 'down') {
+			$schema->drop('models');
+			$schema->drop('relations');
+			$schema->drop('pivot');
+			return;
+		}
+
 		$schema->create('models', function($t) {
 			$t->increments('id');
 			$t->string('name', 32);
@@ -24,19 +40,6 @@ class RelationAggregateTraitTest extends SQLiteTestCase
 			$t->integer('model_id')->unsigned();
 			$t->integer('relation_id')->unsigned();
 		});
-	}
-
-	public function tearDown()
-	{
-		$this->rollbackMigrations();
-	}
-
-	protected function rollbackMigrations()
-	{
-		$schema = $this->capsule->schema();
-		$schema->drop('models');
-		$schema->drop('relations');
-		$schema->drop('pivot');
 	}
 
 	public function testModelsWork()

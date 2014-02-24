@@ -10,13 +10,14 @@
 namespace c\Auth\Reminders;
 
 use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;
+use c\CoreServiceProvider;
 
 class ReminderServiceProvider extends BaseProvider
 {
 	use \c\RouteProviderTrait;
 	
 	protected $defer = false;
-	protected $srcPath;
+	protected static $resPath;
 
 	protected function registerCommands()
 	{
@@ -74,7 +75,7 @@ class ReminderServiceProvider extends BaseProvider
 
 	public function boot()
 	{
-		$this->srcPath = __DIR__ . '/../../..';
+		static::$resPath = CoreServiceProvider::getResPath();
 		$this->registerRoutes('reminders');
 	}
 }
