@@ -42,13 +42,6 @@ class CoreServiceProvider extends ServiceProvider
 	protected $namespace;
 
 	/**
-	 * The path to the packages's src directory.
-	 *
-	 * @var string
-	 */
-	protected static $srcPath;
-
-	/**
 	 * The path to the packages's resources directory.
 	 *
 	 * @var string
@@ -62,7 +55,6 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		static::$srcPath = __DIR__;
 		static::$resPath = __DIR__.'/../resources';
 
 		$this->commands([
@@ -221,6 +213,11 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	/**
+	 * Register the sidebar view creator.
+	 *
+	 * @return void
+	 */
 	protected function registerSidebar()
 	{
 		$this->app['view']->creator('c::sidebar', function($view) {
@@ -228,6 +225,11 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	/**
+	 * Register the default menu composer.
+	 *
+	 * @return void
+	 */
 	protected function registerMenus()
 	{
 		$this->app['view']->composer('c::menu', function($view) {
