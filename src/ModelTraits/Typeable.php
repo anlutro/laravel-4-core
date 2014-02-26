@@ -108,7 +108,7 @@ trait Typeable
 	 *
 	 * @return Illuminate\Database\Eloquent\Builder
 	 */
-	public function scopeFilterType($query, $filter)
+	public function scopeWhereType($query, $filter)
 	{
 		return $query->where('type', '=', $this->getTypeValue($filter));
 	}
