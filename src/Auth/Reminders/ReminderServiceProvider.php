@@ -42,17 +42,15 @@ class ReminderServiceProvider extends BaseProvider
 	 */
 	protected function registerReminderRepository()
 	{
-		$this->app->bindShared('auth.reminder.repository', function($app)
-		{
+		$this->app->bindShared('auth.reminder.repository', function($app) {
+
 			$connection = $app['db']->connection();
-
 			$table = $app['config']['auth.reminder.table'];
-
 			$key = $app['config']['app.key'];
-
 			$expire = $app['config']->get('auth.reminder.expire', 60);
 
 			return new DatabaseReminderRepository($connection, $table, $key, $expire);
+
 		});
 	}
 
