@@ -249,21 +249,25 @@ class CoreServiceProvider extends ServiceProvider
 				$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user']);
 				$subMenu->addItem(
 					$this->app['translator']->get('c::user.profile-title'),
-					$this->app['url']->action('c\Controllers\UserController@profile')
+					$this->app['url']->action('c\Controllers\UserController@profile'),
+					['id' => 'profile']
 				);
 				if ($user->hasAccess('admin')) {
 					$subMenu->addItem(
 						$this->app['translator']->get('c::user.admin-userlist'),
-						$this->app['url']->action('c\Controllers\UserController@index')
+						$this->app['url']->action('c\Controllers\UserController@index'),
+						['id' => 'userlist']
 					);
 					$subMenu->addItem(
 						$this->app['translator']->get('c::user.admin-newuser'),
-						$this->app['url']->action('c\Controllers\UserController@create')
+						$this->app['url']->action('c\Controllers\UserController@create'),
+						['id' => 'add-user']
 					);
 				}
 				$subMenu->addItem(
 					$this->app['translator']->get('c::auth.logout'),
-					$this->app['url']->action('c\Controllers\AuthController@logout')
+					$this->app['url']->action('c\Controllers\AuthController@logout'),
+					['id' => 'log-out']
 				);
 			}
 		});

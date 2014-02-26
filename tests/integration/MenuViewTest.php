@@ -17,10 +17,10 @@ class MenuViewTest extends AppTestCase
 		$this->assertContains('id="menu-left"', $view);
 		$this->assertContains('<ul class="nav navbar-nav pull-right" id="menu-right"', $view);
 		$this->assertContains('<a href="#" class="dropdown-toggle" id="username" data-toggle="dropdown">', $view);
-		$this->assertContains('id="my-profile">My profile</a>', $view);
+		$this->assertContains('id="profile">My profile</a>', $view);
 		$this->assertContains('id="log-out">Log out</a>', $view);
 		$this->assertNotContains('id="add-user">Add user</a>', $view);
-		$this->assertNotContains('id="list-of-users">List of users</a>', $view);
+		$this->assertNotContains('id="userlist">List of users</a>', $view);
 	}
 
 	public function testViewWhenLoggedInAsAdmin()
@@ -30,10 +30,10 @@ class MenuViewTest extends AppTestCase
 		$this->assertContains('id="menu-left"', $view);
 		$this->assertContains('<ul class="nav navbar-nav pull-right" id="menu-right"', $view);
 		$this->assertContains('<a href="#" class="dropdown-toggle" id="username" data-toggle="dropdown">', $view);
-		$this->assertContains('id="my-profile">My profile</a>', $view);
+		$this->assertContains('id="profile">My profile</a>', $view);
 		$this->assertContains('id="log-out">Log out</a>', $view);
 		$this->assertContains('id="add-user">Add user</a>', $view);
-		$this->assertContains('id="list-of-users">List of users</a>', $view);
+		$this->assertContains('id="userlist">List of users</a>', $view);
 	}
 
 	public function mockUser($isAdmin = false)
