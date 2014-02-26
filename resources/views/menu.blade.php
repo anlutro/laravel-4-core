@@ -1,7 +1,3 @@
-@if (Auth::check())
+{{ anlutro\Menu\Facade::render('left') }}
 
-	{{ Menu::render('left') }}
-
-	{{ Menu::render('right', ['class' => 'nav navbar-nav pull-right']) }}
-	
-@endif
+{{ anlutro\Menu\Facade::render('right') }}

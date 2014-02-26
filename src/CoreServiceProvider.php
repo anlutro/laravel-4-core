@@ -92,6 +92,9 @@ class CoreServiceProvider extends ServiceProvider
 		$userModel = $this->app['config']->get('auth.model') ?: 'c\Auth\UserModel';
 		$this->app->bind('c\Auth\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
+
+		$this->registerSidebar();
+		$this->registerMenus();
 	}
 
 	/**
@@ -216,6 +219,58 @@ class CoreServiceProvider extends ServiceProvider
 			$user->setAttribute('last_login', Carbon::now());
 			$user->save();
 		});
+	}
+
+	protected function registerSidebar()
+	{
+		$this->app['view']->creator('c::sidebar', function($view) {
+			$view->with('sidebar', new Collection);
+		});
+	}
+
+	protected function registerMenus()
+	{
+		$this->app['view']->composer('c::menu', function($view) {
+			if (!$this->providerLoaded('anlutro\Menu\ServiceProvider')) return;
+
+			$menu = $this->app['anlutro\Menu\Builder'];
+			$user = $this->app['auth']->user();
+
+			$menu->createMenu('left')->addItem(
+				$this->app['config']->get('app.name'),
+				$this->app['url']->to('/')
+			);
+
+			$menu->createMenu('right', ['class' => 'nav navbar-nav pull-right']);
+
+			if ($user !== null) {
+				$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user']);
+				$subMenu->addItem(
+					$this->app['translator']->get('c::user.profile-title'),
+					$this->app['url']->action('c\Controllers\UserController@profile')
+				);
+				if ($user->hasAccess('admin')) {
+					$subMenu->addItem(
+						$this->app['translator']->get('c::user.admin-userlist'),
+						$this->app['url']->action('c\Controllers\UserController@index')
+					);
+					$subMenu->addItem(
+						$this->app['translator']->get('c::user.admin-newuser'),
+						$this->app['url']->action('c\Controllers\UserController@create')
+					);
+				}
+				$subMenu->addItem(
+					$this->app['translator']->get('c::auth.logout'),
+					$this->app['url']->action('c\Controllers\AuthController@logout')
+				);
+			}
+		});
+	}
+
+	protected function providerLoaded($provider)
+	{
+		$providers = $this->app->getLoadedProviders();
+		return array_key_exists($provider, $providers);
 	}
 
 	public static function getResPath()

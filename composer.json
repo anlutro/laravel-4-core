@@ -23,7 +23,11 @@
 	},
 	"require-dev": {
 		"laravel/laravel": "dev-fix/get-bootstrap-file",
-		"mockery/mockery": "dev-master@dev"
+		"mockery/mockery": "dev-master@dev",
+		"anlutro/menu": "0.1.*"
+	},
+	"suggest": {
+		"anlutro/menu": "Menu builder."
 	},
 	"autoload": {
 		"psr-4": {
