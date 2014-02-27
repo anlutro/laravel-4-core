@@ -37,7 +37,7 @@ class UserRepository extends \c\EloquentRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function prepareQuery($query, $many)
+	protected function beforeQuery($query, $many)
 	{
 		if ($this->search) {
 			$query->searchFor($this->search);
@@ -79,12 +79,11 @@ class UserRepository extends \c\EloquentRepository
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Create a user as an admin.
 	 */
-	public function prepareCreate($user, $attributes)
+	public function createAsAdmin(array $attributes)
 	{
-		// set the username manually as it is not fillable
-		$user->username = $attributes['username'];
+		$user = $this->getNew();
 
 		// set the user level
 		if (!empty($attributes['user_level'])) {
@@ -95,32 +94,10 @@ class UserRepository extends \c\EloquentRepository
 
 		// either activate directly or send an activation code
 		if (isset($attributes['is_active']) && $attributes['is_active']) {
-			$user->activate();
-		}
-	}
-
-	/**
-	 * Directly activate a user.
-	 *
-	 * @param  UserModel $user
-	 *
-	 * @return boolean
-	 */
-	public function activateUser(UserModel $user)
-	{
-		return $user->activate();
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function dryUpdate($user, array $attributes, $action = 'update')
-	{
-		if (isset($attributes['password']) && empty($attributes['password'])) {
-			unset($attributes['password']);
+			$this->activateUser($user);
 		}
 
-		return parent::dryUpdate($user, $attributes, $action);
+		return $this->perform('create', $user, $attributes);
 	}
 
 	/**
@@ -133,8 +110,8 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function updateAsAdmin($user, array $attributes)
 	{
-		if (!$this->dryUpdate($user, $attributes)) {
-			return false;
+		if (isset($attributes['password']) && empty($attributes['password'])) {
+			unset($attributes['password']);
 		}
 
 		if (isset($attributes['username']) && !empty($attributes['username'])) {
@@ -153,7 +130,45 @@ class UserRepository extends \c\EloquentRepository
 			$user->deactivate();
 		}
 
-		return $user->save();
+		return parent::update($user, $attributes);
+	}
+
+	/**
+	 * Directly activate a user.
+	 *
+	 * @param  UserModel $user
+	 *
+	 * @return boolean
+	 */
+	public function activateUser(UserModel $user)
+	{
+		return $user->activate();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function performCreate($user, array $attributes)
+	{
+		// set the username manually as it is not fillable
+		$user->username = $attributes['username'];
+
+		// set a default user level if not set already
+		if (!$user->user_level) $user->user_level = 1;
+
+		return parent::performCreate($user, $attributes);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function performUpdate($user, array $attributes)
+	{
+		if (isset($attributes['password']) && empty($attributes['password'])) {
+			unset($attributes['password']);
+		}
+
+		return parent::performUpdate($user, $attributes);
 	}
 
 	/**

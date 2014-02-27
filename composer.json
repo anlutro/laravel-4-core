@@ -17,7 +17,7 @@
 	"require": {
 		"php": ">=5.4.0",
 		"nesbot/carbon": "*",
-		"anlutro/l4-repository": "0.4.*",
+		"anlutro/l4-repository": "0.5.*",
 		"anlutro/l4-controller": "0.1.*",
 		"anlutro/l4-testing": "0.1.*"
 	},

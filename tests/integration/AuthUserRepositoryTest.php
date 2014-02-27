@@ -52,29 +52,42 @@ class AuthUserRepositoryTest extends \c\EloquentTestCase
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(false);
 		$this->validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
-		$this->assertFalse($repo->create());
+		$this->assertFalse($repo->create([]));
 	}
 
-	public function testCreateAndActivate()
+	public function testCreateAsAdminAndActivate()
 	{
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
 		$input['is_active'] = '1';
-		$user = $repo->create($input);
+		$user = $repo->createAsAdmin($input);
 		$this->assertInstanceOf('c\Auth\UserModel', $user);
 		$this->assertTrue($user->exists, 'User should exist.');
 		$this->assertTrue($user->is_active, 'User should be active.');
 	}
 
-	public function testCreateWithoutActivation()
+	public function testCreateAsAdminWithoutActivation()
 	{
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
+		$user = $repo->createAsAdmin($input, false);
+		$this->assertInstanceOf('c\Auth\UserModel', $user);
+		$this->assertFalse($user->is_active, 'User should not be active.');
+	}
+
+	public function testCreate()
+	{
+		$repo = $this->makeRepository();
+		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
+		$input = $this->getUserAttributes('foo');
+		$input['user_level'] = 100;
+		$input['is_active'] = true;
 		$user = $repo->create($input, false);
 		$this->assertInstanceOf('c\Auth\UserModel', $user);
 		$this->assertFalse($user->is_active, 'User should not be active.');
+		$this->assertEquals(1, $user->user_level);
 	}
 
 	public function testUpdateWithBlankPassword()

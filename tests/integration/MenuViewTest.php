@@ -16,7 +16,7 @@ class MenuViewTest extends AppTestCase
 		$view = $this->makeView()->render();
 		$this->assertContains('id="menu-left"', $view);
 		$this->assertContains('<ul class="nav navbar-nav pull-right" id="menu-right"', $view);
-		$this->assertContains('<a href="#" class="dropdown-toggle" id="username" data-toggle="dropdown">', $view);
+		$this->assertContains('<a href="#" id="user" class="dropdown-toggle" data-toggle="dropdown">', $view);
 		$this->assertContains('id="profile">My profile</a>', $view);
 		$this->assertContains('id="log-out">Log out</a>', $view);
 		$this->assertNotContains('id="add-user">Add user</a>', $view);
@@ -29,7 +29,7 @@ class MenuViewTest extends AppTestCase
 		$view = $this->makeView()->render();
 		$this->assertContains('id="menu-left"', $view);
 		$this->assertContains('<ul class="nav navbar-nav pull-right" id="menu-right"', $view);
-		$this->assertContains('<a href="#" class="dropdown-toggle" id="username" data-toggle="dropdown">', $view);
+		$this->assertContains('<a href="#" id="user" class="dropdown-toggle" data-toggle="dropdown">', $view);
 		$this->assertContains('id="profile">My profile</a>', $view);
 		$this->assertContains('id="log-out">Log out</a>', $view);
 		$this->assertContains('id="add-user">Add user</a>', $view);

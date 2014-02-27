@@ -111,27 +111,16 @@ class UserManager
 	public function create(array $attributes)
 	{
 		if (!empty($attributes['user_level'])) {
-			$level = $attributes['user_level'];
+			$level = (int) $attributes['user_level'];
+		} elseif (!empty($attributes['user_type'])) {
+			$level = (string) $attributes['user_type'];
 		} else {
-			$types = $this->users->getUserTypes();
-
-			if (!empty($attributes['user_type'])) {
-				$type = $attributes['user_type'];
-
-				if (!array_key_exists($type, $types)) {
-					throw new \InvalidArgumentException("Invalid type: $type");
-				}
-
-				$level = $types[$type];
-			} else {
-				$types = array_flip($types);
-				$level = $types['user'];
-			}
+			$level = 1;
 		}
 
 		$this->checkPermissions($level);
 
-		if (!$user = $this->users->create($attributes)) return false;
+		if (!$user = $this->users->createAsAdmin($attributes)) return false;
 
 		if (!$user->is_active && !empty($attributes['send_activation'])) {
 			$this->sendActivationCode($user);
@@ -149,10 +138,6 @@ class UserManager
 	 */
 	public function register(array $attributes)
 	{
-		unset($attributes['user_level']);
-		unset($attributes['user_type']);
-		unset($attributes['is_active']);
-
 		if (!$user = $this->users->create($attributes)) return false;
 
 		$this->sendActivationCode($user);
@@ -221,6 +206,11 @@ class UserManager
 	{
 		if ($against instanceof UserModel) {
 			$against = $against->user_level;
+		}
+
+		if (is_string($against)) {
+			$types = $this->users->getUserTypes();
+			$against = $types[$against];
 		}
 
 		if (!is_numeric($against)) {

@@ -18,7 +18,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$this->pretendLogin($auth, $user);
 
 		$input = ['username' => 'foobar', 'user_level' => 1];
-		$users->shouldReceive('create')->once()->with($input)
+		$users->shouldReceive('createAsAdmin')->once()->with($input)
 			->andReturn($mockUser = $this->mockUser());
 
 		$result = $mng->create($input);
@@ -51,7 +51,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$this->pretendLogin($auth, $user);
 
 		$input = ['username' => 'foobar', 'user_level' => '1'];
-		$users->shouldReceive('create')->once()->with($input)
+		$users->shouldReceive('createAsAdmin')->once()->with($input)
 			->andReturn(false);
 		$users->shouldReceive('getErrors')->once()->andReturn('foo');
 
@@ -69,7 +69,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$this->pretendLogin($auth, $user);
 
 		$input = ['username' => 'foobar', 'user_level' => '1', 'send_activation' => '1'];
-		$users->shouldReceive('create')->once()->with($input)
+		$users->shouldReceive('createAsAdmin')->once()->with($input)
 			->andReturn($mockUser = $this->mockUser());
 		$mockUser->is_active = false;
 		$activations->shouldReceive('generate')->once()->with($mockUser);
@@ -89,7 +89,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$this->pretendLogin($auth, $user);
 
 		$input = ['username' => 'foobar', 'user_level' => '1', 'send_activation' => '1'];
-		$users->shouldReceive('create')->once()->with($input)
+		$users->shouldReceive('createAsAdmin')->once()->with($input)
 			->andReturn($mockUser = $this->mockUser());
 		$mockUser->is_active = false;
 
@@ -103,8 +103,8 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$activations = $this->mockActivations();
 		$mng = $this->makeManager($users, $auth, $this->mockTranslator(), $activations);
 
-		$input = ['username' => 'foobar', 'user_level' => '1', 'user_type' => '1', 'is_active' => '1'];
-		$users->shouldReceive('create')->once()->with(['username' => 'foobar'])
+		$input = ['username' => 'foobar', 'user_level' => '20', 'user_type' => 'asdf', 'is_active' => '1'];
+		$users->shouldReceive('create')->once()->with($input)
 			->andReturn($mockUser = $this->mockUser());
 		$activations->shouldReceive('generate')->once()->with($mockUser);
 
