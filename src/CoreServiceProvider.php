@@ -248,7 +248,7 @@ class CoreServiceProvider extends ServiceProvider
 		$menu = $this->app['anlutro\Menu\Builder'];
 		$lang = $this->app['translator'];
 		$url = $this->app['url'];
-		$user = $this->app['auth']->getUser();
+		$user = $this->app['auth']->user();
 
 		$menu->createMenu('left');
 		$menu->createMenu('right', ['class' => 'nav navbar-nav pull-right']);
