@@ -8,12 +8,6 @@
 			"email": "anlutro@gmail.com"
 		}
 	],
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/anlutro-pull-requests/laravel"
-		}
-	],
 	"require": {
 		"php": ">=5.4.0",
 		"nesbot/carbon": "*",
@@ -22,7 +16,7 @@
 		"anlutro/l4-testing": "0.1.*"
 	},
 	"require-dev": {
-		"laravel/laravel": "dev-fix/get-bootstrap-file",
+		"laravel/laravel": "4.1.*",
 		"mockery/mockery": "dev-master@dev",
 		"anlutro/menu": "0.1.*"
 	},

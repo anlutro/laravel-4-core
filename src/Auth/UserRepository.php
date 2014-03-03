@@ -83,7 +83,7 @@ class UserRepository extends \c\EloquentRepository
 	 */
 	public function createAsAdmin(array $attributes)
 	{
-		$user = $this->getNew();
+		$user = $this->getNew($attributes);
 
 		// set the user level
 		if (!empty($attributes['user_level'])) {

@@ -16,8 +16,11 @@ class AppTestCase extends \c\L4TestCase
 
 		$testEnvironment = 'testing';
 
-		// require the bootstrap file from vendor
-		return require __DIR__.'/../vendor/laravel/laravel/bootstrap/start.php';
+		$app = new Illuminate\Foundation\Application;
+		$env = $app->detectEnvironment(function() { return 'testing'; });
+		$app->bindInstallPaths(require __DIR__.'/../vendor/laravel/laravel/bootstrap/paths.php');
+		require Illuminate\Foundation\Application::getBootstrapFile();
+		return $app;
 	}
 
 	/**
