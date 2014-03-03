@@ -254,7 +254,7 @@ class CoreServiceProvider extends ServiceProvider
 		$menu->createMenu('right', ['class' => 'nav navbar-nav pull-right']);
 
 		if ($user !== null) {
-			$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user']);
+			$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
 			$subMenu->addItem(
 				$lang->get('c::user.profile-title'),
 				$url->action('c\Controllers\UserController@profile'),
