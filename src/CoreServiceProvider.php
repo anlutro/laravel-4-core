@@ -85,6 +85,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app->bind('c\Auth\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
 
+		$this->registerAlertComposer();
 		$this->registerSidebar();
 		$this->registerMenus();
 	}
@@ -214,6 +215,16 @@ class CoreServiceProvider extends ServiceProvider
 	}
 
 	/**
+	 * Register the alerts view composer.
+	 *
+	 * @return void
+	 */
+	protected function registerAlertComposer()
+	{
+		$this->app['view']->composer('c::alerts', 'c\AlertsComposer');
+	}
+
+	/**
 	 * Register the sidebar view creator.
 	 *
 	 * @return void
@@ -232,45 +243,9 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerMenus()
 	{
-		$this->app['view']->composer('c::menu', function($view) {
-			if (!$this->providerLoaded('anlutro\Menu\ServiceProvider')) return;
+		if (!$this->providerLoaded('anlutro\Menu\ServiceProvider')) return;
 
-			$menu = $this->app['anlutro\Menu\Builder'];
-			$user = $this->app['auth']->user();
-
-			$menu->createMenu('left')->addItem(
-				$this->app['config']->get('app.name'),
-				$this->app['url']->to('/')
-			);
-
-			$menu->createMenu('right', ['class' => 'nav navbar-nav pull-right']);
-
-			if ($user !== null) {
-				$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user']);
-				$subMenu->addItem(
-					$this->app['translator']->get('c::user.profile-title'),
-					$this->app['url']->action('c\Controllers\UserController@profile'),
-					['id' => 'profile']
-				);
-				if ($user->hasAccess('admin')) {
-					$subMenu->addItem(
-						$this->app['translator']->get('c::user.admin-userlist'),
-						$this->app['url']->action('c\Controllers\UserController@index'),
-						['id' => 'userlist']
-					);
-					$subMenu->addItem(
-						$this->app['translator']->get('c::user.admin-newuser'),
-						$this->app['url']->action('c\Controllers\UserController@create'),
-						['id' => 'add-user']
-					);
-				}
-				$subMenu->addItem(
-					$this->app['translator']->get('c::auth.logout'),
-					$this->app['url']->action('c\Controllers\AuthController@logout'),
-					['id' => 'log-out']
-				);
-			}
-		});
+		$this->app['view']->composer('c::menu', 'c\MenuComposer');
 	}
 
 	protected function providerLoaded($provider)

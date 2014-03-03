@@ -4,6 +4,11 @@ use Mockery as m;
 
 class MenuViewTest extends AppTestCase
 {
+	public function tearDown()
+	{
+		m::close();
+	}
+
 	public function testViewWhenLoggedOut()
 	{
 		$view = $this->makeView()->render();
@@ -47,7 +52,11 @@ class MenuViewTest extends AppTestCase
 
 	protected function makeView()
 	{
-		$this->app->register('anlutro\Menu\ServiceProvider');
 		return $this->app['view']->make('c::menu');
+	}
+
+	protected function getExtraProviders()
+	{
+		return ['anlutro\Menu\ServiceProvider'];
 	}
 }

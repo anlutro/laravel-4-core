@@ -1,4 +1,4 @@
-@extends('layout.fullwidth')
+@extends('layout.main')
 
 @section('title', Lang::get('c::auth.login-title'))
 

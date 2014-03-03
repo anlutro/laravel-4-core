@@ -26,9 +26,9 @@ The package does not use default config/migration paths, so in order to publish 
 
 ## Assumptions about your app
 
-You have two layouts available: `layout.main` and `layout.fullwidth`. Fullwidth is used by non-logged in users (on routes like login, reset password etc.).
+You have one layout view available: `layout.main`.
 
-Your layouts define the sections 'title', 'content' and 'scripts' (for javascript).
+Your layout defines the sections 'title', 'content' and 'scripts' (at the end of the body tag, for javascript).
 
 You have a Bootstrap 3-derived stylesheet.
 

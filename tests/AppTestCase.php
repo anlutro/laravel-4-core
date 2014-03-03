@@ -21,6 +21,32 @@ class AppTestCase extends \c\L4TestCase
 	}
 
 	/**
+	 * Refresh the application instance.
+	 *
+	 * @return void
+	 */
+	protected function refreshApplication()
+	{
+		$this->app = $this->createApplication();
+
+		$this->client = $this->createClient();
+
+		$this->app->setRequestForConsoleEnvironment();
+
+		// every test will be testing stuff that depends on the coreservice-
+		// provider, so just register it.
+		$this->app->register('c\CoreServiceProvider');
+
+		// allow registration of extra service providers before boot is
+		// called, as some providers rely on others being loaded in time.
+		foreach ($this->getExtraProviders() as $provider) {
+			$this->app->register($provider);
+		}
+
+		$this->app->boot();
+	}
+
+	/**
 	 * Set up the test. This is ran before every test.
 	 */
 	public function setUp()
@@ -30,10 +56,6 @@ class AppTestCase extends \c\L4TestCase
 		// set to sqlite simply because that's the only sql pdo driver I have
 		// installed on my dev laptop :)
 		$this->app['db']->setDefaultConnection('sqlite');
-
-		// every test will be testing stuff that depends on the coreservice-
-		// provider, so just register it.
-		$this->app->register('c\CoreServiceProvider');
 
 		// the package depends on some views, if these are missing we need to
 		// fix that by adding some dummy views
@@ -51,5 +73,10 @@ class AppTestCase extends \c\L4TestCase
 		) {
 			$this->app['view']->addLocation(__DIR__ . '/resources/views');
 		}
+	}
+
+	protected function getExtraProviders()
+	{
+		return [];
 	}
 }
