@@ -5,4 +5,4 @@
 	<?= $alert->message ?>
 </div>
 
-<?php endforeach; ?>0
+<?php endforeach; ?>
