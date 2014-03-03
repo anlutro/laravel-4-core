@@ -250,11 +250,7 @@ class CoreServiceProvider extends ServiceProvider
 		$url = $this->app['url'];
 		$user = $this->app['auth']->getUser();
 
-		$menu->createMenu('left')->addItem(
-			$this->app['config']->get('app.name') ?: $this->app['config']->get('app.url'),
-			$url->to('/')
-		);
-
+		$menu->createMenu('left');
 		$menu->createMenu('right', ['class' => 'nav navbar-nav pull-right']);
 
 		if ($user !== null) {
