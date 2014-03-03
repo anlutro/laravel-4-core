@@ -245,7 +245,45 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		if (!$this->providerLoaded('anlutro\Menu\ServiceProvider')) return;
 
-		$this->app['view']->composer('c::menu', 'c\MenuComposer');
+		$menu = $this->app['anlutro\Menu\Builder'];
+		$lang = $this->app['translator'];
+		$url = $this->app['url'];
+		$user = $this->app['auth']->getUser();
+
+		$menu->createMenu('left')->addItem(
+			$this->app['config']->get('app.name'),
+			$url->to('/')
+		);
+
+		$menu->createMenu('right', ['class' => 'nav navbar-nav pull-right']);
+
+		if ($user !== null) {
+			$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user']);
+			$subMenu->addItem(
+				$lang->get('c::user.profile-title'),
+				$url->action('c\Controllers\UserController@profile'),
+				['id' => 'profile']
+			);
+
+			if ($user->hasAccess('admin')) {
+				$subMenu->addItem(
+					$lang->get('c::user.admin-userlist'),
+					$url->action('c\Controllers\UserController@index'),
+					['id' => 'userlist']
+				);
+				$subMenu->addItem(
+					$lang->get('c::user.admin-newuser'),
+					$url->action('c\Controllers\UserController@create'),
+					['id' => 'add-user']
+				);
+			}
+
+			$subMenu->addItem(
+				$lang->get('c::auth.logout'),
+				$url->action('c\Controllers\AuthController@logout'),
+				['id' => 'log-out']
+			);
+		}
 	}
 
 	protected function providerLoaded($provider)
