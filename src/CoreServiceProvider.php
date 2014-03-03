@@ -288,7 +288,7 @@ class CoreServiceProvider extends ServiceProvider
 
 	protected function providerLoaded($provider)
 	{
-		$providers = $this->app['config']->get('providers');
+		$providers = $this->app['config']->get('app.providers');
 		return in_array($provider, $providers);
 		// $providers = $this->app->getLoadedProviders();
 		// return array_key_exists($provider, $providers);
