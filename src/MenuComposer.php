@@ -11,29 +11,32 @@ namespace c;
 
 use anlutro\Menu\Builder;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Config\Repository as Config;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Translation\Translator;
+use Illuminate\Config\Repository as Config;
 
 /**
  * View composer for resources/views/menu.php
  */
 class MenuComposer
 {
+	protected $url;
 	protected $menu;
 	protected $auth;
+	protected $config;
+	protected $translator;
 
 	public function __construct(
 		Builder $menu,
-		AuthManager $auth,
 		Config $config,
 		UrlGenerator $url,
+		AuthManager $auth,
 		Translator $translator
 	) {
+		$this->url = $url;
 		$this->menu = $menu;
 		$this->auth = $auth;
 		$this->config = $config;
-		$this->url = $url;
 		$this->translator = $translator;
 	}
 
