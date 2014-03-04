@@ -157,7 +157,7 @@ class CoreServiceProvider extends ServiceProvider
 				if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
 					return Response::json(['error' => $message], 403);
 				} else {
-					return $this->app['redirect']->action('AuthController@login')
+					return $this->app['redirect']->action('c\Controllers\AuthController@login')
 						->withErrors($message);
 				}
 			}
