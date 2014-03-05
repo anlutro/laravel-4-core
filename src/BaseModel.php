@@ -50,7 +50,8 @@ class BaseModel extends Model implements JsonSerializable
 	 */
 	public function toStdClass()
 	{
-		return json_decode(json_encode($this->toArray()));
+		$array = $this->toArray();
+		return empty($array) ? (new StdClass) : json_decode(json_encode($array));
 	}
 
 	/**

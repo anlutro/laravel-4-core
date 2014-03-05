@@ -29,11 +29,21 @@ class BaseCollection extends Collection implements JsonSerializable
 	/**
 	 * Convert the collection to an array of StdClasses.
 	 *
-	 * @return StdClass
+	 * @return array
 	 */
 	public function toStdClass()
-	{
-		return json_decode(json_encode($this->toArray()));
+	{	
+		return array_map(function($value) {
+			if (is_object($value)) {
+				if (method_exists($value, 'toStdClass')) {
+					return $value->toStdClass();
+				} elseif ($value instanceof ArrayableInterface) {
+					return json_decode(json_encode($value->toArray()));
+				}
+			}
+
+			return $value;
+		}, $this->items);
 	}
 
 	/**
