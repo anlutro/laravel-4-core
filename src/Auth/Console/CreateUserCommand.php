@@ -42,7 +42,7 @@ class CreateUserCommand extends \c\Command
 		if ($user = $this->users->create($attributes, $activate)) {
 			$this->info("User created!");
 		} else {
-			foreach ($this->users->errors()->toArray() as $error) {
+			foreach ($this->users->getErrors()->toArray() as $error) {
 				$this->error($error);
 			}
 			return 1;

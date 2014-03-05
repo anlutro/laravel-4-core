@@ -63,7 +63,7 @@ class UserController extends \c\Controller
 		if ($this->users->updateCurrentProfile(Input::all())) {
 			return $redirect->with('success', Lang::get('c::user.profile-update-success'));
 		} else {
-			return $redirect->withErrors($this->users->errors());
+			return $redirect->withErrors($this->users->getErrors());
 		}
 	}
 
@@ -178,7 +178,7 @@ class UserController extends \c\Controller
 		if ($this->users->updateAsAdmin($user, Input::all())) {
 			return $redirect->with('success', Lang::get('c::user.update-success'));
 		} else {
-			return $redirect->withErrors($this->users->errors());
+			return $redirect->withErrors($this->users->getErrors());
 		}
 	}
 
@@ -234,7 +234,7 @@ class UserController extends \c\Controller
 				->with('success', Lang::get('c::user.create-success'));
 		} else {
 			return $this->redirect('create')
-				->withErrors($this->users->errors())
+				->withErrors($this->users->getErrors())
 				->withInput();
 		}
 	}

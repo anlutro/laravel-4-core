@@ -60,7 +60,7 @@ class UserControllerTest extends AppTestCase
 		$input = ['foo' => 'bar'];
 		$this->users->shouldReceive('updateCurrentProfile')
 			->with($input)->andReturn(false);
-		$this->users->shouldReceive('errors')
+		$this->users->shouldReceive('getErrors')
 			->andReturn(['baz' => 'bar']);
 
 		$this->postAction('updateProfile', [], $input);
@@ -178,7 +178,7 @@ class UserControllerTest extends AppTestCase
 	{
 		$input = ['foo' => 'bar']; $id = 1;
 		$this->setupUpdateExpectation($input, $id, false);
-		$this->users->shouldReceive('errors')
+		$this->users->shouldReceive('getErrors')
 			->andReturn(['baz' => 'bar']);
 
 		$this->postAction('update', [$id], $input);
@@ -230,7 +230,7 @@ class UserControllerTest extends AppTestCase
 		$input = ['foo' => 'bar'];
 		$this->users->shouldReceive('create')->once()
 			->with($input)->andReturn(false);
-		$this->users->shouldReceive('errors')->once()
+		$this->users->shouldReceive('getErrors')->once()
 			->andReturn('baz');
 
 		$this->postAction('store', [], $input);

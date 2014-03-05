@@ -127,7 +127,7 @@ class AuthController extends \c\Controller
 				->with('success', Lang::get('c::auth.register-success'));
 		} else {
 			return $this->redirect('register')
-				->withErrors($this->users->errors())
+				->withErrors($this->users->getErrors())
 				->withInput();
 		}
 	}
