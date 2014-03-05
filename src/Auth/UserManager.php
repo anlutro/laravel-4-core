@@ -374,7 +374,7 @@ class UserManager
 			return call_user_func_array([$this->users, $method], $args);
 		}
 
-		$self = get_class($this); $repo = get_class($this->users);
+		$class = get_class($this); $repo = get_class($this->users);
 		throw new \BadMethodCallException("The method $method does not exist on this class ($class) or its $repo");
 	}
 }
