@@ -16,7 +16,7 @@
 		"anlutro/l4-testing": "0.1.*"
 	},
 	"require-dev": {
-		"laravel/laravel": "4.1.*",
+		"laravel/laravel": "~4.1",
 		"mockery/mockery": "dev-master@dev",
 		"anlutro/menu": "0.1.*"
 	},
