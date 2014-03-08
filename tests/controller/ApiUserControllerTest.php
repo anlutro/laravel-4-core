@@ -33,7 +33,7 @@ class ApiUserControllerTest extends AppTestCase
 		return $response->getData();
 	}
 
-	public function assertResponseOk($response)
+	public function assertResponse200($response)
 	{
 		$actual = $response->getStatusCode();
 		$this->assertTrue($response->isOk(), 'Expected status code 200, got '.$actual);
@@ -60,7 +60,7 @@ class ApiUserControllerTest extends AppTestCase
 		$this->users->shouldReceive('getCurrentUser')->andReturn($user);
 
 		$response = $this->getAction('profile');
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals('foo', $data->user->name);
 	}
@@ -74,7 +74,7 @@ class ApiUserControllerTest extends AppTestCase
 		$this->users->shouldReceive('getCurrentUser')->andReturn($user);
 
 		$response = $this->postAction('updateProfile', [], $input);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals('foo', $data->user->name);
 	}
@@ -108,7 +108,7 @@ class ApiUserControllerTest extends AppTestCase
 		$this->assertRouteHasFilter('auth');
 		$this->assertRouteHasFilter('access:admin');
 		$data = $this->assertResponseJson($response);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$this->assertEquals('foo', $data->users);
 	}
 
@@ -123,7 +123,7 @@ class ApiUserControllerTest extends AppTestCase
 		$this->assertRouteHasFilter('auth');
 		$this->assertRouteHasFilter('access:admin');
 		$data = $this->assertResponseJson($response);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$this->assertEquals('foo', $data->users);
 	}
 
@@ -138,7 +138,7 @@ class ApiUserControllerTest extends AppTestCase
 		$this->assertRouteHasFilter('auth');
 		$this->assertRouteHasFilter('access:admin');
 		$data = $this->assertResponseJson($response);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$this->assertEquals('foo', $data->users);
 	}
 
@@ -152,7 +152,7 @@ class ApiUserControllerTest extends AppTestCase
 		$response = $this->postAction('bulk', [], $input);
 
 		$data = $this->assertResponseJson($response);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$this->assertEquals('3 affected rows', $data->messages[0]);
 	}
 
@@ -181,7 +181,7 @@ class ApiUserControllerTest extends AppTestCase
 		$response = $this->getAction('show', [$id]);
 		
 		$data = $this->assertResponseJson($response);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$this->assertEquals(1, $data->user->id);
 	}
 
@@ -193,7 +193,7 @@ class ApiUserControllerTest extends AppTestCase
 		$response = $this->postAction('update', [$id], $input);
 		
 		$data = $this->assertResponseJson($response);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$this->assertEquals(1, $data->user->id);
 	}
 
@@ -221,7 +221,7 @@ class ApiUserControllerTest extends AppTestCase
 		$response = $this->postAction('store', [], $input);
 		
 		$data = $this->assertResponseJson($response);
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$this->assertEquals(1, $data->user->id);
 	}
 

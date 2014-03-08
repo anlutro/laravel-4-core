@@ -34,7 +34,7 @@ class ApiAuthControllerTest extends AppTestCase
 		return $response->getData();
 	}
 
-	public function assertResponseOk($response)
+	public function assertResponse200($response)
 	{
 		$actual = $response->getStatusCode();
 		$this->assertTrue($response->isOk(), 'Expected status code 200, got '.$actual);
@@ -49,7 +49,7 @@ class ApiAuthControllerTest extends AppTestCase
 
 		$response = $this->postAction('login', [], $input);
 
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals('foo', $data->user);
 	}
@@ -85,7 +85,7 @@ class ApiAuthControllerTest extends AppTestCase
 
 		$response = $this->postAction('attemptRegistration', [], $input);
 
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
 	}
 
@@ -97,7 +97,7 @@ class ApiAuthControllerTest extends AppTestCase
 		
 		$response = $this->getAction('activate', ['activation_code' => 'foo']);
 
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
 	}
 
@@ -128,7 +128,7 @@ class ApiAuthControllerTest extends AppTestCase
 
 		$response = $this->postAction('sendReminder', [], $input);
 
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
 	}
 
@@ -179,7 +179,7 @@ class ApiAuthControllerTest extends AppTestCase
 
 		$response = $this->postAction('attemptReset', [], $input);
 
-		$this->assertResponseOk($response);
+		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
 	}
 
