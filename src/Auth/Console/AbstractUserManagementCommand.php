@@ -29,11 +29,18 @@ abstract class AbstractUserManagementCommand extends \c\Command
 		$model = $this->laravel->make($class);
 		$query = $model->newQuery();
 
-		foreach ($this->option() as $key => $value) {
-			if (!empty($value)) $query->where($key, '=', $value);
+		$options = ['username', 'email', 'id'];
+		$optionProvided = false;
+
+		foreach ($options as $key) {
+			$value = $this->option($key);
+			if (!empty($value)) {
+				$optionProvided = true;
+				$query->where($key, '=', $value);
+			}
 		}
 
-		if (empty($query->wheres)) {
+		if (!$optionProvided) {
 			$this->error('Must provide at least one option! (username, email or id)');
 			$this->displayHelp();
 			exit(1);

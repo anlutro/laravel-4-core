@@ -22,8 +22,8 @@ class ChangePasswordCommand extends AbstractUserManagementCommand
 		$user = $this->getUser();
 
 		do {
-			$password = $this->ask('New password:');
-			$confirm = $this->ask('Confirm new password:');
+			$password = $this->secret('New password:');
+			$confirm = $this->secret('Confirm new password:');
 		} while ($password !== $confirm);
 
 		$user->password = $password;
