@@ -11,6 +11,7 @@ namespace c\Auth\Console;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\ArrayInput;
 
 /**
  * Abstract command for managing users via the console.
