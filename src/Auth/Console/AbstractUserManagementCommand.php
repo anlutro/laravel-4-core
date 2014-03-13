@@ -55,7 +55,7 @@ abstract class AbstractUserManagementCommand extends \c\Command
 	{
 		$this->getNativeDefinition()->setArguments($this->getArguments());
 		$helpCommand = $this->getApplication()->get('help');
-		$helpCommand->run(new ArrayInput(['command_name' => $this->getName()]), $out);
+		$helpCommand->run(new ArrayInput(['command_name' => $this->getName()]), $this->output);
 	}
 
 	/**
