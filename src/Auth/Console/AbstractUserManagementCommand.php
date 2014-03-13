@@ -34,6 +34,7 @@ abstract class AbstractUserManagementCommand extends \c\Command
 
 		if (empty($query->wheres)) {
 			$this->error('Must provide at least one option! (username, email or id)');
+			$this->displayHelp();
 			exit(1);
 		}
 
@@ -47,6 +48,13 @@ abstract class AbstractUserManagementCommand extends \c\Command
 		}
 
 		return $query->first();
+	}
+
+	protected function displayHelp()
+	{
+		$this->getNativeDefinition()->setArguments($this->getArguments());
+		$helpCommand = $this->getApplication()->get('help');
+		$helpCommand->run(new ArrayInput(['command_name' => $this->getName()]), $out);
 	}
 
 	/**
