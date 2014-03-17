@@ -10,7 +10,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserActivationTable extends Migration
+class UserActivationCreateTable extends Migration
 {
 	public function up()
 	{
