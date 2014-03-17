@@ -4,7 +4,7 @@ class DatabaseActivationCodeRepositoryTest extends \c\EloquentTestCase
 {
 	public function getMigrations()
 	{
-		return ['CreateUserActivationTable'];
+		return ['UserActivationCreateTable'];
 	}
 
 	public function testCreateAndRetrieve()

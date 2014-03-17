@@ -92,7 +92,7 @@ class UserController extends \c\Controller
 			'users'       => $users,
 			'userTypes'   => $types,
 			'bulkActions' => $this->getBulkActions(),
-			'editAction'  => $this->parseAction('edit'),
+			'editAction'  => $this->action('edit'),
 			'newUrl'      => $this->url('create'),
 			'backUrl'     => URL::to('/'),
 		]);

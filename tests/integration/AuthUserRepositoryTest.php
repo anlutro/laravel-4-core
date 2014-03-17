@@ -9,7 +9,7 @@ class AuthUserRepositoryTest extends \c\EloquentTestCase
 	 */
 	protected function getMigrations()
 	{
-		return ['CreateUserTable'];
+		return ['UsersCreateTable'];
 	}
 
 	/**
