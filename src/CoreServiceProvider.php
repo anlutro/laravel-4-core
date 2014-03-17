@@ -251,7 +251,7 @@ class CoreServiceProvider extends ServiceProvider
 		$user = $this->app['auth']->user();
 
 		$menu->createMenu('left');
-		$menu->createMenu('right', ['class' => 'nav navbar-nav pull-right']);
+		$menu->createMenu('right', ['class' => 'nav navbar-nav navbar-right']);
 
 		if ($user !== null) {
 			$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
