@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c;
+namespace anlutro\Core;
 
 class EloquentBuilder extends \Illuminate\Database\Eloquent\Builder
 {

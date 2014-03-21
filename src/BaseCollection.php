@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c;
+namespace anlutro\Core;
 
 use JsonSerializable;
 use Illuminate\Database\Eloquent\Collection;

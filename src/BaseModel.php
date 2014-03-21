@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c;
+namespace anlutro\Core;
 
 use JsonSerializable;
 use Illuminate\Database\Eloquent\Model;
@@ -69,10 +69,10 @@ class BaseModel extends Model implements JsonSerializable
 	 *
 	 * @param  array  $models
 	 *
-	 * @return \c\BaseCollection
+	 * @return \anlutro\Core\BaseCollection
 	 */
 	public function newCollection(array $models = array())
 	{
-		return new \c\BaseCollection($models);
+		return new \anlutro\Core\BaseCollection($models);
 	}
 }

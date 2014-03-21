@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Reminders;
+namespace anlutro\Core\Auth\Reminders;
 
 use Carbon\Carbon;
 use Illuminate\Auth\Reminders\RemindableInterface;
@@ -78,7 +78,10 @@ class PasswordBroker
 
 		$method = $this->queue ? 'queue' : 'send';
 
-		$viewData = ['token' => $token];
+		$viewData = [
+			'token' => $token,
+			'action' => 'anlutro\Core\Web\AuthController@reset',
+		];
 
 		return $this->mailer->$method($this->emailView, $viewData, function($msg) use ($email) {
 			$msg->to($email)

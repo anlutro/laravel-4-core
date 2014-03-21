@@ -7,25 +7,25 @@
  * @package  l4-core
  */
 
-namespace c\Controllers;
+namespace anlutro\Core\Web;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 
-use c\Auth\UserManager;
+use anlutro\Core\Auth\UserManager;
 
 /**
  * Controller for authentication actions.
  */
-class ApiAuthController extends \c\ApiController
+class ApiAuthController extends \anlutro\LaravelController\ApiController
 {
 	/**
-	 * @var \c\Auth\UserManager
+	 * @var \anlutro\Core\Auth\UserManager
 	 */
 	protected $users;
 
 	/**
-	 * @param \c\Auth\UserManager $users
+	 * @param \anlutro\Core\Auth\UserManager $users
 	 */
 	public function __construct(UserManager $users)
 	{

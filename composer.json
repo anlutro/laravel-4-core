@@ -11,9 +11,10 @@
 	"require": {
 		"php": ">=5.4.0",
 		"nesbot/carbon": "*",
-		"anlutro/l4-repository": "0.5.*",
-		"anlutro/l4-controller": "0.2.*",
-		"anlutro/l4-testing": "0.1.*"
+		"anlutro/l4-repository": "dev-master@dev",
+		"anlutro/l4-validation": "dev-master@dev",
+		"anlutro/l4-controller": "dev-master@dev",
+		"anlutro/l4-testing": "dev-master@dev"
 	},
 	"require-dev": {
 		"laravel/laravel": "~4.1",
@@ -25,7 +26,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"c\\": "src/"
+			"anlutro\\Core\\": "src/"
 		},
 		"files": [
 			"src/helpers.php"

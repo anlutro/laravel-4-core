@@ -4,18 +4,18 @@ use Mockery as m;
 
 class ApiAuthControllerTest extends AppTestCase
 {
-	protected $controller = 'c\Controllers\AuthController';
+	protected $controller = 'anlutro\Core\Web\AuthController';
 
 	public function setUp()
 	{
 		parent::setUp();
-		$this->manager = m::mock('c\Auth\UserManager');
-		$this->app->instance('c\Auth\UserManager', $this->manager);
+		$this->manager = m::mock('anlutro\Core\Auth\UserManager');
+		$this->app->instance('anlutro\Core\Auth\UserManager', $this->manager);
 
 		// instead of setting up the filters and having to deal with auth/csrf, just
 		// bind the controllers manually
-		$this->app->bind('c\Controllers\AuthController', 'c\Controllers\ApiAuthController');
-		$this->app->bind('c\Controllers\UserController', 'c\Controllers\ApiUserController');
+		$this->app->bind('anlutro\Core\Web\AuthController', 'anlutro\Core\Web\ApiAuthController');
+		$this->app->bind('anlutro\Core\Web\UserController', 'anlutro\Core\Web\ApiUserController');
 
 		// mock a JSON/AJAX request
 		$this->client->setServerParameter('HTTP_X-Requested-With', 'XMLHttpRequest');
@@ -78,7 +78,7 @@ class ApiAuthControllerTest extends AppTestCase
 	public function testRegister()
 	{
 		$this->manager->shouldReceive('setActivationService')->once();
-		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
 		$input = ['foo' => 'bar'];
 		$this->manager->shouldReceive('register')->once()
 			->with($input)->andReturn(true);
@@ -92,7 +92,7 @@ class ApiAuthControllerTest extends AppTestCase
 	public function testActivation()
 	{
 		$this->manager->shouldReceive('setActivationService')->once();
-		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
 		$this->manager->shouldReceive('activateByCode')->with('foo')->once()->andReturn(true);
 		
 		$response = $this->getAction('activate', ['activation_code' => 'foo']);
@@ -104,7 +104,7 @@ class ApiAuthControllerTest extends AppTestCase
 	public function testResetStepOneFailure()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = ['email' => 'foo', 'bar' => 'baz'];
 		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
@@ -119,7 +119,7 @@ class ApiAuthControllerTest extends AppTestCase
 	public function testResetStepOneSuccess()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = ['email' => 'foo', 'bar' => 'baz'];
 		$mockUser = $this->getMockUser();
@@ -144,7 +144,7 @@ class ApiAuthControllerTest extends AppTestCase
 	public function testResetFailure()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = [
 			'username' => 'bar',
@@ -166,7 +166,7 @@ class ApiAuthControllerTest extends AppTestCase
 	public function testResetSuccess()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = [
 			'username' => 'bar',
@@ -185,6 +185,6 @@ class ApiAuthControllerTest extends AppTestCase
 
 	protected function getMockUser()
 	{
-		return m::mock('c\Auth\UserModel')->makePartial();
+		return m::mock('anlutro\Core\Auth\UserModel')->makePartial();
 	}
 }

@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Console;
+namespace anlutro\Core\Auth\Console;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 /**
  * Abstract command for managing users via the console.
  */
-abstract class AbstractUserManagementCommand extends \c\Command
+abstract class AbstractUserManagementCommand extends \anlutro\Core\Command
 {
 	/**
 	 * Get a user based on the input provided to the command.

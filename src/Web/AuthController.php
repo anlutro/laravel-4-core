@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Controllers;
+namespace anlutro\Core\Web;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
@@ -16,20 +16,20 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 
-use c\Auth\UserManager;
+use anlutro\Core\Auth\UserManager;
 
 /**
  * Controller for authentication actions.
  */
-class AuthController extends \c\Controller
+class AuthController extends \anlutro\LaravelController\Controller
 {
 	/**
-	 * @var \c\Auth\UserManager
+	 * @var \anlutro\Core\Auth\UserManager
 	 */
 	protected $users;
 
 	/**
-	 * @param \c\Auth\UserManager $users
+	 * @param \anlutro\Core\Auth\UserManager $users
 	 */
 	public function __construct(UserManager $users)
 	{
@@ -251,7 +251,7 @@ class AuthController extends \c\Controller
 	{
 		return $this->users->activationEnabled();
 		$loaded = App::getLoadedProviders();
-		$provider = 'c\Auth\Activation\ActivationServiceProvider';
+		$provider = 'anlutro\Core\Auth\Activation\ActivationServiceProvider';
 		return isset($loaded[$provider]);
 	}
 
@@ -264,7 +264,7 @@ class AuthController extends \c\Controller
 	{
 		return $this->users->remindersEnabled();
 		$loaded = App::getLoadedProviders();
-		$provider = 'c\Auth\Reminders\ReminderServiceProvider';
+		$provider = 'anlutro\Core\Auth\Reminders\ReminderServiceProvider';
 		return isset($loaded[$provider]);
 	}
 }

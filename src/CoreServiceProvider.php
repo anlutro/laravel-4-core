@@ -7,9 +7,9 @@
  * @package  l4-core
  */
 
-namespace c;
+namespace anlutro\Core;
 
-use c\Auth\PasswordBroker;
+use anlutro\Core\Auth\PasswordBroker;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Response;
@@ -17,7 +17,7 @@ use Carbon\Carbon;
 
 class CoreServiceProvider extends ServiceProvider
 {
-	use \c\RouteProviderTrait;
+	use \anlutro\Core\RouteProviderTrait;
 
 	/**
 	 * Whether or not the service provider should be deferred/lazy loaded.
@@ -58,11 +58,11 @@ class CoreServiceProvider extends ServiceProvider
 		static::$resPath = __DIR__.'/../resources';
 
 		$this->commands([
-			'c\Auth\Console\CreateUserCommand',
-			'c\Auth\Console\ChangePasswordCommand',
+			'anlutro\Core\Auth\Console\CreateUserCommand',
+			'anlutro\Core\Auth\Console\ChangePasswordCommand',
 		]);
 
-		$this->app->bind('c\Auth\UserManager');
+		$this->app->bind('anlutro\Core\Auth\UserManager');
 	}
 
 	/**
@@ -81,8 +81,8 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
 
-		$userModel = $this->app['config']->get('auth.model') ?: 'c\Auth\UserModel';
-		$this->app->bind('c\Auth\UserModel', $userModel);
+		$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\UserModel';
+		$this->app->bind('anlutro\Core\Auth\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
 
 		$this->registerAlertComposer();
@@ -137,8 +137,8 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerAccessFilter();
 		$this->app['router']->before(function($request) {
 			if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
-				$this->app->bind('c\Controllers\AuthController', 'c\Controllers\ApiAuthController');
-				$this->app->bind('c\Controllers\UserController', 'c\Controllers\ApiUserController');
+				$this->app->bind('anlutro\Core\Web\AuthController', 'anlutro\Core\Web\ApiAuthController');
+				$this->app->bind('anlutro\Core\Web\UserController', 'anlutro\Core\Web\ApiUserController');
 			}
 		});
 	}
@@ -157,7 +157,7 @@ class CoreServiceProvider extends ServiceProvider
 				if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
 					return Response::json(['error' => $message], 403);
 				} else {
-					return $this->app['redirect']->action('c\Controllers\AuthController@login')
+					return $this->app['redirect']->action('anlutro\Core\Web\AuthController@login')
 						->withErrors($message);
 				}
 			}
@@ -221,7 +221,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerAlertComposer()
 	{
-		$this->app['view']->composer('c::alerts', 'c\AlertsComposer');
+		$this->app['view']->composer('c::alerts', 'anlutro\Core\AlertsComposer');
 	}
 
 	/**
@@ -257,26 +257,26 @@ class CoreServiceProvider extends ServiceProvider
 			$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
 			$subMenu->addItem(
 				$lang->get('c::user.profile-title'),
-				$url->action('c\Controllers\UserController@profile'),
+				$url->action('anlutro\Core\Web\UserController@profile'),
 				['id' => 'profile']
 			);
 
 			if ($user->hasAccess('admin')) {
 				$subMenu->addItem(
 					$lang->get('c::user.admin-userlist'),
-					$url->action('c\Controllers\UserController@index'),
+					$url->action('anlutro\Core\Web\UserController@index'),
 					['id' => 'userlist']
 				);
 				$subMenu->addItem(
 					$lang->get('c::user.admin-newuser'),
-					$url->action('c\Controllers\UserController@create'),
+					$url->action('anlutro\Core\Web\UserController@create'),
 					['id' => 'add-user']
 				);
 			}
 
 			$subMenu->addItem(
 				$lang->get('c::auth.logout'),
-				$url->action('c\Controllers\AuthController@logout'),
+				$url->action('anlutro\Core\Web\AuthController@logout'),
 				['id' => 'log-out']
 			);
 		}

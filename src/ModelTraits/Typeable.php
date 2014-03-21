@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\ModelTraits;
+namespace anlutro\Core\ModelTraits;
 
 /**
  * Generic traits for models that store their type as an integer but also needs

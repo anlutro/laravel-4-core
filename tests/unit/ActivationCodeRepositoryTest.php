@@ -1,7 +1,7 @@
 <?php
 use Mockery as m;
 
-use c\Auth\Activation\DatabaseActivationCodeRepository;
+use anlutro\Core\Auth\Activation\DatabaseActivationCodeRepository;
 
 class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,7 @@ class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
 			return $data['code'] === 'foo' && $data['email'] === 'test@example.com';
 		});
 		
-		$user = m::mock('c\Auth\Activation\ActivatableInterface');
+		$user = m::mock('anlutro\Core\Auth\Activation\ActivatableInterface');
 		$user->shouldReceive('getActivationEmail')->once()->andReturn('test@example.com');
 
 		$this->assertTrue($this->repo->create($user, 'foo'));

@@ -1,6 +1,6 @@
 <?php
 use Mockery as m;
-use c\Auth\Reminders\PasswordBroker;
+use anlutro\Core\Auth\Reminders\PasswordBroker;
 use Illuminate\Support\Facades;
 
 class PasswordBrokerTest extends PHPUnit_Framework_TestCase

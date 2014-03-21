@@ -51,7 +51,7 @@ class BaseEloquentClassesTest extends PHPUnit_Framework_TestCase
 
 	public function makeCollection()
 	{
-		$collection = new \c\BaseCollection;
+		$collection = new \anlutro\Core\BaseCollection;
 		$collection->push($this->makeModel());
 		$collection->push($this->makeModel());
 		return $collection;
@@ -59,5 +59,5 @@ class BaseEloquentClassesTest extends PHPUnit_Framework_TestCase
 }
 
 if (!class_exists('BaseModelTestStub')) {
-	class BaseModelTestStub extends \c\BaseModel {}
+	class BaseModelTestStub extends \anlutro\Core\BaseModel {}
 }

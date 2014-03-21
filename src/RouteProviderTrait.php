@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c;
+namespace anlutro\Core;
 
 /**
  * Trait for re-usable service provider methods throughout the core package.

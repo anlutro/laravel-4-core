@@ -2,7 +2,7 @@
 
 use Mockery as m;
 
-class AuthUserRepositoryTest extends \c\EloquentTestCase
+class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 {
 	/**
 	 * The migrations the test depends on.
@@ -62,7 +62,7 @@ class AuthUserRepositoryTest extends \c\EloquentTestCase
 		$input = $this->getUserAttributes('foo');
 		$input['is_active'] = '1';
 		$user = $repo->createAsAdmin($input);
-		$this->assertInstanceOf('c\Auth\UserModel', $user);
+		$this->assertInstanceOf('anlutro\Core\Auth\UserModel', $user);
 		$this->assertTrue($user->exists, 'User should exist.');
 		$this->assertTrue($user->is_active, 'User should be active.');
 	}
@@ -73,7 +73,7 @@ class AuthUserRepositoryTest extends \c\EloquentTestCase
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
 		$user = $repo->createAsAdmin($input, false);
-		$this->assertInstanceOf('c\Auth\UserModel', $user);
+		$this->assertInstanceOf('anlutro\Core\Auth\UserModel', $user);
 		$this->assertFalse($user->is_active, 'User should not be active.');
 	}
 
@@ -85,7 +85,7 @@ class AuthUserRepositoryTest extends \c\EloquentTestCase
 		$input['user_level'] = 100;
 		$input['is_active'] = true;
 		$user = $repo->create($input, false);
-		$this->assertInstanceOf('c\Auth\UserModel', $user);
+		$this->assertInstanceOf('anlutro\Core\Auth\UserModel', $user);
 		$this->assertFalse($user->is_active, 'User should not be active.');
 		$this->assertEquals(1, $user->user_level);
 	}
@@ -188,16 +188,16 @@ class AuthUserRepositoryTest extends \c\EloquentTestCase
 
 	protected function makeRepository()
 	{
-		$this->model = new c\Auth\UserModel;
-		$this->validator = m::mock('c\Auth\UserValidator');
+		$this->model = new anlutro\Core\Auth\UserModel;
+		$this->validator = m::mock('anlutro\Core\Auth\UserValidator');
 		$this->validator->shouldReceive('replace')->with('table', $this->model->getTable());
-		return new c\Auth\UserRepository($this->model, $this->validator);
+		return new anlutro\Core\Auth\UserRepository($this->model, $this->validator);
 	}
 
 	protected function createUser($name, $password = 'foo', $userLevel = 'user')
 	{
 		$attr = $this->getUserAttributes($name, $password, $userLevel);
-		$user = new c\Auth\UserModel;
+		$user = new anlutro\Core\Auth\UserModel;
 		$user->username = $attr['username'];
 		$user->name = $attr['name'];
 		$user->password = $attr['password'];

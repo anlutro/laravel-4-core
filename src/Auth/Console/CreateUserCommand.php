@@ -7,16 +7,16 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Console;
+namespace anlutro\Core\Auth\Console;
 
-use c\Auth\UserRepository;
+use anlutro\Core\Auth\UserRepository;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * Command for creating a new user via the console.
  */
-class CreateUserCommand extends \c\Command
+class CreateUserCommand extends \anlutro\Core\Command
 {
 	protected $name = 'auth:createuser';
 	protected $description = 'Create a new user.';

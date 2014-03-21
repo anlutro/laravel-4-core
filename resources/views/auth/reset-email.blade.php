@@ -7,6 +7,6 @@
 <h2>@lang('c::auth.reminder-title')</h2>
 
 <p>@lang('c::auth.reminder-text', ['sitename' => (Config::get('app.name') ?: Config::get('app.url'))])</p>
-<p>{{ URL::action('AuthController@reset', ['token' => $token]) }}</p>
+<p>{{ URL::action($action, ['token' => $token]) }}</p>
 
 @stop

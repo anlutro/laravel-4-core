@@ -7,13 +7,13 @@
  * @package  l4-core
  */
 
-namespace c\Auth;
+namespace anlutro\Core\Auth;
 
 use Illuminate\Auth\AuthManager;
 use Illuminate\Translation\Translator;
 
-use c\Auth\Activation\ActivationService;
-use c\Auth\Reminders\PasswordBroker;
+use anlutro\Core\Auth\Activation\ActivationService;
+use anlutro\Core\Auth\Reminders\PasswordBroker;
 
 /**
  * Top-level user service class.

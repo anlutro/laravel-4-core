@@ -1,17 +1,17 @@
 <?php
 use Mockery as m;
 use Illuminate\Support\Facades;
-use c\Auth\Activation\Activation;
+use anlutro\Core\Auth\Activation\Activation;
 
 class AuthControllerTest extends AppTestCase
 {
-	protected $controller = 'c\Controllers\AuthController';
+	protected $controller = 'anlutro\Core\Web\AuthController';
 
 	public function setUp()
 	{
 		parent::setUp();
-		$this->manager = m::mock('c\Auth\UserManager');
-		$this->app->instance('c\Auth\UserManager', $this->manager);
+		$this->manager = m::mock('anlutro\Core\Auth\UserManager');
+		$this->app->instance('anlutro\Core\Auth\UserManager', $this->manager);
 	}
 
 	public function tearDown()
@@ -64,7 +64,7 @@ class AuthControllerTest extends AppTestCase
 	public function testRegisterView()
 	{
 		$this->manager->shouldReceive('setActivationService')->once();
-		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
 
 		$this->manager->shouldReceive('getNew')->andReturn($this->getMockUser());
 
@@ -76,7 +76,7 @@ class AuthControllerTest extends AppTestCase
 	public function testRegisterSubmit()
 	{
 		$this->manager->shouldReceive('setActivationService')->once();
-		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
 
 		$input = ['foo' => 'bar'];
 		$this->manager->shouldReceive('register')->once()
@@ -91,19 +91,19 @@ class AuthControllerTest extends AppTestCase
 	public function testActivation()
 	{
 		$this->manager->shouldReceive('setActivationService')->once();
-		$this->app->register('c\Auth\Activation\ActivationServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
 
 		$this->manager->shouldReceive('activateByCode')->with('foo')->once()->andReturn(true);
 		
 		$this->getAction('activate', ['activation_code' => 'foo']);
 
-		$this->assertRedirectedToAction('c\Controllers\AuthController@login');
+		$this->assertRedirectedToAction('anlutro\Core\Web\AuthController@login');
 	}
 
 	public function testResetStepOneForm()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$this->getAction('reminder');
 
@@ -113,7 +113,7 @@ class AuthControllerTest extends AppTestCase
 	public function testResetStepOneFailure()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = ['email' => 'foo', 'bar' => 'baz'];
 		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
@@ -128,7 +128,7 @@ class AuthControllerTest extends AppTestCase
 	public function testResetStepOneSuccess()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = ['email' => 'foo', 'bar' => 'baz'];
 		$mockUser = $this->getMockUser();
@@ -144,7 +144,7 @@ class AuthControllerTest extends AppTestCase
 	public function testResetStepTwoForm()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$this->getAction('reset', [], ['token' => 'foobar']);
 
@@ -154,7 +154,7 @@ class AuthControllerTest extends AppTestCase
 	public function testResetStepTwoFormWithoutToken()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$this->getAction('reset', []);
 
@@ -173,7 +173,7 @@ class AuthControllerTest extends AppTestCase
 	public function testResetFailure()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = [
 			'username' => 'bar',
@@ -193,7 +193,7 @@ class AuthControllerTest extends AppTestCase
 	public function testResetSuccess()
 	{
 		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('c\Auth\Reminders\ReminderServiceProvider');
+		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
 
 		$input = [
 			'username' => 'bar',
@@ -212,6 +212,6 @@ class AuthControllerTest extends AppTestCase
 
 	protected function getMockUser()
 	{
-		return m::mock('c\Auth\UserModel')->makePartial();
+		return m::mock('anlutro\Core\Auth\UserModel')->makePartial();
 	}
 }

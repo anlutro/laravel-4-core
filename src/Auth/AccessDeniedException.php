@@ -7,6 +7,6 @@
  * @package  l4-core
  */
 
-namespace c\Auth;
+namespace anlutro\Core\Auth;
 
 class AccessDeniedException extends \Exception {}

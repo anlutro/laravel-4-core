@@ -7,12 +7,12 @@
  * @package  l4-core
  */
 
-namespace c\Auth;
+namespace anlutro\Core\Auth;
 
 /**
  * Validator for the user repository.
  */
-class UserValidator extends \c\Validator
+class UserValidator extends \anlutro\LaravelValidation\Validator
 {
 	protected function getCommonRules()
 	{

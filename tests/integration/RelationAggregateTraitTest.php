@@ -1,6 +1,6 @@
 <?php
 
-class RelationAggregateTraitTest extends \c\EloquentTestCase
+class RelationAggregateTraitTest extends \anlutro\LaravelTesting\EloquentTestCase
 {
 	public function setUp()
 	{
@@ -130,8 +130,8 @@ class RelAggrModelStub extends \Illuminate\Database\Eloquent\Model
 	protected $table = 'models';
 	public $timestamps = false;
 
-	use c\ModelTraits\AddSubSelect;
-	use c\ModelTraits\RelationAggregates;
+	use anlutro\Core\ModelTraits\AddSubSelect;
+	use anlutro\Core\ModelTraits\RelationAggregates;
 
 	public function mtmrelation()
 	{
@@ -154,8 +154,8 @@ class RelatedStub extends \Illuminate\Database\Eloquent\Model
 	protected $table = 'relations';
 	public $timestamps = false;
 
-	use c\ModelTraits\AddSubSelect;
-	use c\ModelTraits\RelationAggregates;
+	use anlutro\Core\ModelTraits\AddSubSelect;
+	use anlutro\Core\ModelTraits\RelationAggregates;
 
 	public function btrelation()
 	{

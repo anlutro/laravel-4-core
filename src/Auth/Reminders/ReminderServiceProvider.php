@@ -7,14 +7,14 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Reminders;
+namespace anlutro\Core\Auth\Reminders;
 
 use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;
-use c\CoreServiceProvider;
+use anlutro\Core\CoreServiceProvider;
 
 class ReminderServiceProvider extends BaseProvider
 {
-	use \c\RouteProviderTrait;
+	use \anlutro\Core\RouteProviderTrait;
 	
 	protected $defer = false;
 	protected static $resPath;
@@ -22,14 +22,14 @@ class ReminderServiceProvider extends BaseProvider
 	protected function registerCommands()
 	{
 		parent::registerCommands();
-		$this->commands('c\Auth\Console\SendPasswordReminderCommand');
+		$this->commands('anlutro\Core\Auth\Console\SendPasswordReminderCommand');
 	}
 
 	public function register()
 	{
 		parent::register();
 		
-		$this->app->extend('c\Auth\UserManager', function($manager, $app) {
+		$this->app->extend('anlutro\Core\Auth\UserManager', function($manager, $app) {
 			$manager->setReminderService($app['auth.reminder']);
 			return $manager;
 		});

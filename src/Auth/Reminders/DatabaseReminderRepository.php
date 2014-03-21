@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Reminders;
+namespace anlutro\Core\Auth\Reminders;
 
 use Illuminate\Auth\Reminders\DatabaseReminderRepository as BaseRepository;
 use Illuminate\Auth\Reminders\RemindableInterface;

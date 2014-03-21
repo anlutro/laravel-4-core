@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Console;
+namespace anlutro\Core\Auth\Console;
 
 /**
  * Command for sending a password reset email to a user.

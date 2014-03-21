@@ -7,12 +7,12 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Activation;
+namespace anlutro\Core\Auth\Activation;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see  c\Auth\Activation\ActivationBroker
+ * @see  anlutro\Core\Auth\Activation\ActivationBroker
  */
 class Activation extends Facade
 {

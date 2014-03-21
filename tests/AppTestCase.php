@@ -3,7 +3,7 @@
 /**
  * Test case that boots the whole application.
  */
-class AppTestCase extends \c\L4TestCase
+class AppTestCase extends \anlutro\LaravelTesting\L4TestCase
 {
 	/**
 	 * Create the application.
@@ -38,7 +38,7 @@ class AppTestCase extends \c\L4TestCase
 
 		// every test will be testing stuff that depends on the coreservice-
 		// provider, so just register it.
-		$this->app->register('c\CoreServiceProvider');
+		$this->app->register('anlutro\Core\CoreServiceProvider');
 
 		// allow registration of extra service providers before boot is
 		// called, as some providers rely on others being loaded in time.

@@ -27,7 +27,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException c\Auth\AccessDeniedException
+	 * @expectedException anlutro\Core\Auth\AccessDeniedException
 	 */
 	public function testCreateWithInsufficientAccess()
 	{
@@ -180,7 +180,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	protected function makeManager($users, $auth, $translator, $activations = null, $reminders = null)
 	{
-		$manager = new c\Auth\UserManager($users, $auth, $translator);
+		$manager = new anlutro\Core\Auth\UserManager($users, $auth, $translator);
 		if ($activations) $manager->setActivationService($activations);
 		if ($reminders) $manager->setReminderService($reminders);
 		return $manager;
@@ -193,7 +193,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	protected function mockUsers()
 	{
-		return m::mock('c\Auth\UserRepository');
+		return m::mock('anlutro\Core\Auth\UserRepository');
 	}
 
 	protected function mockAuth()
@@ -210,16 +210,16 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function mockActivations()
 	{
-		return m::mock('c\Auth\Activation\ActivationService');
+		return m::mock('anlutro\Core\Auth\Activation\ActivationService');
 	}
 
 	public function mockReminders()
 	{
-		return m::mock('c\Auth\Reminders\PasswordBroker');
+		return m::mock('anlutro\Core\Auth\Reminders\PasswordBroker');
 	}
 
 	protected function mockUser()
 	{
-		return m::mock('c\Auth\UserModel')->makePartial();
+		return m::mock('anlutro\Core\Auth\UserModel')->makePartial();
 	}
 }

@@ -3,18 +3,18 @@ use Mockery as m;
 
 class ApiUserControllerTest extends AppTestCase
 {
-	protected $controller = 'c\Controllers\UserController';
+	protected $controller = 'anlutro\Core\Web\UserController';
 
 	public function setUp()
 	{
 		parent::setUp();
-		$this->users = m::mock('c\Auth\UserManager');
-		$this->app->instance('c\Auth\UserManager', $this->users);
+		$this->users = m::mock('anlutro\Core\Auth\UserManager');
+		$this->app->instance('anlutro\Core\Auth\UserManager', $this->users);
 
 		// instead of setting up the filters and having to deal with auth/csrf, just
 		// bind the controllers manually
-		$this->app->bind('c\Controllers\AuthController', 'c\Controllers\ApiAuthController');
-		$this->app->bind('c\Controllers\UserController', 'c\Controllers\ApiUserController');
+		$this->app->bind('anlutro\Core\Web\AuthController', 'anlutro\Core\Web\ApiAuthController');
+		$this->app->bind('anlutro\Core\Web\UserController', 'anlutro\Core\Web\ApiUserController');
 
 		// mock a JSON/AJAX request
 		$this->client->setServerParameter('HTTP_X-Requested-With', 'XMLHttpRequest');
@@ -242,7 +242,7 @@ class ApiUserControllerTest extends AppTestCase
 
 	protected function getMockUser()
 	{
-		$user = m::mock('c\Auth\UserModel')->makePartial();
+		$user = m::mock('anlutro\Core\Auth\UserModel')->makePartial();
 		$user->is_active = '1';
 		return $user;
 	}

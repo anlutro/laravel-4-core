@@ -7,21 +7,21 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Activation;
+namespace anlutro\Core\Auth\Activation;
 
 use Illuminate\Support\ServiceProvider;
-use c\CoreServiceProvider;
+use anlutro\Core\CoreServiceProvider;
 
 class ActivationServiceProvider extends ServiceProvider
 {
-	use \c\RouteProviderTrait;
+	use \anlutro\Core\RouteProviderTrait;
 	
 	protected $defer = false;
 	protected static $resPath;
 
 	public function register()
 	{
-		$this->commands('c\Auth\Console\ActivateUserCommand');
+		$this->commands('anlutro\Core\Auth\Console\ActivateUserCommand');
 		
 		$this->app->bindShared('auth.activation.repository', function($app) {
 			return new DatabaseActivationCodeRepository($app['db']->connection(), 'user_activation');
@@ -39,7 +39,7 @@ class ActivationServiceProvider extends ServiceProvider
 
 		});
 
-		$this->app->extend('c\Auth\UserManager', function($manager, $app) {
+		$this->app->extend('anlutro\Core\Auth\UserManager', function($manager, $app) {
 			$manager->setActivationService($app['auth.activation']);
 			return $manager;
 		});

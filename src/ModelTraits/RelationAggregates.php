@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\ModelTraits;
+namespace anlutro\Core\ModelTraits;
 
 use Illuminate\Database\Query\Expression;
 

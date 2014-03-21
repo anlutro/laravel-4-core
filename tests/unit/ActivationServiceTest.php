@@ -1,12 +1,12 @@
 <?php
 use Mockery as m;
-use c\Auth\Activation\ActivationService;
+use anlutro\Core\Auth\Activation\ActivationService;
 
 class ActivationServiceTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->codes = m::mock('c\Auth\Activation\ActivationCodeRepositoryInterface');
+		$this->codes = m::mock('anlutro\Core\Auth\Activation\ActivationCodeRepositoryInterface');
 		$this->users = m::mock('Illuminate\Auth\UserProviderInterface');
 		$this->mailer = m::mock('Illuminate\Mail\Mailer');
 		$this->activation = new ActivationService($this->codes, $this->users, $this->mailer, 'hashkey', false);
@@ -42,6 +42,6 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 
 	protected function getMockUser()
 	{
-		return m::mock('c\Auth\Activation\ActivatableInterface');
+		return m::mock('anlutro\Core\Auth\Activation\ActivatableInterface');
 	}
 }

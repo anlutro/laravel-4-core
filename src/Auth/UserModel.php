@@ -7,9 +7,9 @@
  * @package  l4-core
  */
 
-namespace c\Auth;
+namespace anlutro\Core\Auth;
 
-use c\Auth\Activation\ActivatableInterface;
+use anlutro\Core\Auth\Activation\ActivatableInterface;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * User model.
  */
-class UserModel extends \c\BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
+class UserModel extends \anlutro\Core\BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	/**
 	 * The database table the model queries from.

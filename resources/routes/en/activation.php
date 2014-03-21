@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['before' => 'guest'], function()
 {
-	Route::get('/register', 'c\Controllers\AuthController@register');
-	Route::post('/register', 'c\Controllers\AuthController@attemptRegistration');
-	Route::get('/activate', 'c\Controllers\AuthController@activate');
+	Route::get('/register', 'anlutro\Core\Web\AuthController@register');
+	Route::post('/register', 'anlutro\Core\Web\AuthController@attemptRegistration');
+	Route::get('/activate', 'anlutro\Core\Web\AuthController@activate');
 });

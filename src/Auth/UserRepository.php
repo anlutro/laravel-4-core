@@ -7,12 +7,12 @@
  * @package  l4-core
  */
 
-namespace c\Auth;
+namespace anlutro\Core\Auth;
 
 /**
  * Repository for user models.
  */
-class UserRepository extends \c\EloquentRepository
+class UserRepository extends \anlutro\LaravelRepository\EloquentRepository
 {
 	protected $search;
 	protected $filter;
@@ -103,7 +103,7 @@ class UserRepository extends \c\EloquentRepository
 	/**
 	 * Update a user as an admin.
 	 *
-	 * @param  c\Auth\UserModel  $user
+	 * @param  anlutro\Core\Auth\UserModel  $user
 	 * @param  array  $attributes
 	 *
 	 * @return boolean

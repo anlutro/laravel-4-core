@@ -3,13 +3,13 @@ use Mockery as m;
 
 class UserControllerTest extends AppTestCase
 {
-	protected $controller = 'c\Controllers\UserController';
+	protected $controller = 'anlutro\Core\Web\UserController';
 
 	public function setUp()
 	{
 		parent::setUp();
-		$this->users = m::mock('c\Auth\UserManager');
-		$this->app->instance('c\Auth\UserManager', $this->users);
+		$this->users = m::mock('anlutro\Core\Auth\UserManager');
+		$this->app->instance('anlutro\Core\Auth\UserManager', $this->users);
 	}
 
 	public function tearDown()
@@ -241,7 +241,7 @@ class UserControllerTest extends AppTestCase
 
 	protected function getMockUser()
 	{
-		$user = m::mock('c\Auth\UserModel')->makePartial();
+		$user = m::mock('anlutro\Core\Auth\UserModel')->makePartial();
 		$user->is_active = '1';
 		return $user;
 	}

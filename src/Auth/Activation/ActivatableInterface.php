@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Activation;
+namespace anlutro\Core\Auth\Activation;
 
 /**
  * Interface a user model that can be activated needs to implement.

@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Controllers;
+namespace anlutro\Core\Web;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
@@ -15,15 +15,15 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 
-use c\Auth\UserManager;
+use anlutro\Core\Auth\UserManager;
 
 /**
  * Controller for managing users, not including authentication.
  */
-class UserController extends \c\Controller
+class UserController extends \anlutro\LaravelController\Controller
 {
 	/**
-	 * @var c\Auth\UserRepository
+	 * @var anlutro\Core\Auth\UserRepository
 	 */
 	protected $users;
 

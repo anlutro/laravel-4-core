@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace c\Auth\Activation;
+namespace anlutro\Core\Auth\Activation;
 
 use Illuminate\Auth\UserProviderInterface;
 use Illuminate\Mail\Mailer;
@@ -69,9 +69,12 @@ class ActivationService
 
 		$method = $this->queue ? 'queue' : 'send';
 
-		$data = ['code' => $code];
+		$viewData = [
+			'code' => $code,
+			'action' => 'anlutro\Core\Web\AuthController@activate',
+		];
 
-		return $this->mailer->$method('c::auth.activate-email', $data, function($msg) use ($email) {
+		return $this->mailer->$method('c::auth.activate-email', $viewData, function($msg) use ($email) {
 			$msg->to($email)
 				->subject(Lang::get('c::auth.activate-title'));
 		});
