@@ -205,16 +205,13 @@ class UserManager
 	public function checkPermissions($against)
 	{
 		if ($against instanceof UserModel) {
-			$against = $against->user_level;
-		}
-
-		if (is_string($against)) {
-			$types = $this->users->getUserTypes();
-			$against = $types[$against];
+			$against = (int) $against->user_level;
 		}
 
 		if (!is_numeric($against)) {
-			throw new \InvalidArgumentException("Invalid permission check: $against");
+			$against = $this->users
+				->getModel()
+				->getUserLevelValue($against);
 		}
 
 		$level = (int) $this->getCurrentUser()->user_level;

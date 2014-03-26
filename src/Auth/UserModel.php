@@ -99,15 +99,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 	 */
 	public function scopeWhereUserType($query, $level)
 	{
-		if (!is_int($level)) {
-			if (!array_key_exists($level, static::$accessLevels)) {
-				throw new \InvalidArgumentException("Invalid access level: $level");
-			}
-
-			$level = static::$accessLevels[$level];
-		}
-
-		return $query->where('user_level', '=', $level);
+		return $query->where('user_level', '=', $this->getUserLevelValue($level));
 	}
 
 	/**
@@ -160,11 +152,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 			$access = 'superadmin';
 		}
 
-		if (!array_key_exists($access, static::$accessLevels)) {
-			throw new \InvalidArgumentException("Invalid access level: $access");
-		}
-
-		return $this->user_level >= static::$accessLevels[$access];
+		return $this->user_level >= $this->getUserLevelValue($access);
 	}
 
 	/**
@@ -186,15 +174,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 	 */
 	public function setUserLevelAttribute($value)
 	{
-		if (!is_int($value)) {
-			if (!array_key_exists($value, static::$accessLevels)) {
-				throw new \InvalidArgumentException("Invalid access level: $access");
-			}
-
-			$value = static::$accessLevels[$value];
-		}
-
-		$this->attributes['user_level'] = $value;
+		$this->attributes['user_level'] = $this->getUserLevelValue($value);
 	}
 
 	/**
@@ -226,6 +206,31 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 	public function setUserTypeAttribute($value)
 	{
 		$this->setUserLevelAttribute($value);
+	}
+
+	/**
+	 * Get the real user level value from a string or integer. Throws an
+	 * exception if the value is invalid.
+	 *
+	 * @param  mixed $value
+	 *
+	 * @return int
+	 */
+	public function getUserLevelValue($value)
+	{
+		if (is_int($value)) {
+			if ($value < 0 || $value > 255) {
+				throw new \InvalidArgumentException("Invalid access level: $value");
+			}
+		} else {
+			if (!array_key_exists($value, static::$accessLevels)) {
+				throw new \InvalidArgumentException("Invalid access level: $value");
+			}
+
+			$value = static::$accessLevels[$value];
+		}
+
+		return $value;
 	}
 
 	/********************
