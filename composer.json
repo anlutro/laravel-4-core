@@ -31,6 +31,5 @@
 			"src/helpers.php"
 		]
 	},
-	"minimum-stability": "stable",
-	"bin": ["bin/scaff"]
+	"minimum-stability": "stable"
 }
