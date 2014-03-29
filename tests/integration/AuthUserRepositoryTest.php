@@ -13,26 +13,17 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	}
 
 	/**
-	 * Add the hasher to the fake application so that the Hash:: facace works.
-	 */
-	protected function makeFakeApp()
-	{
-		$app = parent::makeFakeApp();
-		$app['hash'] = new Illuminate\Hashing\BcryptHasher;
-		return $app;
-	}
-
-	/**
 	 * Call setUpFacades to make the Hash:: facade available throughout the test.
 	 */
 	public function setUp()
 	{
 		parent::setUp();
-		$this->setUpFacades();
+		$this->container['hash'] = new Illuminate\Hashing\BcryptHasher;
 	}
 
 	public function tearDown()
 	{
+		parent::tearDown();
 		m::close();
 	}
 
