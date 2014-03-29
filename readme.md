@@ -1,4 +1,4 @@
-# L4 Core [![Build Status](https://travis-ci.org/anlutro/laravel-4-core.png?branch=master)](https://travis-ci.org/anlutro/laravel-4-core)
+# L4 Core [![Build Status](https://travis-ci.org/anlutro/laravel-4-core.png?branch=master)](https://travis-ci.org/anlutro/laravel-4-core) [![Latest Version](http://img.shields.io/github/tag/anlutro/laravel-4-core.svg)](https://github.com/anlutro/laravel-4-core/releases)
 
 This is my personal development boilerplate for Laravel 4. It includes user management and authentication controllers, views, language files and more.
 
