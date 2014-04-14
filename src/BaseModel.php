@@ -26,7 +26,7 @@ class BaseModel extends Model implements JsonSerializable
 	/**
 	 * Freeze the model, preventing it from writing to the database.
 	 *
-	 * @return [type] [description]
+	 * @return void
 	 */
 	public function freeze()
 	{
@@ -46,7 +46,7 @@ class BaseModel extends Model implements JsonSerializable
 	/**
 	 * Convert the model to an StdClass.
 	 *
-	 * @return StdClass
+	 * @return \StdClass
 	 */
 	public function toStdClass()
 	{

@@ -14,7 +14,28 @@ namespace anlutro\Core\Auth\Activation;
  */
 interface ActivatableInterface
 {
-	public function activate();
+	/**
+	 * Activate a user.
+	 *
+	 * @param  boolean $save If true, save the user to the database.
+	 *
+	 * @return bool
+	 */
+	public function activate($save = false);
+
+	/**
+	 * Deactivate a user.
+	 *
+	 * @param  boolean $save If true, save the user to the database.
+	 *
+	 * @return bool
+	 */
+	public function deactivate($save = false);
+
+	/**
+	 * Get the email that should be used to send activation links.
+	 *
+	 * @return string
+	 */
 	public function getActivationEmail();
-	public function deactivate();
 }

@@ -8,3 +8,5 @@ foreach (glob(__DIR__.'/../resources/migrations/*.php') as $file) {
 }
 
 date_default_timezone_set('UTC');
+
+Carbon\Carbon::setTestNow(Carbon\Carbon::now());

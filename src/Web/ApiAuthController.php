@@ -9,9 +9,6 @@
 
 namespace anlutro\Core\Web;
 
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-
 use anlutro\Core\Auth\UserManager;
 
 /**
@@ -47,19 +44,19 @@ class ApiAuthController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Attempt to log a user in.
 	 *
-	 * @return Illuminate\Http\JsonResponse
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function attemptLogin()
 	{
 		$credentials = [
-			'username'  => Input::get('username'),
-			'password'  => Input::get('password'),
+			'username'  => $this->input('username'),
+			'password'  => $this->input('password'),
 		];
 
 		if ($this->users->login($credentials)) {
 			$user = $this->users->getCurrentUser();
 			$data = ['status' => 'logged in', 'user' => $user];
-			return Response::json($data, 200);
+			return $this->jsonResponse($data, 200);
 		} else {
 			return $this->status('login failed', 401);
 		}
@@ -68,7 +65,7 @@ class ApiAuthController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Log out the currently logged in user.
 	 *
-	 * @return Illuminate\Http\JsonResponse
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function logout()
 	{
@@ -80,13 +77,13 @@ class ApiAuthController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Process a registration attempt.
 	 *
-	 * @return Illuminate\Http\JsonResponse
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function attemptRegistration()
 	{
-		if ($user = $this->users->register(Input::all())) {
+		if ($user = $this->users->register($this->input())) {
 			$data = ['status' => 'registered', 'user' => $user];
-			return Response::json($data, 200);
+			return $this->jsonResponse($data, 200);
 		} else {
 			return $this->error($this->users->getErrors());
 		}
@@ -95,11 +92,11 @@ class ApiAuthController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Process an activation attempt.
 	 *
-	 * @return Illuminate\Http\JsonResponse
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function activate()
 	{
-		$code = Input::get('activation_code');
+		$code = $this->input('activation_code');
 
 		if ($this->users->activateByCode($code)) {
 			return $this->success();
@@ -111,11 +108,11 @@ class ApiAuthController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Send a password reset token.
 	 *
-	 * @return Illuminate\Http\JsonResponse
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function sendReminder()
 	{
-		if ($this->users->requestPasswordResetForEmail(Input::get('email'))) {
+		if ($this->users->requestPasswordResetForEmail($this->input('email'))) {
 			return $this->success(['reminder email sent']);
 		} else {
 			return $this->error(['no user with that e-mail']);
@@ -125,13 +122,13 @@ class ApiAuthController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Attempt to reset a user's password.
 	 *
-	 * @return Illuminate\Http\JsonResponse
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function attemptReset()
 	{
-		$credentials = Input::only('username');
-		$token = Input::get('token');
-		$input = Input::only('password', 'password_confirmation');
+		$credentials = $this->input(['username']);
+		$token = $this->input('token');
+		$input = $this->input(['password', 'password_confirmation']);
 
 		if ($this->users->resetPasswordForCredentials($credentials, $input, $token)) {
 			return $this->success(['password reset, please log in']);

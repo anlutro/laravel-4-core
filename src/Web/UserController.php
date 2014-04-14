@@ -23,12 +23,12 @@ use anlutro\Core\Auth\UserManager;
 class UserController extends \anlutro\LaravelController\Controller
 {
 	/**
-	 * @var anlutro\Core\Auth\UserRepository
+	 * @var \anlutro\Core\Auth\UserManager
 	 */
 	protected $users;
 
 	/**
-	 * @param UserRepository $users
+	 * @param \anlutro\Core\Auth\UserManager $users
 	 */
 	public function __construct(UserManager $users)
 	{
@@ -38,13 +38,13 @@ class UserController extends \anlutro\LaravelController\Controller
 	/**
 	 * View the logged in user's profile.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function profile()
 	{
 		$user = $this->users->getCurrentUser();
 
-		return View::make('c::user.profile', [
+		return $this->view('c::user.profile', [
 			'user'       => $user,
 			'formAction' => $this->url('updateProfile'),
 			'backUrl'    => URL::to('/'),
@@ -54,13 +54,13 @@ class UserController extends \anlutro\LaravelController\Controller
 	/**
 	 * Update the logged in user's profile.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function updateProfile()
 	{
 		$redirect = $this->redirect('profile');
 
-		if ($this->users->updateCurrentProfile(Input::all())) {
+		if ($this->users->updateCurrentProfile($this->input())) {
 			return $redirect->with('success', Lang::get('c::user.profile-update-success'));
 		} else {
 			return $redirect->withErrors($this->users->getErrors());
@@ -70,16 +70,16 @@ class UserController extends \anlutro\LaravelController\Controller
 	/**
 	 * Show a table of users.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function index()
 	{
-		if (Input::get('search')) {
-			$this->users->search(Input::get('search'));
+		if ($this->input('search')) {
+			$this->users->search($this->input('search'));
 		}
 
-		if (Input::get('usertype')) {
-			$this->users->filter(Input::get('usertype'));
+		if ($this->input('usertype')) {
+			$this->users->filter($this->input('usertype'));
 		}
 
 		$users = $this->users
@@ -88,7 +88,7 @@ class UserController extends \anlutro\LaravelController\Controller
 		$types = ['all' => Lang::get('c::user.usertype-all')]
 			+ $this->getUserTypes();
 
-		return View::make('c::user.list', [
+		return $this->view('c::user.list', [
 			'users'       => $users,
 			'userTypes'   => $types,
 			'bulkActions' => $this->getBulkActions(),
@@ -101,12 +101,12 @@ class UserController extends \anlutro\LaravelController\Controller
 	/**
 	 * Apply an action on more than one user.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function bulk()
 	{
-		$userIds = array_keys(Input::get('bulk'));
-		$action = Input::get('bulkAction');
+		$userIds = array_keys($this->input('bulk'));
+		$action = $this->input('bulkAction');
 
 		$this->users->processBulkAction($action, $userIds);
 
@@ -118,7 +118,7 @@ class UserController extends \anlutro\LaravelController\Controller
 	 *
 	 * @param  int $userId
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function show($userId)
 	{
@@ -126,7 +126,7 @@ class UserController extends \anlutro\LaravelController\Controller
 			return $this->notFound();
 		}
 
-		return View::make('c::user.show', [
+		return $this->view('c::user.show', [
 			'user'    => $user,
 			'backUrl' => URL::to('/'),
 		]);
@@ -137,7 +137,7 @@ class UserController extends \anlutro\LaravelController\Controller
 	 *
 	 * @param  int $userId
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function edit($userId)
 	{
@@ -157,7 +157,7 @@ class UserController extends \anlutro\LaravelController\Controller
 			'backUrl'    => $this->url('index'),
 		];
 
-		return View::make('c::user.form', $viewData);
+		return $this->view('c::user.form', $viewData);
 	}
 
 	/**
@@ -165,7 +165,7 @@ class UserController extends \anlutro\LaravelController\Controller
 	 *
 	 * @param  int $userId
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function update($userId)
 	{
@@ -175,7 +175,7 @@ class UserController extends \anlutro\LaravelController\Controller
 
 		$redirect = $this->redirect('edit', [$user->id]);
 
-		if ($this->users->updateAsAdmin($user, Input::all())) {
+		if ($this->users->updateAsAdmin($user, $this->input())) {
 			return $redirect->with('success', Lang::get('c::user.update-success'));
 		} else {
 			return $redirect->withErrors($this->users->getErrors());
@@ -187,7 +187,7 @@ class UserController extends \anlutro\LaravelController\Controller
 	 *
 	 * @param  int $userId
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function delete($userId)
 	{
@@ -207,11 +207,11 @@ class UserController extends \anlutro\LaravelController\Controller
 	/**
 	 * Show the create new user form.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function create()
 	{
-		return View::make('c::user.form', [
+		return $this->view('c::user.form', [
 			'pageTitle'  => Lang::get('c::user.admin-newuser'),
 			'user'       => $this->users->getNew(),
 			'userTypes'  => $this->getUserTypes(),
@@ -223,11 +223,11 @@ class UserController extends \anlutro\LaravelController\Controller
 	/**
 	 * Store a new user in the database.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function store()
 	{
-		$input = Input::all();
+		$input = $this->input();
 
 		if ($user = $this->users->create($input)) {
 			return $this->redirect('edit', [$user->id])
@@ -242,7 +242,7 @@ class UserController extends \anlutro\LaravelController\Controller
 	/**
 	 * Return a not found redirect.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	private function notFound()
 	{

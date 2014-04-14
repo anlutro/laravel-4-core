@@ -3,50 +3,22 @@
 /**
  * Test case that boots the whole application.
  */
-class AppTestCase extends \anlutro\LaravelTesting\L4TestCase
+class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 {
 	/**
-	 * Create the application.
-	 *
-	 * @return Illuminate\Foundation\Application
+	 * {@inheritdoc}
 	 */
-	public function createApplication()
+	public function getVendorPath()
 	{
-		$unitTesting = true;
-
-		$testEnvironment = 'testing';
-
-		$app = new Illuminate\Foundation\Application;
-		$env = $app->detectEnvironment(function() { return 'testing'; });
-		$app->bindInstallPaths(require __DIR__.'/../vendor/laravel/laravel/bootstrap/paths.php');
-		require Illuminate\Foundation\Application::getBootstrapFile();
-		return $app;
+		return __DIR__.'/../vendor';
 	}
 
 	/**
-	 * Refresh the application instance.
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
-	protected function refreshApplication()
+	protected function getExtraProviders()
 	{
-		$this->app = $this->createApplication();
-
-		$this->client = $this->createClient();
-
-		$this->app->setRequestForConsoleEnvironment();
-
-		// every test will be testing stuff that depends on the coreservice-
-		// provider, so just register it.
-		$this->app->register('anlutro\Core\CoreServiceProvider');
-
-		// allow registration of extra service providers before boot is
-		// called, as some providers rely on others being loaded in time.
-		foreach ($this->getExtraProviders() as $provider) {
-			$this->app->register($provider);
-		}
-
-		$this->app->boot();
+		return ['anlutro\Core\CoreServiceProvider'];
 	}
 
 	/**
@@ -60,26 +32,10 @@ class AppTestCase extends \anlutro\LaravelTesting\L4TestCase
 		// installed on my dev laptop :)
 		$this->app['db']->setDefaultConnection('sqlite');
 
-		// the package depends on some views, if these are missing we need to
-		// fix that by adding some dummy views
-		$this->addMissingViews();
-	}
-
-	/**
-	 * Check for missing views and make them available if necessary.
-	 */
-	protected function addMissingViews()
-	{
-		if (
-			!$this->app['view']->exists('layout.main') ||
-			!$this->app['view']->exists('layout.fullwidth')
-		) {
+		// the package's views extends the 'layout.main' view which must be
+		// present. if it is not present, add our dummy views
+		if (!$this->app['view']->exists('layout.main')) {
 			$this->app['view']->addLocation(__DIR__ . '/resources/views');
 		}
-	}
-
-	protected function getExtraProviders()
-	{
-		return [];
 	}
 }

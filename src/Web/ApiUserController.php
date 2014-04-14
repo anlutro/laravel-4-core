@@ -9,9 +9,6 @@
 
 namespace anlutro\Core\Web;
 
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Response;
-
 use anlutro\Core\Auth\UserManager;
 
 /**
@@ -20,12 +17,12 @@ use anlutro\Core\Auth\UserManager;
 class ApiUserController extends \anlutro\LaravelController\ApiController
 {
 	/**
-	 * @var anlutro\Core\Auth\UserRepository
+	 * @var \anlutro\Core\Auth\UserManager
 	 */
 	protected $users;
 
 	/**
-	 * @param UserRepository $users
+	 * @param \anlutro\Core\Auth\UserManager $users
 	 */
 	public function __construct(UserManager $users)
 	{
@@ -35,24 +32,24 @@ class ApiUserController extends \anlutro\LaravelController\ApiController
 	/**
 	 * View the logged in user's profile.
 	 *
-	 * @return View
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function profile()
 	{
 		$user = $this->users->getCurrentUser();
 
-		return Response::json(['user' => $user]);
+		return $this->jsonResponse(['user' => $user]);
 	}
 
 	/**
 	 * Update the logged in user's profile.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function updateProfile()
 	{
-		if ($this->users->updateCurrentProfile(Input::all())) {
-			return Response::json(['user' => $this->users->getCurrentUser()]);
+		if ($this->users->updateCurrentProfile($this->input())) {
+			return $this->jsonResponse(['user' => $this->users->getCurrentUser()]);
 		} else {
 			return $this->error($this->users->getErrors());
 		}
@@ -61,34 +58,34 @@ class ApiUserController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Show a table of users.
 	 *
-	 * @return View
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function index()
 	{
-		if (Input::get('search')) {
-			$this->users->search(Input::get('search'));
+		if ($this->input('search')) {
+			$this->users->search($this->input('search'));
 		}
 
-		if (Input::get('usertype')) {
-			$this->users->filter(Input::get('usertype'));
+		if ($this->input('usertype')) {
+			$this->users->filter($this->input('usertype'));
 		}
 
 		$users = $this->users
 			->paginate(20)
 			->getAll();
 
-		return Response::json(['users' => $users->toArray()]);
+		return $this->jsonResponse(['users' => $users->toArray()]);
 	}
 
 	/**
 	 * Apply an action on more than one user.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function bulk()
 	{
-		$userIds = Input::get('bulk');
-		$action = Input::get('bulkAction');
+		$userIds = $this->input('bulk');
+		$action = $this->input('bulkAction');
 
 		$result = $this->users->processBulkAction($action, $userIds);
 
@@ -100,14 +97,14 @@ class ApiUserController extends \anlutro\LaravelController\ApiController
 	 *
 	 * @param  int $userId
 	 *
-	 * @return View
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function show($userId)
 	{
 		if (!$user = $this->users->getByKey($userId)) {
 			return $this->notFound();
 		} else{
-			return Response::json(['user' => $user]);
+			return $this->jsonResponse(['user' => $user]);
 		}
 	}
 
@@ -116,14 +113,14 @@ class ApiUserController extends \anlutro\LaravelController\ApiController
 	 *
 	 * @param  int $userId
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function update($userId)
 	{
 		if (!$user = $this->users->getByKey($userId)) {
 			return $this->notFound();
-		} elseif ($this->users->updateAsAdmin($user, Input::all())) {
-			return Response::json(['user' => $user]);
+		} elseif ($this->users->updateAsAdmin($user, $this->input())) {
+			return $this->jsonResponse(['user' => $user]);
 		} else {
 			return $this->error($this->users->getErrors());
 		}
@@ -134,7 +131,7 @@ class ApiUserController extends \anlutro\LaravelController\ApiController
 	 *
 	 * @param  int $userId
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function delete($userId)
 	{
@@ -150,12 +147,12 @@ class ApiUserController extends \anlutro\LaravelController\ApiController
 	/**
 	 * Store a new user in the database.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function store()
 	{
-		if ($user = $this->users->create(Input::all())) {
-			return Response::json(['user' => $user]);
+		if ($user = $this->users->create($this->input())) {
+			return $this->jsonResponse(['user' => $user]);
 		} else {
 			return $this->error($this->users->getErrors());
 		}

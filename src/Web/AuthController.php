@@ -51,7 +51,7 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Show the login form.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function login()
 	{
@@ -63,19 +63,19 @@ class AuthController extends \anlutro\LaravelController\Controller
 			$viewData['resetUrl'] = $this->url('reminder');
 		}
 		
-		return View::make('c::auth.login', $viewData);
+		return $this->view('c::auth.login', $viewData);
 	}
 
 	/**
 	 * Attempt to log a user in.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function attemptLogin()
 	{
 		$credentials = [
-			'username'  => Input::get('username'),
-			'password'  => Input::get('password'),
+			'username'  => $this->input('username'),
+			'password'  => $this->input('password'),
 		];
 
 		if ($this->users->login($credentials)) {
@@ -91,7 +91,7 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Log out the currently logged in user.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function logout()
 	{
@@ -103,11 +103,11 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Show the form for user registration.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function register()
 	{
-		return View::make('c::auth.register', [
+		return $this->view('c::auth.register', [
 			'user'       => $this->users->getNew(),
 			'formAction' => $this->url('attemptRegistration'),
 		]);
@@ -116,11 +116,11 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Process a registration attempt.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function attemptRegistration()
 	{
-		$input = Input::all();
+		$input = $this->input();
 
 		if ($this->users->register($input)) {
 			return $this->redirect('login')
@@ -135,11 +135,11 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Process an activation attempt.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function activate()
 	{
-		$code = Input::get('activation_code');
+		$code = $this->input('activation_code');
 
 		if ($this->users->activateByCode($code)) {
 			$msg = Lang::get('c::auth.activation-success');
@@ -153,11 +153,11 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Generate the form for sending a password reset token.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function reminder()
 	{
-		return View::make('c::auth.reminder', [
+		return $this->view('c::auth.reminder', [
 			'formAction' => $this->url('sendReminder'),
 		]);
 	}
@@ -165,11 +165,11 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Send a password reset token.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function sendReminder()
 	{
-		if ($this->users->requestPasswordResetForEmail(Input::get('email'))) {
+		if ($this->users->requestPasswordResetForEmail($this->input('email'))) {
 			return $this->redirect('login')
 				->with('info', Lang::get('c::auth.reminder-sent'));
 		} else {
@@ -181,15 +181,15 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Show the form for finalizing a password reset.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function reset()
 	{
-		if (!Input::get('token')) {
+		if (!$this->input('token')) {
 			return $this->redirect('login');
 		}
 
-		return View::make('c::auth.reset', [
+		return $this->view('c::auth.reset', [
 			'formAction' => $this->url('attemptReset'),
 			'token'      => Request::query('token'),
 		]);
@@ -198,13 +198,13 @@ class AuthController extends \anlutro\LaravelController\Controller
 	/**
 	 * Attempt to reset a user's password.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function attemptReset()
 	{
-		$credentials = Input::only('username');
-		$token = Input::get('token');
-		$input = Input::only('password', 'password_confirmation');
+		$credentials = $this->input(['username']);
+		$token = $this->input('token');
+		$input = $this->input(['password', 'password_confirmation']);
 
 		if ($this->users->resetPasswordForCredentials($credentials, $input, $token)) {
 			return $this->redirect('login')
@@ -212,33 +212,6 @@ class AuthController extends \anlutro\LaravelController\Controller
 		} else {
 			return $this->redirect('login')
 				->withErrors(Lang::get('reminders.token'));
-		}
-
-		/**
-		 * OLD CODE BELOW
-		 */
-
-		$validator = Validator::make($input, [
-			'password' => ['required', 'confirmed', 'min:5'],
-		]);
-		
-		if ($validator->fails()) {
-			return $this->redirect('reset', ['token' => $token])
-				->withErrors($validator);
-		}
-
-		$redirect = $this->redirect('login');
-
-		if (!$user = $this->users->getByCredentials($credentials)) {
-			return $redirect->withErrors(Lang::get('reminders.user'));
-		}
-
-		$newPassword = Input::get('password');
-
-		if ($this->users->resetPassword($user, $newPassword, $token)) {
-			return $redirect->with('success', Lang::get('c::auth.reset-success'));
-		} else {
-			return $redirect->withErrors(Lang::get('reminders.token'));
 		}
 	}
 

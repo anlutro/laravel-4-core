@@ -60,7 +60,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 	 */
 	public function confirmPassword($password)
 	{
-		return Hash::check($password, $this->attributes['password']);
+		return Hash::check($password, $this->getAttributeFromArray('password'));
 	}
 
 	/**
@@ -68,7 +68,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 	 */
 	public function rehashPassword($password)
 	{
-		if (!Hash::needsRehash($this->attributes['password'])) return;
+		if (!Hash::needsRehash($this->getAttributeFromArray('password'))) return;
 
 		if (!$this->confirmPassword($password)) return;
 
@@ -244,7 +244,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 
 	public function getAuthPassword()
 	{
-		return $this->attributes['password'];
+		return $this->getAttribute('password');
 	}
 
 	/********************
@@ -253,7 +253,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 
 	public function getReminderEmail()
 	{
-		return $this->attributes['email'];
+		return $this->getAttribute('email');
 	}
 
 	/********************
@@ -274,6 +274,6 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 
 	public function getActivationEmail()
 	{
-		return $this->attributes['email'];
+		return $this->getAttribute('email');
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Hash;
+
 class UserModelTest extends PHPUnit_Framework_TestCase
 {
 	/**
@@ -51,6 +53,11 @@ class UserModelTest extends PHPUnit_Framework_TestCase
 			['admin', 100],
 			['superadmin', 255],
 		];
+	}
+
+	public function testSetPassword()
+	{
+		
 	}
 
 	protected function makeUserModel()
