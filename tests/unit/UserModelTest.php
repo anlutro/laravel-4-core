@@ -55,11 +55,6 @@ class UserModelTest extends PHPUnit_Framework_TestCase
 		];
 	}
 
-	public function testSetPassword()
-	{
-		
-	}
-
 	protected function makeUserModel()
 	{
 		return new anlutro\Core\Auth\UserModel;
