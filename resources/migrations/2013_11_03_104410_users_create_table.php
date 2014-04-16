@@ -27,6 +27,8 @@ class UsersCreateTable extends Migration
 				->default(false);
 			$t->string('login_token', 32)
 				->nullable();
+			$t->string('remember_token', 128)
+				->nullable();
 			$t->timestamp('last_login')
 				->nullable();
 			$t->softDeletes();

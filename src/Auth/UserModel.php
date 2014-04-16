@@ -247,6 +247,21 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 		return $this->getAttribute('password');
 	}
 
+	public function getRememberToken()
+	{
+	    return $this->getAttribute('remember_token');
+	}
+
+	public function setRememberToken($value)
+	{
+		$this->setAttribute('remember_token', $value);
+	}
+
+	public function getRememberTokenName()
+	{
+	    return 'remember_token';
+	}
+
 	/********************
 	 *    Reminders     *
 	 ********************/
