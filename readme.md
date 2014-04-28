@@ -15,9 +15,9 @@ Also check out the following repositories, which contains classes that this pack
 
 `composer require anlutro/l4-core`
 
-Add `c\CoreServiceProvider` to the list of providers in `app/config/app.php`.
+Add `anlutro\Core\CoreServiceProvider` to the list of providers in `app/config/app.php`.
 
-If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `c\Auth\Reminders\ReminderServiceProvider`. If you want access to activation, add `c\Auth\Activation\ActivationServiceProvider` as well. Ideally you should never touch any of these but just let the `c\Auth\UserManager` class do its stuff.
+If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `anlutro\Core\Auth\Reminders\ReminderServiceProvider`. If you want access to activation, add `anlutro\Core\Auth\Activation\ActivationServiceProvider` as well. Ideally you should never touch any of these but just let the `anlutro\Core\Auth\UserManager` class do its stuff.
 
 The package does not use default config/migration paths, so in order to publish those you have to use the following commands:
 
