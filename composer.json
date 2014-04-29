@@ -10,13 +10,13 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"laravel/framework": "4.1.*",
+		"laravel/framework": "4.2.*",
 		"anlutro/l4-repository": "0.6.*",
 		"anlutro/l4-controller": "0.3.*",
 		"anlutro/l4-testing": "0.2.*"
 	},
 	"require-dev": {
-		"laravel/laravel": "dev-master",
+		"laravel/laravel": "dev-develop",
 		"mockery/mockery": "~0.9",
 		"anlutro/menu": "~0.2"
 	},
@@ -31,5 +31,6 @@
 	"config": {
 		"preferred-install": "dist"	
 	},
+	"minimum-stability": "dev",
 	"prefer-stable": true
 }

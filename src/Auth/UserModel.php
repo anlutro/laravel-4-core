@@ -12,6 +12,7 @@ namespace anlutro\Core\Auth;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 use anlutro\Core\Auth\Activation\ActivatableInterface;
 use anlutro\Core\BaseModel;
@@ -21,19 +22,14 @@ use anlutro\Core\BaseModel;
  */
 class UserModel extends BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
 {
+	use SoftDeletingTrait;
+
 	/**
 	 * The database table the model queries from.
 	 *
 	 * @var string
 	 */
 	protected $table = 'users';
-
-	/**
-	 * Whether or not the model soft deletes.
-	 *
-	 * @var boolean
-	 */
-	protected $softDelete = true;
 
 	/**
 	 * The attributes that are fillable by mass assignment.
