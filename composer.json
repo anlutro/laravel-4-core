@@ -17,8 +17,8 @@
 	},
 	"require-dev": {
 		"laravel/laravel": "dev-master",
-		"mockery/mockery": "0.9.*",
-		"anlutro/menu": "0.1.*"
+		"mockery/mockery": "~0.9",
+		"anlutro/menu": "~0.2"
 	},
 	"suggest": {
 		"anlutro/menu": "Menu builder."
@@ -31,5 +31,5 @@
 	"config": {
 		"preferred-install": "dist"	
 	},
-	"minimum-stability": "stable"
+	"prefer-stable": true
 }
