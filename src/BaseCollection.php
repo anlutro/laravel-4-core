@@ -53,6 +53,6 @@ class BaseCollection extends Collection implements JsonSerializable
 	 */
 	public function jsonSerialize()
 	{
-		return $this->toArray();
+		return $this->flatten()->toArray();
 	}
 }
