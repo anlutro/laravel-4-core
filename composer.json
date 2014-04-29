@@ -10,7 +10,7 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"nesbot/carbon": "*",
+		"laravel/framework": "4.1.*",
 		"anlutro/l4-repository": "0.6.*",
 		"anlutro/l4-controller": "0.3.*",
 		"anlutro/l4-testing": "0.2.*"
