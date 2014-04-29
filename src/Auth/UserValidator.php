@@ -9,10 +9,12 @@
 
 namespace anlutro\Core\Auth;
 
+use anlutro\LaravelValidation\Validator;
+
 /**
  * Validator for the user repository.
  */
-class UserValidator extends \anlutro\LaravelValidation\Validator
+class UserValidator extends Validator
 {
 	protected function getCommonRules()
 	{

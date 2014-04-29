@@ -9,6 +9,7 @@
 
 namespace anlutro\Core\Web;
 
+use anlutro\LaravelController\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
@@ -20,7 +21,7 @@ use anlutro\Core\Auth\UserManager;
 /**
  * Controller for managing users, not including authentication.
  */
-class UserController extends \anlutro\LaravelController\Controller
+class UserController extends Controller
 {
 	/**
 	 * @var \anlutro\Core\Auth\UserManager

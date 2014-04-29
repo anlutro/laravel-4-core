@@ -9,7 +9,9 @@
 
 namespace anlutro\Core;
 
-class EloquentBuilder extends \Illuminate\Database\Eloquent\Builder
+use Illuminate\Database\Eloquent\Builder;
+
+class EloquentBuilder extends Builder
 {
 	/**
 	 * Generate the fully qualified column name for a column by prepending the

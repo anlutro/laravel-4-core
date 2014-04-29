@@ -13,10 +13,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\ArrayInput;
 
+use anlutro\Core\Command;
+
 /**
  * Abstract command for managing users via the console.
  */
-abstract class AbstractUserManagementCommand extends \anlutro\Core\Command
+abstract class AbstractUserManagementCommand extends Command
 {
 	/**
 	 * Get a user based on the input provided to the command.

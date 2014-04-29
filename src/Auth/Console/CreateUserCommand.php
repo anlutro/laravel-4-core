@@ -9,14 +9,16 @@
 
 namespace anlutro\Core\Auth\Console;
 
-use anlutro\Core\Auth\UserRepository;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+
+use anlutro\Core\Auth\UserRepository;
+use anlutro\Core\Command;
 
 /**
  * Command for creating a new user via the console.
  */
-class CreateUserCommand extends \anlutro\Core\Command
+class CreateUserCommand extends Command
 {
 	protected $name = 'auth:createuser';
 	protected $description = 'Create a new user.';

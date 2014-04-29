@@ -9,6 +9,7 @@
 
 namespace anlutro\Core\Web;
 
+use anlutro\LaravelController\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
@@ -21,7 +22,7 @@ use anlutro\Core\Auth\UserManager;
 /**
  * Controller for authentication actions.
  */
-class AuthController extends \anlutro\LaravelController\Controller
+class AuthController extends Controller
 {
 	/**
 	 * @var \anlutro\Core\Auth\UserManager

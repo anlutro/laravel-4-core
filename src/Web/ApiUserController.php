@@ -9,12 +9,14 @@
 
 namespace anlutro\Core\Web;
 
+use anlutro\LaravelController\ApiController;
+
 use anlutro\Core\Auth\UserManager;
 
 /**
  * Controller for managing users, not including authentication.
  */
-class ApiUserController extends \anlutro\LaravelController\ApiController
+class ApiUserController extends ApiController
 {
 	/**
 	 * @var \anlutro\Core\Auth\UserManager

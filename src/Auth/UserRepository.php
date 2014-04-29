@@ -9,10 +9,12 @@
 
 namespace anlutro\Core\Auth;
 
+use anlutro\LaravelRepository\EloquentRepository;
+
 /**
  * Repository for user models.
  */
-class UserRepository extends \anlutro\LaravelRepository\EloquentRepository
+class UserRepository extends EloquentRepository
 {
 	protected $search;
 	protected $filter;

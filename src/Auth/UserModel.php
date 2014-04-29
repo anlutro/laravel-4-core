@@ -9,15 +9,17 @@
 
 namespace anlutro\Core\Auth;
 
-use anlutro\Core\Auth\Activation\ActivatableInterface;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
 
+use anlutro\Core\Auth\Activation\ActivatableInterface;
+use anlutro\Core\BaseModel;
+
 /**
  * User model.
  */
-class UserModel extends \anlutro\Core\BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
+class UserModel extends BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	/**
 	 * The database table the model queries from.
@@ -45,7 +47,7 @@ class UserModel extends \anlutro\Core\BaseModel implements UserInterface, Remind
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['password', 'login_token'];
+	protected $hidden = ['password', 'login_token', 'remember_token'];
 
 	/**
 	 * Hash the password automatically when setting it.
