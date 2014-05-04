@@ -45,6 +45,7 @@ return array(
 
 	// other misc stuff
 	'browsehappy' => 'You are using an <strong>outdated</strong> browser. Please <a href=":url">upgrade your browser</a> to improve your experience.',
+	'home' => 'Home',
 	'page-not-found' => 'The page you were looking for was not found!',
 	'under-construction' => 'Under construction',
 	'under-construction-text' => 'This part of the website is currently under construction. Please check again later!',

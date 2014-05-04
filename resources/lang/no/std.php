@@ -45,6 +45,7 @@ return array(
 
 	// other misc stuff
 	'browsehappy' => 'Du bruker en <strong>utdatert</strong> nettleser. Vennligst <a href=":url">oppgrader nettleseren din</a> for å få mest ut av denne nettsiden!',
+	'home' => 'Hjem',
 	'page-not-found' => 'Siden du prøvde besøke finnes ikke!',
 	'under-construction' => 'Under konstruksjon',
 	'under-construction-text' => 'Denen delen av nettsiden er for øyeblikket under konstruksjon. Vennligst prøv igjen senere!',
