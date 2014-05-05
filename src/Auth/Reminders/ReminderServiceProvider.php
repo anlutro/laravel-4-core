@@ -25,16 +25,6 @@ class ReminderServiceProvider extends BaseProvider
 		$this->commands('anlutro\Core\Auth\Console\SendPasswordReminderCommand');
 	}
 
-	public function register()
-	{
-		parent::register();
-		
-		$this->app->extend('anlutro\Core\Auth\UserManager', function($manager, $app) {
-			$manager->setReminderService($app['auth.reminder']);
-			return $manager;
-		});
-	}
-
 	/**
 	 * Register the reminder repository implementation.
 	 *
@@ -73,6 +63,11 @@ class ReminderServiceProvider extends BaseProvider
 
 	public function boot()
 	{
+		$this->app->extend('anlutro\Core\Auth\UserManager', function($manager, $app) {
+			$manager->setReminderService($app['auth.reminder']);
+			return $manager;
+		});
+
 		static::$resPath = CoreServiceProvider::getResPath();
 		$this->registerRoutes('reminders');
 	}

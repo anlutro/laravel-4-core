@@ -38,15 +38,15 @@ class ActivationServiceProvider extends ServiceProvider
 			return new ActivationService($codes, $users, $mailer, $hashKey, $queue);
 
 		});
-
-		$this->app->extend('anlutro\Core\Auth\UserManager', function($manager, $app) {
-			$manager->setActivationService($app['auth.activation']);
-			return $manager;
-		});
 	}
 
 	public function boot()
 	{
+		$this->app->extend('anlutro\Core\Auth\UserManager', function($manager, $app) {
+			$manager->setActivationService($app['auth.activation']);
+			return $manager;
+		});
+
 		static::$resPath = CoreServiceProvider::getResPath();
 		$this->registerRoutes('activation');
 	}
