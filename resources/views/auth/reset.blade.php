@@ -12,21 +12,21 @@
 
 	<div class="form-group">
 		{{ Form::label('username', Lang::get('c::user.username-field'), ['class' => 'control-label col-sm-3']) }}
-		<div class="col-sm-10 col-md-7 col-md-5">
+		<div class="col-sm-10 col-md-7 col-lg-5">
 			{{ Form::text('username', null, ['class' => 'form-control']) }}
 		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('password', Lang::get('c::user.password-field'), ['class' => 'control-label col-sm-3']) }}
-		<div class="col-sm-10 col-md-7 col-md-5">
+		<div class="col-sm-10 col-md-7 col-lg-5">
 			{{ Form::password('password', ['class' => 'form-control']) }}
 		</div>
 	</div>
 
 	<div class="form-group">
 		{{ Form::label('password_confirmation', Lang::get('c::auth.confirm-password'), ['class' => 'control-label col-sm-3']) }}
-		<div class="col-sm-10 col-md-7 col-md-5">
+		<div class="col-sm-10 col-md-7 col-lg-5">
 			{{ Form::password('password_confirmation', ['class' => 'form-control']) }}
 		</div>
 	</div>

@@ -14,7 +14,7 @@
 
 	<div class="form-group">
 		{{ Form::label('email', Lang::get('c::user.email-field'), ['class' => 'control-label col-sm-2']) }}
-		<div class="col-sm-10 col-md-7 col-md-5">
+		<div class="col-sm-10 col-md-7 col-lg-5">
 			{{ Form::email('email', null, ['class' => 'form-control']) }}		
 		</div>
 	</div>
