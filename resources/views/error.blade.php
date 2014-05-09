@@ -4,16 +4,18 @@
 
 @section('content')
 
-<div class="page-header">
+<div class="jumbotron text-center">
 	<h1>{{ $title }}</h1>
-</div>
 
-@foreach ((array) $text as $paragraph)
-<p>{{ $paragraph }}</p>
-@endforeach
-<p>
-<a href="javascript:history.back()">@lang('c::std.back')</a> &mdash; 
-<a href="{{ $homeUrl }}">@lang('c::std.home')</a>
-</p>
+	@foreach ((array) $text as $paragraph)
+	<p>{{ $paragraph }}</p>
+	@endforeach
+	<p>
+	<a href="javascript:history.back()" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-backward"></span> @lang('c::std.back')</a>
+	@if (isset($homeUrl))
+	<a href="{{ $homeUrl }}" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-home"></span> @lang('c::std.home')</a>
+	@endif
+	</p>
+</div>
 
 @stop
