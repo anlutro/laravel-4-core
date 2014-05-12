@@ -49,6 +49,9 @@ class AlertsComposer
 
 	protected function makeAlert($type, $message)
 	{
-		return (object) ['type' => $type, 'message' => $message];
+		return (object) [
+			'type'    => $type,
+			'message' => ucfirst($message),
+		];
 	}
 }
