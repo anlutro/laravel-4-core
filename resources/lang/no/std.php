@@ -52,5 +52,6 @@ return array(
 	'from' => 'Fra',
 	'until' => 'Til',
 	'token-mismatch' => 'Denne nettsiden sender en unik kode med hver forespørsel for å beskytte mot spam og forsøk på hacking. Koden som ble sent med denne forespørselen var ugyldig. Vennligst prøv igjen.',
+	'toggle-menu' => 'Åpne/lukk meny',
 
 );

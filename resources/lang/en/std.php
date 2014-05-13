@@ -52,5 +52,6 @@ return array(
 	'from' => 'From',
 	'until' => 'Until',
 	'token-mismatch' => 'This website uses tokens to protect the server from spam and hacking attempts. The token sent with your request was invalid. Please try again.',
+	'toggle-menu' => 'Open/close menu',
 
 );

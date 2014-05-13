@@ -232,6 +232,8 @@ class CoreServiceProvider extends ServiceProvider
 				['id' => 'log-out']
 			);
 		}
+
+		$this->app['view']->composer('c::menu', 'anlutro\Core\MenuViewComposer');
 	}
 
 	protected function providerLoaded($provider)
