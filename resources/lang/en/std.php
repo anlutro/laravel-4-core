@@ -29,6 +29,8 @@ return array(
 	'creating' => 'New :model',
 	'editing' => 'Editing :model',
 	'not-found' => ':model not found!',
+	'none-selected' => 'No :model selected!',
+	'invalid-action' => 'Invalid action!',
 
 	// generic button strings
 	'submit' => 'Submit',

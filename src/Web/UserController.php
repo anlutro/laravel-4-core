@@ -106,12 +106,23 @@ class UserController extends Controller
 	 */
 	public function bulk()
 	{
-		$userIds = array_keys($this->input('bulk'));
+		$redirect = $this->redirect('index');
+		$input = $this->input('bulk');
 		$action = $this->input('bulkAction');
 
-		$this->users->processBulkAction($action, $userIds);
+		if (empty($input)) {
+			return $redirect->withInput()
+				->withErrors(Lang::get('c::std.none-selected', ['model' => Lang::get('c::user.model-user')]));
+		}
 
-		return $this->redirect('index');
+		if (empty($action)) {
+			return $redirect->withInput()
+				->withErrors(Lang::get('c::std.invalid-action'));
+		}
+
+		$this->users->processBulkAction($action, array_keys($input));
+
+		return $redirect;
 	}
 
 	/**

@@ -29,6 +29,8 @@ return array(
 	'creating' => 'Ny :model',
 	'editing' => 'Redigerer :model',
 	'not-found' => ':model finnes ikke!',
+	'none-selected' => 'Ingen :model valgt!',
+	'invalid-action' => 'Ugyldig handling!',
 
 	// generic button strings
 	'submit' => 'Send inn',
