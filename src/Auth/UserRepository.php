@@ -203,6 +203,8 @@ class UserRepository extends EloquentRepository
 	 */
 	protected function executeBulkDelete($query)
 	{
-		$query->delete();
+		foreach ($query->get() as $model) {
+			$model->delete();
+		}
 	}
 }
