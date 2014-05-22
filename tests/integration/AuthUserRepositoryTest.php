@@ -42,7 +42,7 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	{
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(false);
-		$this->validator->shouldReceive('errors->getMessages')->once()->andReturn([]);
+		$this->validator->shouldReceive('getErrors')->once()->andReturn(new Illuminate\Support\MessageBag);
 		$this->assertFalse($repo->create([]));
 	}
 
