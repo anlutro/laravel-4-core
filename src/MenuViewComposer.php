@@ -62,7 +62,8 @@ class MenuViewComposer
 
 	protected function getSiteName()
 	{
-		return $this->config->get('site.name') ?:
-			$this->config->get('app.url');
+		return $this->config->get('site.html-name') ?:
+			($this->config->get('site.name') ?:
+			$this->config->get('app.url'));
 	}
 }
