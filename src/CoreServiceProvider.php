@@ -135,6 +135,7 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		$this->app['router']->filter('auth', 'anlutro\Core\Web\Filters\AuthFilter');
 		$this->app['router']->filter('access', 'anlutro\Core\Web\Filters\AccessFilter');
+		$this->app['router']->filter('csrf', 'anlutro\Core\Web\Filters\CsrfFilter');
 		$this->app['router']->before(function($request) {
 			if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
 				$this->app->bind('anlutro\Core\Web\AuthController', 'anlutro\Core\Web\ApiAuthController');
