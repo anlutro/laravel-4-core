@@ -134,7 +134,7 @@ class UserController extends Controller
 	 */
 	public function show($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 
@@ -153,7 +153,7 @@ class UserController extends Controller
 	 */
 	public function edit($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 
@@ -181,7 +181,7 @@ class UserController extends Controller
 	 */
 	public function update($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 
@@ -203,7 +203,7 @@ class UserController extends Controller
 	 */
 	public function delete($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 

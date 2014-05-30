@@ -158,7 +158,7 @@ class ApiUserControllerTest extends AppTestCase
 
 	public function testNotFound()
 	{
-		$this->users->shouldReceive('getByKey')->andReturn(false);
+		$this->users->shouldReceive('findByKey')->andReturn(false);
 
 		$response = $this->getAction('show', [1]);
 
@@ -170,7 +170,7 @@ class ApiUserControllerTest extends AppTestCase
 	{
 		$mockUser = $this->getMockUser();
 		$mockUser->id = $id;
-		$this->users->shouldReceive('getByKey')->once()->andReturn($mockUser);
+		$this->users->shouldReceive('findByKey')->once()->andReturn($mockUser);
 		return $mockUser;
 	}
 

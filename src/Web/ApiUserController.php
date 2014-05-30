@@ -103,7 +103,7 @@ class ApiUserController extends ApiController
 	 */
 	public function show($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		} else{
 			return $this->jsonResponse(['user' => $user]);
@@ -119,7 +119,7 @@ class ApiUserController extends ApiController
 	 */
 	public function update($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		} elseif ($this->users->updateAsAdmin($user, $this->input())) {
 			return $this->jsonResponse(['user' => $user]);
@@ -137,7 +137,7 @@ class ApiUserController extends ApiController
 	 */
 	public function delete($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		} elseif ($this->users->delete($user)) {
 			return $this->success();
