@@ -185,7 +185,7 @@ class CoreServiceProvider extends ServiceProvider
 	protected function registerSidebar()
 	{
 		$this->app['view']->creator('c::sidebar', function($view) {
-			$view->with('sidebar', new Collection);
+			$view->with('sidebar', new \Illuminate\Support\Collection);
 		});
 	}
 
