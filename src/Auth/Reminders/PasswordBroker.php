@@ -60,7 +60,9 @@ class PasswordBroker
 		$token = $this->reminders->create($user);
 
 		// send an email
-		return $this->mail($user, $token);
+		$this->mail($user, $token);
+
+		return true;
 	}
 
 	/**
