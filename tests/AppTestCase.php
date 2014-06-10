@@ -44,7 +44,10 @@ class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 
 		// the package's views extends the 'layout.main' view which must be
 		// present. if it is not present, add our dummy views
-		if (!$this->app['view']->exists('layout.main')) {
+		if (
+			!$this->app['view']->exists('layout.main')
+			|| !$this->app['view']->exists('layout.email')
+		) {
 			$this->app['view']->addLocation(__DIR__ . '/resources/views');
 		}
 	}

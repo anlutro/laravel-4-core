@@ -25,6 +25,7 @@ class PasswordResetTest extends \AppTestCase
 			return strpos($provider, 'Reminder' !== null);
 		});
 		$app['config']->set('app.providers', $providers);
+		$app['config']->set('auth.reminder.email', null);
 		return $app;
 	}
 
@@ -69,7 +70,11 @@ class PasswordResetTest extends \AppTestCase
 				$oldEnv = $this->app['env'];
 				$this->app['env'] = 'testing';
 				$body = $msg->getBody();
-				preg_match('/localhost\/password\/reset\/([0-9a-z]+)/', $body, $token);
+				preg_match('/localhost\/reset\?token=([0-9a-z]+)/', $body, $token);
+				if (empty($token[1])) {
+					var_dump($token);
+					$this->fail('Reset token not found in message body: '.$body);
+				}
 				$token = $token[1];
 				$this->app['env'] = $oldEnv;
 			});
