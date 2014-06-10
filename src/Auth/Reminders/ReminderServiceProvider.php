@@ -19,6 +19,15 @@ class ReminderServiceProvider extends BaseProvider
 	protected $defer = false;
 	protected static $resPath;
 
+	public function register()
+	{
+		$this->registerReminderRepository();
+
+		$this->registerPasswordBroker();
+
+		$this->registerCommands();
+	}
+
 	protected function registerCommands()
 	{
 		parent::registerCommands();

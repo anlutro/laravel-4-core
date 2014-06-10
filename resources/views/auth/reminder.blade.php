@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', Lang::get('c::auth.reminder-title'))
+@section('title', Lang::get('c::auth.resetpass-title'))
 
 @section('content')
 
