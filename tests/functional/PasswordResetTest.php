@@ -72,7 +72,6 @@ class PasswordResetTest extends \AppTestCase
 				$body = $msg->getBody();
 				preg_match('/localhost\/reset\?token=([0-9a-z]+)/', $body, $token);
 				if (empty($token[1])) {
-					var_dump($token);
 					$this->fail('Reset token not found in message body: '.$body);
 				}
 				$token = $token[1];
