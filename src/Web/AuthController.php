@@ -223,10 +223,7 @@ class AuthController extends Controller
 	 */
 	private function activationEnabled()
 	{
-		return $this->users->activationEnabled();
-		$loaded = App::getLoadedProviders();
-		$provider = 'anlutro\Core\Auth\Activation\ActivationServiceProvider';
-		return isset($loaded[$provider]);
+		return $this->users->activationsEnabled();
 	}
 
 	/**
@@ -237,8 +234,5 @@ class AuthController extends Controller
 	private function remindersEnabled()
 	{
 		return $this->users->remindersEnabled();
-		$loaded = App::getLoadedProviders();
-		$provider = 'anlutro\Core\Auth\Reminders\ReminderServiceProvider';
-		return isset($loaded[$provider]);
 	}
 }
