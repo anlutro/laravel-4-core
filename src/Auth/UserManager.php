@@ -295,9 +295,9 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		$user = $this->users->getByCredentials(['email' => $email]);
-
-		if (!$user) return false;
+		if (!$user = $this->users->findByCredentials(['email' => $email])) {
+			return false;
+		}
 
 		return $this->reminders->requestReset($user);
 	}
@@ -333,7 +333,9 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		if (!$user = $this->users->getByCredentials($credentials)) return false;
+		if (!$user = $this->users->findByCredentials($credentials)) {
+			return false;
+		}
 
 		return $this->resetPassword($user, $attributes, $token);
 	}
@@ -353,7 +355,9 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		if (!$this->users->valid('passwordReset', $attributes)) return false;
+		if (!$this->users->valid('passwordReset', $attributes)) {
+			return false;
+		}
 
 		$newPassword = $attributes['password'];
 

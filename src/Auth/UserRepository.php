@@ -57,17 +57,15 @@ class UserRepository extends EloquentRepository
 	 *
 	 * @return null|Model
 	 */
-	public function getByCredentials(array $credentials)
+	public function findByCredentials(array $credentials)
 	{
-		$query = $this->newQuery();
-
 		foreach ($credentials as $key => $value) {
-			if (strpos($key, 'password') === false) {
-				$query->where($key, '=', $value);
+			if (strpos($key, 'password') !== false) {
+				unset($credentials[$key]);
 			}
 		}
 
-		return $this->fetchSingle($query);
+		if (!empty($credentials)) return $this->findByAttributes($credentials);
 	}
 
 	/**

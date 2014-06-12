@@ -87,22 +87,30 @@ class ActivationService
 	 * @param  string $code
 	 *
 	 * @return boolean
+	 *
+	 * @throws \anlutro\Core\Auth\Activation\ActivationException
 	 */
 	public function activate($code)
 	{
 		$email = $this->codes->retrieveEmailByCode($code);
 
 		if (!$email) {
-			return false;
+			throw new ActivationException('No email found for activation code');
 		}
 
 		$user = $this->findUserByEmail($email);
 
 		if (!$user) {
-			return false;
+			throw new ActivationException('Email found for activation code, but No user found for email');
 		}
 
-		return ($this->activateUser($user) && $this->codes->delete($code));
+		if (!$this->activateUser($user)) {
+			throw new ActivationException('User found, but could not activate');
+		}
+
+		$this->codes->delete($code);
+
+		return true;
 	}
 
 	/**
@@ -127,7 +135,7 @@ class ActivationService
 	 */
 	protected function activateUser(ActivatableInterface $user)
 	{
-		return $user->activate();
+		return $user->activate(true);
 	}
 
 	/**

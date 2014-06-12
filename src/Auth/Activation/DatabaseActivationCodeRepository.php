@@ -52,6 +52,8 @@ class DatabaseActivationCodeRepository implements ActivationCodeRepositoryInterf
 
 		if ($result === null) return null;
 
+		$result = (array) $result;
+
 		return $result['email'];
 	}
 

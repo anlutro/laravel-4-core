@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 
 use anlutro\Core\Auth\UserManager;
+use anlutro\Core\Auth\Activation\ActivationException;
 
 /**
  * Controller for authentication actions.
@@ -142,10 +143,12 @@ class AuthController extends Controller
 	{
 		$code = $this->input('activation_code');
 
-		if ($this->users->activateByCode($code)) {
+		try {
+			$this->users->activateByCode($code);
 			$msg = Lang::get('c::auth.activation-success');
 			return $this->redirect('login')->with('success', $msg);
-		} else {
+		} catch (ActivationException $e) {
+			if (Config::get('app.debug')) throw $e;
 			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.activation-failed'));
 		}

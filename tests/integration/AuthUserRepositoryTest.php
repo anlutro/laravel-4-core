@@ -27,15 +27,15 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 		m::close();
 	}
 
-	public function testGetByCredentials()
+	public function testFindByCredentials()
 	{
 		$this->createUser('name');
 		$repo = $this->makeRepository();
 
-		$this->assertNull($repo->getByCredentials(['username' => 'nonexistant']));
-		$this->assertNotNull($repo->getByCredentials(['username' => 'name']));
-		$this->assertNotNull($repo->getByCredentials(['username' => 'name', 'password' => 'foo']));
-		$this->assertNotNull($repo->getByCredentials(['username' => 'name', 'password' => 'bar']));
+		$this->assertNull($repo->findByCredentials(['username' => 'nonexistant']));
+		$this->assertNotNull($repo->findByCredentials(['username' => 'name']));
+		$this->assertNotNull($repo->findByCredentials(['username' => 'name', 'password' => 'foo']));
+		$this->assertNotNull($repo->findByCredentials(['username' => 'name', 'password' => 'bar']));
 	}
 
 	public function testInvalidCreate()
