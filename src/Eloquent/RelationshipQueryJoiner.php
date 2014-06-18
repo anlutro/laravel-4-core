@@ -16,9 +16,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 /**
  * Utility class for joining related tables in Eloquent.
  *
- * $query = $model->newQuery();
- * (new RelationshipQueryJoiner($query))->join('relation');
- * return $query->get();
+ * (new RelationshipQueryJoiner($eloquentQuery))
+ *   ->join('relation');
  */
 class RelationshipQueryJoiner
 {
@@ -33,19 +32,39 @@ class RelationshipQueryJoiner
 
 	public function join($relation, $type = 'left')
 	{
-		if (!method_exists($this->model, $relation)) {
-			$class = get_class($this->model);
-			throw new \InvalidArgumentException("$class has no relation $relation");
+		if (strpos($relation, '.') !== false) {
+			$this->joinNested($relation, $type);
+		} else {
+			$relation = $this->getRelation($this->model, $relation);
+			$this->joinRelation($relation, $type);
 		}
-
-		$relation = $this->model->$relation();
 
 		$this->checkQuerySelects();
 
 		// @todo resarch when/if group by's are necessary
 		// $this->checkQueryGroupBy();
+	}
 
-		$this->joinRelation($relation, $type);
+	protected function getRelation($model, $name)
+	{
+		if (!method_exists($model, $name)) {
+			$class = get_class($model);
+			throw new \InvalidArgumentException("$class has no relation $name");
+		}
+
+		return $model->$name();
+	}
+
+	protected function joinNested($relation, $type)
+	{
+		$segments = explode('.', $relation);
+		$model = $this->model;
+
+		foreach ($segments as $segment) {
+			$relation = $this->getRelation($model, $segment);
+			$this->joinRelation($relation, $type);
+			$model = $relation->getRelated();
+		}
 	}
 
 	protected function checkQuerySelects()

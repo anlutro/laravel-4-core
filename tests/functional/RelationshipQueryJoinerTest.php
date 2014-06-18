@@ -37,6 +37,17 @@ class RelationshipQueryJoinerTest extends EloquentTestCase
 		$this->assertEquals($this->trimSql($sql), $query->toSql());
 	}
 
+	/** @test */
+	public function joinNestedBelongsToAndHasMany()
+	{
+		$sql = 'select "stub_models".* from "stub_models"
+			left join "stub_model_ones" on "stub_models"."foreign_key" = "stub_model_ones"."id"
+			left join "stub_model_threes" on "stub_model_threes"."foreign_key" = "stub_model_ones"."id"';
+		$query = (new StubModel)->newQuery();
+		(new RelationshipQueryJoiner($query))->join('one.five');
+		$this->assertEquals($this->trimSql($sql), $query->toSql());
+	}
+
 	protected function trimSql($string)
 	{
 		return str_replace(["\n", "\t", '  '], [' ', '', ' '], $string);
@@ -61,6 +72,17 @@ class StubModel extends \Illuminate\Database\Eloquent\Model
 	}
 }
 
-class StubModelOne extends \Illuminate\Database\Eloquent\Model {}
+class StubModelOne extends \Illuminate\Database\Eloquent\Model
+{
+	public function four()
+	{
+		return $this->belongsTo(__NAMESPACE__.'\\StubModelTwo', 'foreign_key');
+	}
+
+	public function five()
+	{
+		return $this->hasMany(__NAMESPACE__.'\\StubModelThree', 'foreign_key');
+	}
+}
 class StubModelTwo extends \Illuminate\Database\Eloquent\Model {}
 class StubModelThree extends \Illuminate\Database\Eloquent\Model {}
