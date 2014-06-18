@@ -72,5 +72,5 @@ class TypeableModelStub extends \anlutro\Core\BaseModel
 		2 => 'two',
 	];
 
-	use \anlutro\Core\ModelTraits\Typeable;
+	use \anlutro\Core\Eloquent\TypeableModelTrait;
 }
