@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core;
+namespace anlutro\Core\Web\Composers;
 
 use anlutro\Menu\Builder;
 use Illuminate\View\View;

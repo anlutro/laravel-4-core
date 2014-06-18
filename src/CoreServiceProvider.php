@@ -174,7 +174,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerAlertComposer()
 	{
-		$this->app['view']->composer('c::alerts', 'anlutro\Core\AlertsComposer');
+		$this->app['view']->composer('c::alerts', 'anlutro\Core\Web\Composers\AlertsComposer');
 	}
 
 	/**
@@ -234,7 +234,7 @@ class CoreServiceProvider extends ServiceProvider
 			);
 		}
 
-		$this->app['view']->composer('c::menu', 'anlutro\Core\MenuViewComposer');
+		$this->app['view']->composer('c::menu', 'anlutro\Core\Web\Composers\MenuViewComposer');
 	}
 
 	protected function providerLoaded($provider)

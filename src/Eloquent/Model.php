@@ -10,9 +10,9 @@
 namespace anlutro\Core;
 
 use JsonSerializable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as BaseModel;
 
-class BaseModel extends Model implements JsonSerializable
+class Model extends BaseModel implements JsonSerializable
 {
 	/**
 	 * Whether or not the model is frozen.
@@ -73,6 +73,6 @@ class BaseModel extends Model implements JsonSerializable
 	 */
 	public function newCollection(array $models = array())
 	{
-		return new \anlutro\Core\BaseCollection($models);
+		return new Collection($models);
 	}
 }
