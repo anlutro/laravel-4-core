@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core;
+namespace anlutro\Core\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder as BaseBuilder;
 

@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core;
+namespace anlutro\Core\Eloquent;
 
 use JsonSerializable;
 use Illuminate\Database\Eloquent\Model as BaseModel;

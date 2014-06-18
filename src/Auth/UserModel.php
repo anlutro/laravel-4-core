@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 use anlutro\Core\Auth\Activation\ActivatableInterface;
-use anlutro\Core\BaseModel;
+use anlutro\Core\Eloquent\Model;
 
 /**
  * User model.
  */
-class UserModel extends BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
+class UserModel extends Model implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	use SoftDeletingTrait;
 
