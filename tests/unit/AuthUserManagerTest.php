@@ -173,7 +173,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$input = ['password' => 'bar'];
 		$token = 'baz';
 		$users->shouldReceive('findByCredentials')->once()->with($credentials)->andReturn($mockUser = $this->mockUser());
-		$users->shouldReceive('valid')->once()->with('passwordReset', $input)->andReturn(true);
+		$users->shouldReceive('getValidator->validPasswordReset')->with($input)->andReturn(true);
 		$reminders->shouldReceive('resetUser')->once()->with($mockUser, $token, $input['password']);
 		$mng->resetPasswordForCredentials($credentials, $input, $token);
 	}

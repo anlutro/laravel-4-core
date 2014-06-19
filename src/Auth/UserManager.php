@@ -357,7 +357,7 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		if (!$this->users->valid('passwordReset', $attributes)) {
+		if (!$this->users->getValidator()->validPasswordReset($attributes)) {
 			return false;
 		}
 
