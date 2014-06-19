@@ -9,9 +9,11 @@
 
 namespace anlutro\Core\Web;
 
+use Illuminate\Support\Facades\Config;
 use anlutro\LaravelController\ApiController;
 
 use anlutro\Core\Auth\UserManager;
+use anlutro\Core\Auth\Activation\ActivationException;
 
 /**
  * Controller for authentication actions.
@@ -100,10 +102,12 @@ class ApiAuthController extends ApiController
 	{
 		$code = $this->input('activation_code');
 
-		if ($this->users->activateByCode($code)) {
+		try {
+			$this->users->activateByCode($code);
 			return $this->success();
-		} else {
-			return $this->error(['actiavtion failed']);
+		} catch (ActivationException $e) {
+			if (Config::get('app.debug')) throw $e;
+			return $this->error(['activation failed']);
 		}
 	}
 
