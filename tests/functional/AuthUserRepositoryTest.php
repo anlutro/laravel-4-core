@@ -41,7 +41,7 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testInvalidCreate()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validCreate')->once()->andReturn(false);
+		$this->validator->shouldReceive('valid')->once()->with('create', [])->andReturn(false);
 		$this->validator->shouldReceive('getErrors')->once()->andReturn(new Illuminate\Support\MessageBag);
 		$this->assertFalse($repo->create([]));
 	}
@@ -49,9 +49,9 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testCreateAsAdminAndActivate()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
 		$input['is_active'] = '1';
+		$this->validator->shouldReceive('valid')->once()->with('create', $input)->andReturn(true);
 		$user = $repo->createAsAdmin($input);
 		$this->assertInstanceOf('anlutro\Core\Auth\Users\UserModel', $user);
 		$this->assertTrue($user->exists, 'User should exist.');
@@ -61,8 +61,8 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testCreateAsAdminWithoutActivation()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
+		$this->validator->shouldReceive('valid')->once()->with('create', $input)->andReturn(true);
 		$user = $repo->createAsAdmin($input, false);
 		$this->assertInstanceOf('anlutro\Core\Auth\Users\UserModel', $user);
 		$this->assertFalse($user->is_active, 'User should not be active.');
@@ -71,10 +71,10 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testCreate()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
 		$input['user_level'] = 100;
 		$input['is_active'] = true;
+		$this->validator->shouldReceive('valid')->once()->with('create', $input)->andReturn(true);
 		$user = $repo->create($input, false);
 		$this->assertInstanceOf('anlutro\Core\Auth\Users\UserModel', $user);
 		$this->assertFalse($user->is_active, 'User should not be active.');
@@ -84,12 +84,12 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testUpdateWithBlankPassword()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
+		$input = ['name' => 'New Name', 'password' => ''];
+		$this->validator->shouldReceive('valid')->once()->with('update', $input)->andReturn(true);
 
 		$user = $this->createUser('name', 'pass');
 		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
 		$oldpw = $user->password;
-		$input = ['name' => 'New Name', 'password' => ''];
 
 		$repo->update($user, $input);
 
@@ -100,12 +100,12 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testUpdateWithNewPassword()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
+		$input = ['name' => 'New Name', 'password' => 'newpass'];
+		$this->validator->shouldReceive('valid')->once()->with('update', $input)->andReturn(true);
 
 		$user = $this->createUser('name', 'pass');
 		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
 		$oldpw = $user->password;
-		$input = ['name' => 'New Name', 'password' => 'newpass'];
 
 		$repo->update($user, $input);
 
@@ -116,12 +116,12 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testUpdateProfileUpdatesCorrectFields()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
+		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'admin', 'username' => 'newname'];
+		$this->validator->shouldReceive('valid')->once()->with('update', $input)->andReturn(true);
 
 		$user = $this->createUser('name', 'pass', 'user');
 		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
 		$oldpw = $user->password;
-		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'admin', 'username' => 'newname'];
 
 		$repo->update($user, $input);
 
@@ -134,10 +134,10 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testUpdateAsAdmin()
 	{
 		$repo = $this->makeRepository();
-		$this->validator->shouldReceive('validUpdate')->once()->andReturn(true);
+		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'mod', 'username' => 'newname'];
+		$this->validator->shouldReceive('valid')->once()->with('update', $input)->andReturn(true);
 		$user = $this->createUser('name', 'pass', 'user'); $oldpw = $user->password;
 		$this->validator->shouldReceive('replace')->once()->with('key', $user->getKey());
-		$input = ['name' => 'New Name', 'password' => 'newpass', 'user_type' => 'mod', 'username' => 'newname'];
 
 		$repo->updateAsAdmin($user, $input);
 
