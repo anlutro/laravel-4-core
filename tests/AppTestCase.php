@@ -30,7 +30,7 @@ class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 		$app['db']->setDefaultConnection('sqlite');
 
 		$app['config']->set('database.connections.sqlite.database', ':memory:');
-		$app['config']->set('auth.model', 'anlutro\Core\Auth\UserModel');
+		$app['config']->set('auth.model', 'anlutro\Core\Auth\Users\UserModel');
 
 		return $app;
 	}

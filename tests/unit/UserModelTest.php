@@ -57,6 +57,6 @@ class UserModelTest extends PHPUnit_Framework_TestCase
 
 	protected function makeUserModel()
 	{
-		return new anlutro\Core\Auth\UserModel;
+		return new anlutro\Core\Auth\Users\UserModel;
 	}
 }

@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core\Auth;
+namespace anlutro\Core\Auth\Users;
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;

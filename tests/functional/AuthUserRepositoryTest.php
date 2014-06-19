@@ -53,7 +53,7 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 		$input = $this->getUserAttributes('foo');
 		$input['is_active'] = '1';
 		$user = $repo->createAsAdmin($input);
-		$this->assertInstanceOf('anlutro\Core\Auth\UserModel', $user);
+		$this->assertInstanceOf('anlutro\Core\Auth\Users\UserModel', $user);
 		$this->assertTrue($user->exists, 'User should exist.');
 		$this->assertTrue($user->is_active, 'User should be active.');
 	}
@@ -64,7 +64,7 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 		$this->validator->shouldReceive('validCreate')->once()->andReturn(true);
 		$input = $this->getUserAttributes('foo');
 		$user = $repo->createAsAdmin($input, false);
-		$this->assertInstanceOf('anlutro\Core\Auth\UserModel', $user);
+		$this->assertInstanceOf('anlutro\Core\Auth\Users\UserModel', $user);
 		$this->assertFalse($user->is_active, 'User should not be active.');
 	}
 
@@ -76,7 +76,7 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 		$input['user_level'] = 100;
 		$input['is_active'] = true;
 		$user = $repo->create($input, false);
-		$this->assertInstanceOf('anlutro\Core\Auth\UserModel', $user);
+		$this->assertInstanceOf('anlutro\Core\Auth\Users\UserModel', $user);
 		$this->assertFalse($user->is_active, 'User should not be active.');
 		$this->assertEquals(1, $user->user_level);
 	}
@@ -179,16 +179,16 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 
 	protected function makeRepository()
 	{
-		$this->model = new anlutro\Core\Auth\UserModel;
-		$this->validator = m::mock('anlutro\Core\Auth\UserValidator');
+		$this->model = new \anlutro\Core\Auth\Users\UserModel;
+		$this->validator = m::mock('anlutro\Core\Auth\Users\UserValidator');
 		$this->validator->shouldReceive('replace')->with('table', $this->model->getTable());
-		return new anlutro\Core\Auth\UserRepository($this->model, $this->validator);
+		return new \anlutro\Core\Auth\Users\UserRepository($this->model, $this->validator);
 	}
 
 	protected function createUser($name, $password = 'foo', $userLevel = 'user')
 	{
 		$attr = $this->getUserAttributes($name, $password, $userLevel);
-		$user = new anlutro\Core\Auth\UserModel;
+		$user = new \anlutro\Core\Auth\Users\UserModel;
 		$user->username = $attr['username'];
 		$user->name = $attr['name'];
 		$user->password = $attr['password'];

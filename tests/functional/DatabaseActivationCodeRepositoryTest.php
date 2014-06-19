@@ -46,6 +46,6 @@ class DatabaseActivationCodeRepositoryTest extends \anlutro\LaravelTesting\Eloqu
 
 	public function makeUser(array $attr)
 	{
-		return new anlutro\Core\Auth\UserModel($attr);
+		return new anlutro\Core\Auth\Users\UserModel($attr);
 	}
 }

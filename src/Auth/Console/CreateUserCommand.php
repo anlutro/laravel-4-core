@@ -12,7 +12,7 @@ namespace anlutro\Core\Auth\Console;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-use anlutro\Core\Auth\UserRepository;
+use anlutro\Core\Auth\Users\UserRepository;
 use anlutro\Core\Console\Command;
 
 /**

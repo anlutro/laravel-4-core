@@ -241,7 +241,7 @@ class UserControllerTest extends AppTestCase
 
 	protected function getMockUser()
 	{
-		$user = m::mock('anlutro\Core\Auth\UserModel')->makePartial();
+		$user = m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
 		$user->is_active = '1';
 		return $user;
 	}

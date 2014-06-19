@@ -193,7 +193,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	protected function mockUsers()
 	{
-		return m::mock('anlutro\Core\Auth\UserRepository');
+		return m::mock('anlutro\Core\Auth\Users\UserRepository');
 	}
 
 	protected function mockAuth()
@@ -220,6 +220,6 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	protected function mockUser()
 	{
-		return m::mock('anlutro\Core\Auth\UserModel')->makePartial();
+		return m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
 	}
 }

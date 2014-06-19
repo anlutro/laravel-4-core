@@ -81,8 +81,8 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
 
-		$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\UserModel';
-		$this->app->bind('anlutro\Core\Auth\UserModel', $userModel);
+		$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
+		$this->app->bind('anlutro\Core\Auth\Users\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
 
 		$this->registerAlertComposer();

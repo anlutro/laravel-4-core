@@ -14,6 +14,8 @@ use Illuminate\Translation\Translator;
 
 use anlutro\Core\Auth\Activation\ActivationService;
 use anlutro\Core\Auth\Reminders\PasswordBroker;
+use anlutro\Core\Auth\Users\UserRepository;
+use anlutro\Core\Auth\Users\UserModel;
 
 /**
  * Top-level user service class.

@@ -20,7 +20,7 @@ class FiltersTest extends AppTestCase
 	/** @test */
 	public function authFilterReturnsNullWhenLoggedIn()
 	{
-		$mockUser = m::mock('anlutro\Core\Auth\UserModel');
+		$mockUser = m::mock('anlutro\Core\Auth\Users\UserModel');
 		$this->be($mockUser);
 		$this->call('get', '/auth-test');
 		$this->assertResponseOk();
@@ -36,7 +36,7 @@ class FiltersTest extends AppTestCase
 	/** @test */
 	public function accessFilterReturnsNullWhenHasAccess()
 	{
-		$mockUser = m::mock('anlutro\Core\Auth\UserModel');
+		$mockUser = m::mock('anlutro\Core\Auth\Users\UserModel');
 		$mockUser->shouldReceive('hasAccess')->once()->andReturn(true);
 		$this->be($mockUser);
 		$this->call('get', '/access-test');
@@ -46,7 +46,7 @@ class FiltersTest extends AppTestCase
 	/** @test */
 	public function accessFilterReturns403WhenAccessDenied()
 	{
-		$mockUser = m::mock('anlutro\Core\Auth\UserModel');
+		$mockUser = m::mock('anlutro\Core\Auth\Users\UserModel');
 		$mockUser->shouldReceive('hasAccess')->once()->andReturn(false);
 		$this->be($mockUser);
 		$this->call('get', '/access-test');

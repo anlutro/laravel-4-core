@@ -60,7 +60,7 @@ class PasswordResetTest extends \AppTestCase
 			'password' => 'foobar', 'password_confirmation' => 'foobar',
 			'name' => 'Foo Bar', 'phone' => '', 'is_active' => '1',
 		]);
-		$this->assertInstanceOf('anlutro\Core\Auth\UserModel', $user, $manager->getErrors());
+		$this->assertInstanceOf('anlutro\Core\Auth\Users\UserModel', $user, $manager->getErrors());
 		$result = $manager->login(['username' => 'foobar', 'password' => 'foobar']);
 		$this->assertEquals(true, $result);
 
@@ -90,7 +90,7 @@ class PasswordResetTest extends \AppTestCase
 
 	protected function mockUser()
 	{
-		return m::mock('anlutro\Core\Auth\UserModel')->makePartial();
+		return m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
 	}
 
 	public function setMailExpectations()
