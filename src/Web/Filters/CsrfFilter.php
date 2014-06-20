@@ -19,6 +19,8 @@ class CsrfFilter
 	{
 		if ($this->session->token() != $request->input('_token')) {
 			throw new TokenMismatchException;
+		} else {
+			$this->session->regenerateToken();
 		}
 	}
 }
