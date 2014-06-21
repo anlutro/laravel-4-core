@@ -86,16 +86,9 @@ class RelationshipQueryJoiner
 		$selects = $this->query->getQuery()->columns;
 		$tableSelect = $this->model->getTable().'.*';
 
-		if (empty($selects)) {
-			$this->query->select($tableSelect);
-			return;
+		if (empty($selects) || !in_array($tableSelect, $selects)) {
+			$this->query->addSelect($tableSelect);
 		}
-
-		if (in_array($tableSelect, $selects)) {
-			return;
-		}
-
-		$query->addSelect($tableSelect);
 	}
 
 	protected function checkQueryGroupBy()
@@ -103,16 +96,9 @@ class RelationshipQueryJoiner
 		$groups = $this->query->getQuery()->groups;
 		$keyGroup = $this->model->getQualifiedKeyName();
 
-		if (empty($groups)) {
+		if (empty($groups) || !in_array($keyGroup, $groups)) {
 			$this->query->groupBy($keyGroup);
-			return;
 		}
-
-		if (in_array($keyGroup, $groups)) {
-			return;
-		}
-
-		$query->groupBy($keyGroup);
 	}
 
 	protected function joinRelation(Relation $relation, $type)
