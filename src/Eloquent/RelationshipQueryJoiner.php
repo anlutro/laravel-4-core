@@ -21,8 +21,26 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class RelationshipQueryJoiner
 {
+	/**
+	 * The query builder.
+	 *
+	 * @var \Illuminate\Database\Eloquent\Builder
+	 */
 	protected $query;
+
+	/**
+	 * The model.
+	 *
+	 * @var \Illuminate\Database\Eloquent\Model
+	 */
 	protected $model;
+
+	/**
+	 * This array keeps track of currently joined relationships to try and
+	 * prevent overlapping joins.
+	 *
+	 * @var array
+	 */
 	protected $joined = [];
 
 	public function __construct(Builder $query)
@@ -31,6 +49,15 @@ class RelationshipQueryJoiner
 		$this->model = $query->getModel();
 	}
 
+	/**
+	 * Join one or multiple relations onto the query.
+	 *
+	 * @param  string|array $relations Single string or array of strings with
+	 * the name of the relation(s) that should be joined onto the query.
+	 * @param  string       $type      The join type - left, inner etc
+	 *
+	 * @return static
+	 */
 	public function join($relations, $type = 'left')
 	{
 		foreach ((array) $relations as $relation) {
@@ -51,6 +78,8 @@ class RelationshipQueryJoiner
 
 		// @todo resarch when/if group by's are necessary
 		// $this->checkQueryGroupBy();
+
+		return $this;
 	}
 
 	protected function getRelation($model, $name)
