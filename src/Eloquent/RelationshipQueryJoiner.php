@@ -23,6 +23,7 @@ class RelationshipQueryJoiner
 {
 	protected $query;
 	protected $model;
+	protected $joined = [];
 
 	public function __construct(Builder $query)
 	{
@@ -30,13 +31,20 @@ class RelationshipQueryJoiner
 		$this->model = $query->getModel();
 	}
 
-	public function join($relation, $type = 'left')
+	public function join($relations, $type = 'left')
 	{
-		if (strpos($relation, '.') !== false) {
-			$this->joinNested($relation, $type);
-		} else {
-			$relation = $this->getRelation($this->model, $relation);
-			$this->joinRelation($relation, $type);
+		foreach ((array) $relations as $relation) {
+			if (in_array($relation, $this->joined)) {
+				continue;
+			}
+
+			if (strpos($relation, '.') !== false) {
+				$this->joinNested($relation, $type);
+			} else {
+				$this->joined[] = $relation;
+				$relation = $this->getRelation($this->model, $relation);
+				$this->joinRelation($relation, $type);
+			}
 		}
 
 		$this->checkQuerySelects();
@@ -59,10 +67,16 @@ class RelationshipQueryJoiner
 	{
 		$segments = explode('.', $relation);
 		$model = $this->model;
+		$current = '';
 
 		foreach ($segments as $segment) {
+			$current = $current ? "$current.$segment" : $segment;
 			$relation = $this->getRelation($model, $segment);
-			$this->joinRelation($relation, $type);
+
+			if (!in_array($current, $this->joined)) {
+				$this->joinRelation($relation, $type);
+			}
+
 			$model = $relation->getRelated();
 		}
 	}

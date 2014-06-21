@@ -48,6 +48,28 @@ class RelationshipQueryJoinerTest extends EloquentTestCase
 		$this->assertEquals($this->trimSql($sql), $query->toSql());
 	}
 
+	/** @test */
+	public function joinSeveral()
+	{
+		$sql = 'select "stub_models".* from "stub_models"
+			left join "stub_model_ones" on "stub_models"."foreign_key" = "stub_model_ones"."id"
+			left join "stub_model_twos" on "stub_model_twos"."foreign_key" = "stub_models"."id"';
+		$query = (new StubModel)->newQuery();
+		(new RelationshipQueryJoiner($query))->join(['one', 'two']);
+		$this->assertEquals($this->trimSql($sql), $query->toSql());
+	}
+
+	/** @test */
+	public function joinSeveralDoNotOverlap()
+	{
+		$sql = 'select "stub_models".* from "stub_models"
+			left join "stub_model_ones" on "stub_models"."foreign_key" = "stub_model_ones"."id"
+			left join "stub_model_threes" on "stub_model_threes"."foreign_key" = "stub_model_ones"."id"';
+		$query = (new StubModel)->newQuery();
+		(new RelationshipQueryJoiner($query))->join(['one', 'one.five']);
+		$this->assertEquals($this->trimSql($sql), $query->toSql());
+	}
+
 	protected function trimSql($string)
 	{
 		return str_replace(["\n", "\t", '  '], [' ', '', ' '], $string);
