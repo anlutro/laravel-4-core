@@ -12,37 +12,8 @@ namespace anlutro\Core\Eloquent;
 use JsonSerializable;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
-class Model extends BaseModel implements JsonSerializable
+class Model extends BaseModel implements JsonSerializable, StdClassableInterface
 {
-	/**
-	 * Whether or not the model is frozen.
-	 *
-	 * @see freeze()
-	 *
-	 * @var boolean
-	 */
-	protected $frozen = false;
-
-	/**
-	 * Freeze the model, preventing it from writing to the database.
-	 *
-	 * @return void
-	 */
-	public function freeze()
-	{
-		$this->frozen = true;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function save(array $options = array())
-	{
-		if ($this->frozen) throw new \RuntimeException('Model is frozen.');
-
-		return parent::save();
-	}
-
 	/**
 	 * Convert the model to an StdClass.
 	 *
@@ -50,8 +21,37 @@ class Model extends BaseModel implements JsonSerializable
 	 */
 	public function toStdClass()
 	{
-		$array = $this->toArray();
-		return empty($array) ? (new StdClass) : json_decode(json_encode($array));
+		$attributes = $this->getArrayableAttributes();
+
+		foreach ($this->getDates() as $key) {
+			if (!isset($attributes[$key])) continue;
+
+			$attributes[$key] = $this->asDateTime($attributes[$key]);
+		}
+
+		foreach ($this->getMutatedAttributes() as $key) {
+			if (!array_key_exists($key, $attributes)) continue;
+
+			$attributes[$key] = $this->mutateAttributeForArray($key, $attributes[$key]);
+		}
+
+		foreach ($this->appends as $key) {
+			$attributes[$key] = $this->mutateAttributeForArray($key, null);
+		}
+
+		foreach ($this->getArrayableRelations() as $key => $value) {
+			if (in_array($key, $this->hidden)) continue;
+
+			if ($value instanceof StdClassableInterface) {
+				$attributes[$key] = $value->toStdClass();
+			} else if ($value instanceof ArrayableInterface) {
+				$attributes[$key] = $value->toArray();
+			} else {
+				$attributes[$key] = $value;
+			}
+		}
+
+		return empty($attributes) ? (new StdClass) : json_decode(json_encode($attributes));
 	}
 
 	/**
