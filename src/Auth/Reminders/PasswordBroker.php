@@ -9,11 +9,10 @@
 
 namespace anlutro\Core\Auth\Reminders;
 
-use Carbon\Carbon;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Support\Facades\Lang;
+use Illuminate\Mail\Message;
 use Illuminate\Mail\Mailer;
 use Illuminate\Auth\UserProviderInterface;
+use Illuminate\Translation\Translator;
 
 /**
  * Class responsible for handling password resets. Improved version of
@@ -27,6 +26,7 @@ class PasswordBroker
 	protected $users;
 	protected $reminders;
 	protected $mailer;
+	protected $translator;
 	protected $emailView;
 	protected $queue = false;
 
@@ -34,11 +34,13 @@ class PasswordBroker
 		UserProviderInterface $users,
 		DatabaseReminderRepository $reminders,
 		Mailer $mailer,
+		Translator $translator,
 		array $config
 	) {
 		$this->users = $users;
 		$this->reminders = $reminders;
 		$this->mailer = $mailer;
+		$this->translator = $translator;
 		$this->emailView = $config['email-view'];
 		$this->queue = $config['queue-email'];
 	}
@@ -49,7 +51,7 @@ class PasswordBroker
 	 *
 	 * @param  RemindableInterface $user
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function requestReset(RemindableInterface $user)
 	{
@@ -71,7 +73,7 @@ class PasswordBroker
 	 * @param  RemindableInterface $user
 	 * @param  string $token
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function mail(RemindableInterface $user, $token)
 	{
@@ -84,10 +86,12 @@ class PasswordBroker
 			'action' => 'anlutro\Core\Web\AuthController@reset',
 		];
 
-		return $this->mailer->$method($this->emailView, $viewData, function($msg) use ($email) {
+		$this->mailer->$method($this->emailView, $viewData, function(Message $msg) use ($email) {
 			$msg->to($email)
-				->subject(Lang::get('c::auth.resetpass-title'));
+				->subject($this->translator->get('c::auth.resetpass-title'));
 		});
+
+		return true;
 	}
 
 	/**
@@ -105,8 +109,7 @@ class PasswordBroker
 			return false;
 		}
 
-		$user->setPasswordAttribute($newPassword);
-		$user->save();
+		$user->setPassword($newPassword);
 		$this->reminders->delete($token);
 
 		return true;

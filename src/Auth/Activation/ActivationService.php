@@ -10,14 +10,17 @@
 namespace anlutro\Core\Auth\Activation;
 
 use Illuminate\Auth\UserProviderInterface;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Mail\Mailer;
+use Illuminate\Translation\Translator;
 
 class ActivationService
 {
 	protected $codes;
 	protected $users;
 	protected $mailer;
+	protected $translator;
 	protected $hashKey;
 	protected $queue;
 
@@ -25,12 +28,14 @@ class ActivationService
 		ActivationCodeRepositoryInterface $codes,
 		UserProviderInterface $users,
 		Mailer $mailer,
+		Translator $translator,
 		$hashKey,
 		$queue = false
 	) {
 		$this->codes = $codes;
 		$this->users = $users;
 		$this->mailer = $mailer;
+		$this->translator = $translator;
 		$this->hashKey = $hashKey;
 		$this->queue = $queue;
 	}
@@ -75,10 +80,12 @@ class ActivationService
 			'action' => 'anlutro\Core\Web\AuthController@activate',
 		];
 
-		return $this->mailer->$method('c::auth.activate-email', $viewData, function($msg) use ($email) {
+		$this->mailer->$method('c::auth.activate-email', $viewData, function(Message $msg) use ($email) {
 			$msg->to($email)
-				->subject(Lang::get('c::auth.activate-title'));
+				->subject($this->translator->get('c::auth.activate-title'));
 		});
+
+		return count($this->mailer->failures()) == 0;
 	}
 
 	/**
@@ -86,7 +93,7 @@ class ActivationService
 	 *
 	 * @param  string $code
 	 *
-	 * @return boolean
+	 * @return void
 	 *
 	 * @throws \anlutro\Core\Auth\Activation\ActivationException
 	 */
@@ -109,8 +116,6 @@ class ActivationService
 		}
 
 		$this->codes->delete($code);
-
-		return true;
 	}
 
 	/**
@@ -123,6 +128,7 @@ class ActivationService
 	protected function findUserByEmail($email)
 	{
 		$credentials = ['email' => $email];
+
 		return $this->users->retrieveByCredentials($credentials);
 	}
 
@@ -148,6 +154,7 @@ class ActivationService
 	protected function generateActivationCode($object)
 	{
 		$value = str_shuffle(sha1(spl_object_hash($this).spl_object_hash($object).microtime(true)));
+
 		return hash_hmac('sha1', $value, $this->hashKey);
 	}
 }

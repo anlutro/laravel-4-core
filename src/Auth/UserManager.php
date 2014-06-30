@@ -22,10 +22,29 @@ use anlutro\Core\Auth\Users\UserModel;
  */
 class UserManager
 {
+	/**
+	 * @var UserRepository
+	 */
 	protected $users;
+
+	/**
+	 * @var AuthManager|\Illuminate\Auth\Guard
+	 */
 	protected $auth;
+
+	/**
+	 * @var Translator
+	 */
 	protected $translator;
+
+	/**
+	 * @var ActivationService
+	 */
 	protected $activations;
+
+	/**
+	 * @var PasswordBroker
+	 */
 	protected $reminders;
 
 	/**
@@ -100,7 +119,7 @@ class UserManager
 	 */
 	public function getCurrentUser()
 	{
-		return $this->auth->getUser();
+		return $this->auth->user();
 	}
 
 	/**
@@ -159,7 +178,9 @@ class UserManager
 		$user = $this->getCurrentUser();
 
 		if (empty($attributes['old_password']) || !$user->confirmPassword($attributes['old_password'])) {
-			$this->users->getErrors()->add($this->translate('c::auth.invalid-password'));
+			$this->users->getErrors()
+				->add('password', $this->translate('c::auth.invalid-password'));
+
 			return false;
 		}
 
@@ -192,7 +213,7 @@ class UserManager
 	{
 		$this->checkPermissions($user);
 
-		return $this->users->delete($user, $attributes);
+		return $this->users->delete($user);
 	}
 
 	/**
@@ -211,9 +232,9 @@ class UserManager
 		}
 
 		if (!is_numeric($against)) {
-			$against = $this->users
-				->getModel()
-				->getUserLevelValue($against);
+			/** @var \anlutro\Core\Auth\Users\UserModel $user */
+			$user = $this->users->getModel();
+			$against = $user->getUserLevelValue($against);
 		}
 
 		$level = (int) $this->getCurrentUser()->user_level;
@@ -249,7 +270,7 @@ class UserManager
 	 */
 	public function logout()
 	{
-		return $this->auth->logout();
+		$this->auth->logout();
 	}
 
 	/**
@@ -257,7 +278,7 @@ class UserManager
 	 *
 	 * @param  UserModel $user
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function sendActivationCode($user)
 	{
@@ -265,7 +286,7 @@ class UserManager
 			throw new \RuntimeException('Activation service not set.');
 		}
 
-		return $this->activations->generate($user);
+		$this->activations->generate($user);
 	}
 
 	/**
@@ -273,7 +294,7 @@ class UserManager
 	 *
 	 * @param  string $code
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function activateByCode($code)
 	{
@@ -281,7 +302,7 @@ class UserManager
 			throw new \RuntimeException('Activation service not set.');
 		}
 		
-		return $this->activations->activate($code);
+		$this->activations->activate($code);
 	}
 
 	/**
@@ -357,7 +378,7 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		if (!$this->users->getValidator()->validPasswordReset($attributes)) {
+		if (!$this->users->validPasswordReset($attributes)) {
 			return false;
 		}
 

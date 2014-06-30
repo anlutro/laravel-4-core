@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
+ */
+
 namespace anlutro\Core\Web\Filters;
 
 use Illuminate\Http\Request;
@@ -19,6 +27,8 @@ class CsrfFilter
 	{
 		if ($this->session->token() != $request->input('_token')) {
 			throw new TokenMismatchException;
+		} else {
+			$this->session->regenerateToken();
 		}
 	}
 }

@@ -21,8 +21,27 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class RelationshipQueryJoiner
 {
+	/**
+	 * The query builder.
+	 *
+	 * @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+	 */
 	protected $query;
+
+	/**
+	 * The model.
+	 *
+	 * @var \Illuminate\Database\Eloquent\Model
+	 */
 	protected $model;
+
+	/**
+	 * This array keeps track of currently joined relationships to try and
+	 * prevent overlapping joins.
+	 *
+	 * @var array
+	 */
+	protected $joined = [];
 
 	public function __construct(Builder $query)
 	{
@@ -30,21 +49,46 @@ class RelationshipQueryJoiner
 		$this->model = $query->getModel();
 	}
 
-	public function join($relation, $type = 'left')
+	/**
+	 * Join one or multiple relations onto the query.
+	 *
+	 * @param  string|array $relations Single string or array of strings with
+	 * the name of the relation(s) that should be joined onto the query.
+	 * @param  string       $type      The join type - left, inner etc
+	 *
+	 * @return static
+	 */
+	public function join($relations, $type = 'left')
 	{
-		if (strpos($relation, '.') !== false) {
-			$this->joinNested($relation, $type);
-		} else {
-			$relation = $this->getRelation($this->model, $relation);
-			$this->joinRelation($relation, $type);
+		foreach ((array) $relations as $relation) {
+			if (in_array($relation, $this->joined)) {
+				continue;
+			}
+
+			if (strpos($relation, '.') !== false) {
+				$this->joinNested($relation, $type);
+			} else {
+				$this->joined[] = $relation;
+				$relation = $this->getRelation($this->model, $relation);
+				$this->joinRelation($relation, $type);
+			}
 		}
 
 		$this->checkQuerySelects();
 
 		// @todo resarch when/if group by's are necessary
 		// $this->checkQueryGroupBy();
+
+		return $this;
 	}
 
+	/**
+	 * @param Model  $model
+	 * @param string $name
+	 *
+	 * @return Relation
+	 * @throws \InvalidArgumentException
+	 */
 	protected function getRelation($model, $name)
 	{
 		if (!method_exists($model, $name)) {
@@ -59,10 +103,16 @@ class RelationshipQueryJoiner
 	{
 		$segments = explode('.', $relation);
 		$model = $this->model;
+		$current = '';
 
 		foreach ($segments as $segment) {
+			$current = $current ? "$current.$segment" : $segment;
 			$relation = $this->getRelation($model, $segment);
-			$this->joinRelation($relation, $type);
+
+			if (!in_array($current, $this->joined)) {
+				$this->joinRelation($relation, $type);
+			}
+
 			$model = $relation->getRelated();
 		}
 	}
@@ -72,16 +122,9 @@ class RelationshipQueryJoiner
 		$selects = $this->query->getQuery()->columns;
 		$tableSelect = $this->model->getTable().'.*';
 
-		if (empty($selects)) {
-			$this->query->select($tableSelect);
-			return;
+		if (empty($selects) || !in_array($tableSelect, $selects)) {
+			$this->query->addSelect($tableSelect);
 		}
-
-		if (in_array($tableSelect, $selects)) {
-			return;
-		}
-
-		$query->addSelect($tableSelect);
 	}
 
 	protected function checkQueryGroupBy()
@@ -89,26 +132,19 @@ class RelationshipQueryJoiner
 		$groups = $this->query->getQuery()->groups;
 		$keyGroup = $this->model->getQualifiedKeyName();
 
-		if (empty($groups)) {
+		if (empty($groups) || !in_array($keyGroup, $groups)) {
 			$this->query->groupBy($keyGroup);
-			return;
 		}
-
-		if (in_array($keyGroup, $groups)) {
-			return;
-		}
-
-		$query->groupBy($keyGroup);
 	}
 
 	protected function joinRelation(Relation $relation, $type)
 	{
 		if ($relation instanceof Relations\BelongsToMany) {
-			return $this->joinManyToManyRelation($relation, $type);
+			$this->joinManyToManyRelation($relation, $type);
 		} else if ($relation instanceof Relations\HasOneOrMany) {
-			return $this->joinHasRelation($relation, $type);
+			$this->joinHasRelation($relation, $type);
 		} else if ($relation instanceof Relations\BelongsTo) {
-			return $this->joinBelongsToRelation($relation, $type);
+			$this->joinBelongsToRelation($relation, $type);
 		}
 	}
 

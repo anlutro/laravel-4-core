@@ -47,7 +47,7 @@ class ApiAuthControllerTest extends AppTestCase
 		$this->manager->shouldReceive('login')->with($credentials)->andReturn(true);
 		$this->manager->shouldReceive('getCurrentUser')->andReturn('foo');
 
-		$response = $this->postAction('login', [], $input);
+		$response = $this->postAction('attemptLogin', [], $input);
 
 		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
@@ -60,7 +60,7 @@ class ApiAuthControllerTest extends AppTestCase
 		$credentials = array_only($input, ['username', 'password']);
 		$this->manager->shouldReceive('login')->with($credentials)->andReturn(false);
 
-		$response = $this->postAction('login', [], $input);
+		$response = $this->postAction('attemptLogin', [], $input);
 
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals(401, $response->getStatusCode());

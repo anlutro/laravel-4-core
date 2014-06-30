@@ -13,38 +13,38 @@ use JsonSerializable;
 use Illuminate\Database\Eloquent\Collection as BaseCollection;
 use Illuminate\Support\Contracts\ArrayableInterface;
 
-class Collection extends BaseCollection implements JsonSerializable
+class Collection extends BaseCollection implements JsonSerializable, StdClassableInterface
 {
 	/**
-	 * Freeze the collection.
-	 *
-	 * @return void
-	 */
-	public function freeze()
-	{
-		$this->each(function($item) {
-			if (method_exists($item, 'freeze')) $item->freeze();
-		});
-	}
-
-	/**
-	 * Convert the collection to an array of StdClasses.
+	 * Convert the collection to an array of StdClass objects.
 	 *
 	 * @return array
 	 */
 	public function toStdClass()
 	{	
 		return array_map(function($value) {
+			$array = null;
+
 			if (is_object($value)) {
-				if (method_exists($value, 'toStdClass')) {
+				if ($value instanceof StdClassableInterface) {
 					return $value->toStdClass();
-				} elseif ($value instanceof ArrayableInterface) {
-					return json_decode(json_encode($value->toArray()));
+				}
+
+				if ($value instanceof ArrayableInterface) {
+					$array = $value->toArray();
+				} else if ($value instanceof JsonSerializable) {
+					$array = $value->jsonSerialize();
+				} else {
+					$array = (array) $value;
 				}
 			}
 
+			if (is_array($array)) {
+				return json_decode(json_encode($value));
+			}
+
 			return $value;
-		}, $this->items);
+		}, array_values($this->items));
 	}
 
 	/**

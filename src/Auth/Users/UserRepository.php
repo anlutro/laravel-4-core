@@ -27,12 +27,14 @@ class UserRepository extends EloquentRepository
 	public function search($search)
 	{
 		$this->search = $search;
+
 		return $this;
 	}
 
 	public function filter($filter)
 	{
 		$this->filter = $filter;
+
 		return $this;
 	}
 
@@ -55,7 +57,7 @@ class UserRepository extends EloquentRepository
 	 *
 	 * @param  array  $credentials
 	 *
-	 * @return null|Model
+	 * @return null|\Illuminate\Database\Eloquent\Model
 	 */
 	public function findByCredentials(array $credentials)
 	{
@@ -94,7 +96,7 @@ class UserRepository extends EloquentRepository
 
 		// either activate directly or send an activation code
 		if (isset($attributes['is_active']) && $attributes['is_active']) {
-			$this->activateUser($user);
+			$user->is_active = true;
 		}
 
 		return $this->perform('create', $user, $attributes);
@@ -103,7 +105,7 @@ class UserRepository extends EloquentRepository
 	/**
 	 * Update a user as an admin.
 	 *
-	 * @param  anlutro\Core\Auth\Users\UserModel  $user
+	 * @param  UserModel  $user
 	 * @param  array  $attributes
 	 *
 	 * @return boolean
@@ -125,24 +127,23 @@ class UserRepository extends EloquentRepository
 		}
 
 		if (isset($attributes['is_active']) && (bool) $attributes['is_active'] !== false) {
-			$user->activate();
+			$user->is_active = true;
 		} else {
-			$user->deactivate();
+			$user->is_active = false;
 		}
 
 		return parent::update($user, $attributes);
 	}
 
-	/**
-	 * Directly activate a user.
-	 *
-	 * @param  UserModel $user
-	 *
-	 * @return boolean
-	 */
-	public function activateUser(UserModel $user)
+	public function validPasswordReset(array $attributes)
 	{
-		return $user->activate();
+		$result = $this->validator->validPasswordReset($attributes);
+
+		if ($result === false) {
+			$this->errors->merge($this->validator->getErrors());
+		}
+
+		return $result;
 	}
 
 	/**
@@ -186,7 +187,7 @@ class UserRepository extends EloquentRepository
 			throw new \InvalidArgumentException("Invalid bulk action: $action ($method does not exist)");
 		}
 
-		$query = $this->model
+		$query = $this->newQuery()
 			->whereIn($this->model->getKeyName(), $keys);
 
 		$this->$method($query);
@@ -195,7 +196,7 @@ class UserRepository extends EloquentRepository
 	/**
 	 * Bulk delete users.
 	 *
-	 * @param  Builder $query
+	 * @param  \Illuminate\Database\Eloquent\Builder $query
 	 *
 	 * @return void
 	 */

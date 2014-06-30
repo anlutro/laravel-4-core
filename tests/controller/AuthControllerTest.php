@@ -186,7 +186,7 @@ class AuthControllerTest extends AppTestCase
 
 		$this->postAction('attemptReset', [], $input);
 
-		$this->assertRedirectedTo('login');
+		$this->assertRedirectedToAction('login');
 		$this->assertSessionHasErrors();
 	}
 
@@ -206,7 +206,7 @@ class AuthControllerTest extends AppTestCase
 
 		$this->postAction('attemptReset', [], $input);
 
-		$this->assertRedirectedTo('login');
+		$this->assertRedirectedToAction('login');
 		$this->assertSessionHas('success');
 	}
 

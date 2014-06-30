@@ -1,6 +1,8 @@
 <?php
 namespace anlutro\Core\Tests;
 
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Mail\Message;
 use Mockery as m;
 use Illuminate\Support\Facades;
 
@@ -32,7 +34,7 @@ class PasswordResetTest extends \AppTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		Facades\Schema::create('password_reminders', function($t) {
+		Facades\Schema::create('password_reminders', function(Blueprint $t) {
 			$t->string('email')->index();
 			$t->string('token')->index();
 			$t->timestamp('created_at');
@@ -54,6 +56,7 @@ class PasswordResetTest extends \AppTestCase
 		// create the user
 		$this->be($user = $this->mockUser());
 		$user->user_level = 255;
+		/** @var \anlutro\Core\Auth\UserManager $manager */
 		$manager = $this->app->make('anlutro\Core\Auth\UserManager');
 		$user = $manager->create([
 			'username' => 'foobar', 'email' => 'foo@bar.com',
@@ -70,7 +73,7 @@ class PasswordResetTest extends \AppTestCase
 				$oldEnv = $this->app['env'];
 				$this->app['env'] = 'testing';
 				$body = $msg->getBody();
-				preg_match('/localhost\/reset\?token=([0-9a-z]+)/', $body, $token);
+				preg_match('/localhost\/password\/reset\?token=([0-9a-z]+)/', $body, $token);
 				if (empty($token[1])) {
 					$this->fail('Reset token not found in message body: '.$body);
 				}

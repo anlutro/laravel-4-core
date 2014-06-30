@@ -10,7 +10,7 @@
 namespace anlutro\Core\Auth\Users;
 
 use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableInterface;
+use anlutro\Core\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
@@ -269,20 +269,29 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 		return $this->getAttribute('email');
 	}
 
+	public function setPassword($newPassword)
+	{
+		$this->setPasswordAttribute($newPassword);
+
+		$this->save();
+	}
+
 	/********************
 	 *    Activation    *
 	 ********************/
 
-	public function activate($save = false)
+	public function activate()
 	{
 		$this->is_active = true;
-		return $save ? $this->save() : true;
+
+		$this->save();
 	}
 
-	public function deactivate($save = false)
+	public function deactivate()
 	{
 		$this->is_active = false;
-		return $save ? $this->save() : true;
+
+		$this->save();
 	}
 
 	public function getActivationEmail()

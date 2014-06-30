@@ -11,14 +11,15 @@
 	"require": {
 		"php": ">=5.4.0",
 		"laravel/framework": "~4.3",
-		"anlutro/l4-repository": "dev-master",
+		"anlutro/l4-repository": "0.7.*",
 		"anlutro/l4-controller": "0.3.*",
 		"anlutro/l4-testing": "0.2.*"
 	},
 	"require-dev": {
 		"laravel/laravel": "dev-develop",
 		"mockery/mockery": "~0.9",
-		"anlutro/menu": "~0.2"
+		"anlutro/menu": "~0.2",
+		"phpunit/phpunit": "~4.1"
 	},
 	"suggest": {
 		"anlutro/menu": "Menu builder."

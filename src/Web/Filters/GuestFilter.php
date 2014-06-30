@@ -15,9 +15,9 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Translation\Translator;
+use Illuminate\Config\Repository;
 
-class AuthFilter
+class GuestFilter
 {
 	/**
 	 * @var AuthManager|\Illuminate\Auth\Guard
@@ -25,14 +25,14 @@ class AuthFilter
 	protected $auth;
 
 	/**
+	 * @var Repository
+	 */
+	protected $config;
+
+	/**
 	 * @var Redirector
 	 */
 	protected $redirect;
-
-	/**
-	 * @var Translator
-	 */
-	protected $translator;
 
 	/**
 	 * @var UrlGenerator
@@ -41,38 +41,22 @@ class AuthFilter
 
 	public function __construct(
 		AuthManager $auth,
+		Repository $config,
 		Redirector $redirect,
-		Translator $translator,
 		UrlGenerator $url
 	) {
 		$this->auth = $auth;
+		$this->config = $config;
 		$this->redirect = $redirect;
-		$this->translator = $translator;
 		$this->url = $url;
 	}
 
 	public function filter(Route $route, Request $request)
 	{
-		if ($this->auth->guest()) {
-			return $this->makeResponse($request);
+		if ($this->auth->check()) {
+			$url = $this->url->to($this->config->get('c::redirect-login'), '/');
+
+			return $this->redirect->to($url);
 		}
-	}
-
-	protected function makeResponse(Request $request)
-	{
-		$message = $this->getErrorMessage();
-
-		if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
-			return Response::json(['error' => $message], 403);
-		} else {
-			$url = $this->url->action('anlutro\Core\Web\AuthController@login');
-			return $this->redirect->guest($url)
-				->withErrors($message);
-		}
-	}
-
-	protected function getErrorMessage()
-	{
-		return $this->translator->get('c::auth.login-required');
 	}
 }
