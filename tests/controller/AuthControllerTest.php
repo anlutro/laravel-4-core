@@ -212,6 +212,6 @@ class AuthControllerTest extends AppTestCase
 
 	protected function getMockUser()
 	{
-		return m::mock('anlutro\Core\Auth\UserModel')->makePartial();
+		return m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
 	}
 }

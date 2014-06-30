@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\ArrayInput;
 
-use anlutro\Core\Command;
+use anlutro\Core\Console\Command;
 
 /**
  * Abstract command for managing users via the console.

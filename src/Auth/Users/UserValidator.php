@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core\Auth;
+namespace anlutro\Core\Auth\Users;
 
 use anlutro\LaravelValidation\Validator;
 
@@ -34,9 +34,15 @@ class UserValidator extends Validator
 		];
 	}
 
+	public function getPasswordResetRules()
+	{
+		return [
+			'password' => ['required', 'confirmed', 'min:6']
+		];
+	}
+
 	public function validPasswordReset(array $attributes)
 	{
-		$rules = ['password' => ['required', 'confirmed', 'min:6']];
-		return $this->valid($rules, $attributes, false);
+		return $this->valid('passwordReset', $attributes, false);
 	}
 }

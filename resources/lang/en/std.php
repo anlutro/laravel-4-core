@@ -29,6 +29,8 @@ return array(
 	'creating' => 'New :model',
 	'editing' => 'Editing :model',
 	'not-found' => ':model not found!',
+	'none-selected' => 'No :model selected!',
+	'invalid-action' => 'Invalid action!',
 
 	// generic button strings
 	'submit' => 'Submit',
@@ -45,11 +47,13 @@ return array(
 
 	// other misc stuff
 	'browsehappy' => 'You are using an <strong>outdated</strong> browser. Please <a href=":url">upgrade your browser</a> to improve your experience.',
+	'home' => 'Home',
 	'page-not-found' => 'The page you were looking for was not found!',
 	'under-construction' => 'Under construction',
 	'under-construction-text' => 'This part of the website is currently under construction. Please check again later!',
 	'from' => 'From',
 	'until' => 'Until',
 	'token-mismatch' => 'This website uses tokens to protect the server from spam and hacking attempts. The token sent with your request was invalid. Please try again.',
+	'toggle-menu' => 'Open/close menu',
 
 );

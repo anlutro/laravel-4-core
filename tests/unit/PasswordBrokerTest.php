@@ -8,7 +8,7 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->users = m::mock('Illuminate\Auth\UserProviderInterface');
-		$this->reminders = m::mock('Illuminate\Auth\Reminders\ReminderRepositoryInterface');
+		$this->reminders = m::mock('anlutro\Core\Auth\Reminders\DatabaseReminderRepository');
 		$this->mailer = m::mock('Illuminate\Mail\Mailer');
 		$this->config = ['email-view' => 'view', 'queue-email' => false];
 	}

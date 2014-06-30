@@ -29,6 +29,8 @@ return array(
 	'creating' => 'Ny :model',
 	'editing' => 'Redigerer :model',
 	'not-found' => ':model finnes ikke!',
+	'none-selected' => 'Ingen :model valgt!',
+	'invalid-action' => 'Ugyldig handling!',
 
 	// generic button strings
 	'submit' => 'Send inn',
@@ -45,11 +47,13 @@ return array(
 
 	// other misc stuff
 	'browsehappy' => 'Du bruker en <strong>utdatert</strong> nettleser. Vennligst <a href=":url">oppgrader nettleseren din</a> for å få mest ut av denne nettsiden!',
+	'home' => 'Hjem',
 	'page-not-found' => 'Siden du prøvde besøke finnes ikke!',
 	'under-construction' => 'Under konstruksjon',
 	'under-construction-text' => 'Denen delen av nettsiden er for øyeblikket under konstruksjon. Vennligst prøv igjen senere!',
 	'from' => 'Fra',
 	'until' => 'Til',
 	'token-mismatch' => 'Denne nettsiden sender en unik kode med hver forespørsel for å beskytte mot spam og forsøk på hacking. Koden som ble sent med denne forespørselen var ugyldig. Vennligst prøv igjen.',
+	'toggle-menu' => 'Åpne/lukk meny',
 
 );

@@ -81,8 +81,8 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
 
-		$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\UserModel';
-		$this->app->bind('anlutro\Core\Auth\UserModel', $userModel);
+		$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
+		$this->app->bind('anlutro\Core\Auth\Users\UserModel', $userModel);
 		$this->registerUserEvents($userModel);
 
 		$this->registerAlertComposer();
@@ -133,60 +133,13 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function addRouteFilters()
 	{
-		$this->registerAuthFilter();
-		$this->registerAccessFilter();
+		$this->app['router']->filter('auth', 'anlutro\Core\Web\Filters\AuthFilter');
+		$this->app['router']->filter('access', 'anlutro\Core\Web\Filters\AccessFilter');
+		$this->app['router']->filter('csrf', 'anlutro\Core\Web\Filters\CsrfFilter');
 		$this->app['router']->before(function($request) {
 			if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
 				$this->app->bind('anlutro\Core\Web\AuthController', 'anlutro\Core\Web\ApiAuthController');
 				$this->app->bind('anlutro\Core\Web\UserController', 'anlutro\Core\Web\ApiUserController');
-			}
-		});
-	}
-
-	/**
-	 * Register our custom auth filter.
-	 *
-	 * @return void
-	 */
-	protected function registerAuthFilter()
-	{
-		$this->app['router']->filter('auth', function($route, $request) {
-			if ($this->app['auth']->guest()) {
-				$message = $this->app['translator']->get('c::auth.login-required');
-
-				if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
-					return Response::json(['error' => $message], 403);
-				} else {
-					return $this->app['redirect']->action('anlutro\Core\Web\AuthController@login')
-						->withErrors($message);
-				}
-			}
-		});
-	}
-
-	/**
-	 * Register the access level filter.
-	 *
-	 * @return void
-	 */
-	protected function registerAccessFilter()
-	{
-		$this->app['router']->filter('access', function($route, $request, $params) {
-			if (!$user = $this->app['auth']->user()) {
-				throw new \RuntimeException('auth filter must precede access filter');
-			}
-
-			foreach ((array) $params as $access) {
-				if (!$user->hasAccess($access)) {
-					$message = $this->app['translator']->get('c::auth.access-denied');
-
-					if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
-						return Response::json(['error' => $message], 403);
-					} else {
-						return $this->app['redirect']->to('/')
-							->withErrors($message);
-					}
-				}
 			}
 		});
 	}
@@ -221,7 +174,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerAlertComposer()
 	{
-		$this->app['view']->composer('c::alerts', 'anlutro\Core\AlertsComposer');
+		$this->app['view']->composer('c::alerts', 'anlutro\Core\Web\Composers\AlertsComposer');
 	}
 
 	/**
@@ -232,7 +185,7 @@ class CoreServiceProvider extends ServiceProvider
 	protected function registerSidebar()
 	{
 		$this->app['view']->creator('c::sidebar', function($view) {
-			$view->with('sidebar', new Collection);
+			$view->with('sidebar', new \Illuminate\Support\Collection);
 		});
 	}
 
@@ -280,14 +233,14 @@ class CoreServiceProvider extends ServiceProvider
 				['id' => 'log-out']
 			);
 		}
+
+		$this->app['view']->composer('c::menu', 'anlutro\Core\Web\Composers\MenuViewComposer');
 	}
 
 	protected function providerLoaded($provider)
 	{
 		$providers = $this->app['config']->get('app.providers');
 		return in_array($provider, $providers);
-		// $providers = $this->app->getLoadedProviders();
-		// return array_key_exists($provider, $providers);
 	}
 
 	public static function getResPath()

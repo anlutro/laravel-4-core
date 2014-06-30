@@ -7,12 +7,13 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core;
+namespace anlutro\Core\Eloquent;
 
 use JsonSerializable;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as BaseCollection;
+use Illuminate\Support\Contracts\ArrayableInterface;
 
-class BaseCollection extends Collection implements JsonSerializable
+class Collection extends BaseCollection implements JsonSerializable
 {
 	/**
 	 * Freeze the collection.

@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core\Auth;
+namespace anlutro\Core\Auth\Users;
 
 use anlutro\LaravelRepository\EloquentRepository;
 
@@ -57,17 +57,15 @@ class UserRepository extends EloquentRepository
 	 *
 	 * @return null|Model
 	 */
-	public function getByCredentials(array $credentials)
+	public function findByCredentials(array $credentials)
 	{
-		$query = $this->newQuery();
-
 		foreach ($credentials as $key => $value) {
-			if (strpos($key, 'password') === false) {
-				$query->where($key, '=', $value);
+			if (strpos($key, 'password') !== false) {
+				unset($credentials[$key]);
 			}
 		}
 
-		return $this->fetchSingle($query);
+		if (!empty($credentials)) return $this->findByAttributes($credentials);
 	}
 
 	/**
@@ -105,7 +103,7 @@ class UserRepository extends EloquentRepository
 	/**
 	 * Update a user as an admin.
 	 *
-	 * @param  anlutro\Core\Auth\UserModel  $user
+	 * @param  anlutro\Core\Auth\Users\UserModel  $user
 	 * @param  array  $attributes
 	 *
 	 * @return boolean
@@ -203,6 +201,8 @@ class UserRepository extends EloquentRepository
 	 */
 	protected function executeBulkDelete($query)
 	{
-		$query->delete();
+		foreach ($query->get() as $model) {
+			$model->delete();
+		}
 	}
 }

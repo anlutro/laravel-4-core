@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core\Auth;
+namespace anlutro\Core\Auth\Users;
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 use anlutro\Core\Auth\Activation\ActivatableInterface;
-use anlutro\Core\BaseModel;
+use anlutro\Core\Eloquent\Model;
 
 /**
  * User model.
  */
-class UserModel extends BaseModel implements UserInterface, RemindableInterface, ActivatableInterface
+class UserModel extends Model implements UserInterface, RemindableInterface, ActivatableInterface
 {
 	use SoftDeletingTrait;
 
@@ -276,13 +276,13 @@ class UserModel extends BaseModel implements UserInterface, RemindableInterface,
 	public function activate($save = false)
 	{
 		$this->is_active = true;
-		if ($save) return $this->save();
+		return $save ? $this->save() : true;
 	}
 
 	public function deactivate($save = false)
 	{
 		$this->is_active = false;
-		if ($save) return $this->save();
+		return $save ? $this->save() : true;
 	}
 
 	public function getActivationEmail()

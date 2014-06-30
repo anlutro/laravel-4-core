@@ -125,7 +125,7 @@ class UserControllerTest extends AppTestCase
 
 	public function testNotFound()
 	{
-		$this->users->shouldReceive('getByKey')->andReturn(false);
+		$this->users->shouldReceive('findByKey')->andReturn(false);
 
 		$this->getAction('show', [1]);
 
@@ -137,7 +137,7 @@ class UserControllerTest extends AppTestCase
 	{
 		$mockUser = $this->getMockUser();
 		$mockUser->id = $id;
-		$this->users->shouldReceive('getByKey')->once()->andReturn($mockUser);
+		$this->users->shouldReceive('findByKey')->once()->andReturn($mockUser);
 		return $mockUser;
 	}
 
@@ -241,7 +241,7 @@ class UserControllerTest extends AppTestCase
 
 	protected function getMockUser()
 	{
-		$user = m::mock('anlutro\Core\Auth\UserModel')->makePartial();
+		$user = m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
 		$user->is_active = '1';
 		return $user;
 	}

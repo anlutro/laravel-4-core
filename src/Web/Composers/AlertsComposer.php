@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core;
+namespace anlutro\Core\Web\Composers;
 
 use Illuminate\Session\Store as Session;
 
@@ -49,6 +49,9 @@ class AlertsComposer
 
 	protected function makeAlert($type, $message)
 	{
-		return (object) ['type' => $type, 'message' => $message];
+		return (object) [
+			'type'    => $type,
+			'message' => ucfirst($message),
+		];
 	}
 }

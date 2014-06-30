@@ -106,12 +106,23 @@ class UserController extends Controller
 	 */
 	public function bulk()
 	{
-		$userIds = array_keys($this->input('bulk'));
+		$redirect = $this->redirect('index');
+		$input = $this->input('bulk');
 		$action = $this->input('bulkAction');
 
-		$this->users->processBulkAction($action, $userIds);
+		if (empty($input)) {
+			return $redirect->withInput()
+				->withErrors(Lang::get('c::std.none-selected', ['model' => Lang::get('c::user.model-user')]));
+		}
 
-		return $this->redirect('index');
+		if (empty($action)) {
+			return $redirect->withInput()
+				->withErrors(Lang::get('c::std.invalid-action'));
+		}
+
+		$this->users->processBulkAction($action, array_keys($input));
+
+		return $redirect;
 	}
 
 	/**
@@ -123,7 +134,7 @@ class UserController extends Controller
 	 */
 	public function show($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 
@@ -142,7 +153,7 @@ class UserController extends Controller
 	 */
 	public function edit($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 
@@ -170,7 +181,7 @@ class UserController extends Controller
 	 */
 	public function update($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 
@@ -192,7 +203,7 @@ class UserController extends Controller
 	 */
 	public function delete($userId)
 	{
-		if (!$user = $this->users->getByKey($userId)) {
+		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
 		}
 

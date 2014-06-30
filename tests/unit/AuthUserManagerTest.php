@@ -159,7 +159,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
 		$reminders = $this->mockReminders();
 		$mng = $this->makeManager($users, $auth, $this->mockTranslator(), null, $reminders);
-		$users->shouldReceive('getByCredentials')->once()->with(['email' => 'foo@bar.com'])->andReturn($mockUser = $this->mockUser());
+		$users->shouldReceive('findByCredentials')->once()->with(['email' => 'foo@bar.com'])->andReturn($mockUser = $this->mockUser());
 		$reminders->shouldReceive('requestReset')->once()->with($mockUser)->andReturn(true);
 		$this->assertTrue($mng->requestPasswordResetForEmail('foo@bar.com'));
 	}
@@ -172,8 +172,8 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$credentials = ['username' => 'foo'];
 		$input = ['password' => 'bar'];
 		$token = 'baz';
-		$users->shouldReceive('getByCredentials')->once()->with($credentials)->andReturn($mockUser = $this->mockUser());
-		$users->shouldReceive('valid')->once()->with('passwordReset', $input)->andReturn(true);
+		$users->shouldReceive('findByCredentials')->once()->with($credentials)->andReturn($mockUser = $this->mockUser());
+		$users->shouldReceive('getValidator->validPasswordReset')->with($input)->andReturn(true);
 		$reminders->shouldReceive('resetUser')->once()->with($mockUser, $token, $input['password']);
 		$mng->resetPasswordForCredentials($credentials, $input, $token);
 	}
@@ -193,7 +193,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	protected function mockUsers()
 	{
-		return m::mock('anlutro\Core\Auth\UserRepository');
+		return m::mock('anlutro\Core\Auth\Users\UserRepository');
 	}
 
 	protected function mockAuth()
@@ -220,6 +220,6 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	protected function mockUser()
 	{
-		return m::mock('anlutro\Core\Auth\UserModel')->makePartial();
+		return m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
 	}
 }

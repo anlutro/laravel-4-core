@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core;
+namespace anlutro\Core\Console;
 
 use Illuminate\Console\Command as BaseCommand;
 
@@ -24,7 +24,6 @@ abstract class Command extends BaseCommand
 
 		return $dialog->ask($this->output, "$question ", $default);
 	}
-
 
 	/**
 	 * Overwrite the secret method to get rid of that hideous baby blue colour

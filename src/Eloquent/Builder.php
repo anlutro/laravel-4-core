@@ -7,11 +7,11 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core;
+namespace anlutro\Core\Eloquent;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as BaseBuilder;
 
-class EloquentBuilder extends Builder
+class Builder extends BaseBuilder
 {
 	/**
 	 * Generate the fully qualified column name for a column by prepending the

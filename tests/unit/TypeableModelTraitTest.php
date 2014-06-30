@@ -65,12 +65,12 @@ class TypeableModelTraitTest extends PHPUnit_Framework_TestCase
 	}
 }
 
-class TypeableModelStub extends \anlutro\Core\BaseModel
+class TypeableModelStub extends \anlutro\Core\Eloquent\Model
 {
 	protected static $types = [
 		1 => 'one',
 		2 => 'two',
 	];
 
-	use \anlutro\Core\ModelTraits\Typeable;
+	use \anlutro\Core\Eloquent\TypeableModelTrait;
 }

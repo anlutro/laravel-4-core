@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core\ModelTraits;
+namespace anlutro\Core\Eloquent;
 
 /**
  * Generic traits for models that store their type as an integer but also needs
@@ -16,7 +16,7 @@ namespace anlutro\Core\ModelTraits;
  * Classes that implement this trait must have a protected static $types assoc
  * array of int => string values.
  */
-trait Typeable
+trait TypeableModelTrait
 {
 	/**
 	 * Getter for $model->type. Returns the string representation.

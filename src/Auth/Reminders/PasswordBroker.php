@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Mail\Mailer;
-use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
 use Illuminate\Auth\UserProviderInterface;
 
 /**
@@ -33,7 +32,7 @@ class PasswordBroker
 
 	public function __construct(
 		UserProviderInterface $users,
-		ReminderRepositoryInterface $reminders,
+		DatabaseReminderRepository $reminders,
 		Mailer $mailer,
 		array $config
 	) {
@@ -61,7 +60,9 @@ class PasswordBroker
 		$token = $this->reminders->create($user);
 
 		// send an email
-		return $this->mail($user, $token);
+		$this->mail($user, $token);
+
+		return true;
 	}
 
 	/**
