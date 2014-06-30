@@ -1,6 +1,8 @@
 <?php
+namespace anlutro\Core\Tests;
 
 use Mockery as m;
+use PHPUnit_Framework_TestCase;
 
 class TypeableModelTraitTest extends PHPUnit_Framework_TestCase
 {
@@ -59,7 +61,7 @@ class TypeableModelTraitTest extends PHPUnit_Framework_TestCase
 
 	protected function makeQuery($model)
 	{
-		$query = new Illuminate\Database\Eloquent\Builder(new Illuminate\Database\Query\Builder(m::mock('Illuminate\Database\ConnectionInterface'), m::mock('Illuminate\Database\Query\Grammars\Grammar'), m::mock('Illuminate\Database\Query\Processors\Processor')));
+		$query = new \Illuminate\Database\Eloquent\Builder(new \Illuminate\Database\Query\Builder(m::mock('Illuminate\Database\ConnectionInterface'), m::mock('Illuminate\Database\Query\Grammars\Grammar'), m::mock('Illuminate\Database\Query\Processors\Processor')));
 		$query->setModel($model);
 		return $query;
 	}

@@ -1,5 +1,8 @@
 <?php
+namespace anlutro\Core\Tests;
+
 use Mockery as m;
+use PHPUnit_Framework_TestCase;
 use anlutro\Core\Auth\Activation\ActivationService;
 
 class ActivationServiceTest extends PHPUnit_Framework_TestCase

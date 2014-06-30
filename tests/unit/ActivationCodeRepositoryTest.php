@@ -1,6 +1,9 @@
 <?php
-use Mockery as m;
+namespace anlutro\Core\Tests;
 
+use Mockery as m;
+use Carbon\Carbon;
+use PHPUnit_Framework_TestCase;
 use anlutro\Core\Auth\Activation\DatabaseActivationCodeRepository;
 
 class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
@@ -20,7 +23,7 @@ class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
 	{
 		// query expectation has to be defined first for some reason
 		$this->query()->shouldReceive('insert')->with(m::on(function($data) {
-			return $data['expires'] instanceof Carbon\Carbon;
+			return $data['expires'] instanceof Carbon;
 		}))->andReturnUsing(function($data) {
 			return $data['code'] === 'foo' && $data['email'] === 'test@example.com';
 		});

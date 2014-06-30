@@ -1,6 +1,9 @@
 <?php
+namespace anlutro\Core\Tests;
 
 use Mockery as m;
+use PHPUnit_Framework_TestCase;
+
 
 class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 {
@@ -180,7 +183,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	protected function makeManager($users, $auth, $translator, $activations = null, $reminders = null)
 	{
-		$manager = new anlutro\Core\Auth\UserManager($users, $auth, $translator);
+		$manager = new \anlutro\Core\Auth\UserManager($users, $auth, $translator);
 		if ($activations) $manager->setActivationService($activations);
 		if ($reminders) $manager->setReminderService($reminders);
 		return $manager;

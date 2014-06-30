@@ -1,6 +1,8 @@
 <?php
+namespace anlutro\Core\Tests;
 
 use Mockery as m;
+use PHPUnit_Framework_TestCase;
 
 class BaseEloquentClassesTest extends PHPUnit_Framework_TestCase
 {

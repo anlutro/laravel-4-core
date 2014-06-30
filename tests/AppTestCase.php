@@ -1,4 +1,5 @@
 <?php
+namespace anlutro\Core\Tests;
 
 /**
  * Test case that boots the whole application.

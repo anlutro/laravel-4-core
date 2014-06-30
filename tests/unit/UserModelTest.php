@@ -1,5 +1,7 @@
 <?php
+namespace anlutro\Core\Tests;
 
+use PHPUnit_Framework_TestCase;
 use Illuminate\Support\Facades\Hash;
 
 class UserModelTest extends PHPUnit_Framework_TestCase
@@ -57,6 +59,6 @@ class UserModelTest extends PHPUnit_Framework_TestCase
 
 	protected function makeUserModel()
 	{
-		return new anlutro\Core\Auth\Users\UserModel;
+		return new \anlutro\Core\Auth\Users\UserModel;
 	}
 }

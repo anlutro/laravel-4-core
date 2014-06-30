@@ -1,11 +1,9 @@
 <?php
 namespace anlutro\Core\Tests;
 
-use AppTestCase;
-
 use Mockery as m;
 
-class ApiAuthControllerTest extends AppTestCase
+class LocalizedRoutesTest extends AppTestCase
 {
 	/**
 	 * {@inheritdoc}
