@@ -13,7 +13,7 @@ return [
 	'profile' => '/bruker/profil',
 	'profile_post' => '/bruker/profil',
 	'logout' => '/bruker/logg-ut',
-	'user.show' => '/user/{id}/profil',
+	'user.show' => '/bruker/{id}/profil',
 	'user.index' => '/admin/brukere',
 	'user.bulk' => '/admin/brukere',
 	'user.create' => '/admin/brukere/ny',

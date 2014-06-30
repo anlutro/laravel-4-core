@@ -47,7 +47,7 @@ class ApiAuthControllerTest extends AppTestCase
 			['c::profile', [], '/bruker/profil'],
 			['c::profile_post', [], '/bruker/profil'],
 			['c::logout', [], '/bruker/logg-ut'],
-			['c::user.show', [1], '/user/1/profil'],
+			['c::user.show', [1], '/bruker/1/profil'],
 			['c::user.index', [], '/admin/brukere'],
 			['c::user.bulk', [], '/admin/brukere'],
 			['c::user.create', [], '/admin/brukere/ny'],
