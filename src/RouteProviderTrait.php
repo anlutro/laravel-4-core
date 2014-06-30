@@ -33,10 +33,10 @@ trait RouteProviderTrait
 
 		if ($prefix) {
 			$this->app['router']->group(['prefix' => $prefix], function() use($file) {
-				$this->requireRouteFile($file);
+				$this->parseRouteConfig($file);
 			});
 		} else {
-			$this->requireRouteFile($file);
+			$this->parseRouteConfig($file);
 		}
 	}
 
@@ -57,5 +57,36 @@ trait RouteProviderTrait
 		}
 
 		require $path . '/' . $file . '.php';
+	}
+
+	/**
+	 * Register routes from the routes.php config file.
+	 *
+	 * @param  string $file
+	 *
+	 * @return void
+	 */
+	protected function parseRouteConfig($file)
+	{
+		$locale = $this->app['translator']->getLocale();
+
+		$data = $this->app['config']->get("c::routes.{$file}");
+
+		if (!$data) {
+			return;
+		}
+
+		$router = $this->app['router'];
+		$translator = $this->app['translator'];
+
+		foreach ($data as $name => $route) {
+			$key = "c::routes.{$name}";
+			$translatedUrl = $translator->trans($key);
+			$url = $translatedUrl == $key ? $route['url'] : $translatedUrl;
+			$method = $route['method'];
+			unset($route['url'], $route['method']);
+			$route['as'] = "c::$name";
+			$router->{$method}($url, $route);
+		}
 	}
 }

@@ -134,6 +134,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function addRouteFilters()
 	{
+		$this->app['router']->filter('guest', 'anlutro\Core\Web\Filters\GuestFilter');
 		$this->app['router']->filter('auth', 'anlutro\Core\Web\Filters\AuthFilter');
 		$this->app['router']->filter('access', 'anlutro\Core\Web\Filters\AccessFilter');
 		$this->app['router']->filter('csrf', 'anlutro\Core\Web\Filters\CsrfFilter');

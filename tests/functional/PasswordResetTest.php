@@ -73,7 +73,7 @@ class PasswordResetTest extends \AppTestCase
 				$oldEnv = $this->app['env'];
 				$this->app['env'] = 'testing';
 				$body = $msg->getBody();
-				preg_match('/localhost\/reset\?token=([0-9a-z]+)/', $body, $token);
+				preg_match('/localhost\/password\/reset\?token=([0-9a-z]+)/', $body, $token);
 				if (empty($token[1])) {
 					$this->fail('Reset token not found in message body: '.$body);
 				}
