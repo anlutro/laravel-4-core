@@ -5,17 +5,43 @@ use Illuminate\Support\Facades;
 
 class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * @var \Mockery\Mock
+	 */
+	protected $users;
+
+	/**
+	 * @var \Mockery\Mock
+	 */
+	protected $reminders;
+
+	/**
+	 * @var \Mockery\Mock
+	 */
+	protected $mailer;
+
+	/**
+	 * @var \Mockery\Mock
+	 */
+	protected $translator;
+
+	/**
+	 * @var array
+	 */
+	protected $config;
+
 	public function setUp()
 	{
 		$this->users = m::mock('Illuminate\Auth\UserProviderInterface');
 		$this->reminders = m::mock('anlutro\Core\Auth\Reminders\DatabaseReminderRepository');
 		$this->mailer = m::mock('Illuminate\Mail\Mailer');
+		$this->translator = m::mock('Illuminate\Translation\Translator');
 		$this->config = ['email-view' => 'view', 'queue-email' => false];
 	}
 
 	public function getBroker()
 	{
-		return new PasswordBroker($this->users, $this->reminders, $this->mailer, $this->config);
+		return new PasswordBroker($this->users, $this->reminders, $this->mailer, $this->translator, $this->config);
 	}
 
 	public function tearDown()
@@ -50,8 +76,7 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 		$user = $this->getMockUser();
 		$this->reminders->shouldReceive('exists')->once()
 			->with($user, $token)->andReturn(true);
-		$user->shouldReceive('setPasswordAttribute')->once()->with($newPassword);
-		$user->shouldReceive('save')->once();
+		$user->shouldReceive('setPassword')->once()->with($newPassword);
 		$this->reminders->shouldReceive('delete')->once()->with($token);
 
 		$this->assertTrue($this->getBroker()->resetUser($user, $token, $newPassword));
@@ -78,7 +103,7 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 
 	protected function getMockUser($email = 'test@example.com')
 	{
-		$mock = m::mock('Illuminate\Auth\Reminders\RemindableInterface');
+		$mock = m::mock('anlutro\Core\Auth\Reminders\RemindableInterface');
 		$mock->shouldReceive('getReminderEmail')->andReturn($email);
 		return $mock;
 	}

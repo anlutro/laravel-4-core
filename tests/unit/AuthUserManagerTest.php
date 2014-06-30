@@ -129,7 +129,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$input = ['foo' => 'bar', 'old_password' => 'baz'];
 		$this->pretendLogin($auth, $mockUser = $this->mockUser());
 		$mockUser->shouldReceive('confirmPassword')->once()->with('baz')->andReturn(false);
-		$users->shouldReceive('getErrors->add')->once()->with('c::auth.invalid-password');
+		$users->shouldReceive('getErrors->add')->once()->with('password', 'c::auth.invalid-password');
 		$this->assertFalse($mng->updateCurrentProfile($input));
 	}
 
@@ -150,7 +150,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
 		$input = ['username' => 'foo', 'password' => 'bar'];
 		$auth->shouldReceive('attempt')->once()->with($input + ['is_active' => 1])->andReturn(true);
-		$auth->shouldReceive('getUser->rehashPassword')->once()->with('bar');
+		$auth->shouldReceive('user->rehashPassword')->once()->with('bar');
 		$mng->login($input);
 	}
 
@@ -173,7 +173,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$input = ['password' => 'bar'];
 		$token = 'baz';
 		$users->shouldReceive('findByCredentials')->once()->with($credentials)->andReturn($mockUser = $this->mockUser());
-		$users->shouldReceive('getValidator->validPasswordReset')->with($input)->andReturn(true);
+		$users->shouldReceive('validPasswordReset')->with($input)->andReturn(true);
 		$reminders->shouldReceive('resetUser')->once()->with($mockUser, $token, $input['password']);
 		$mng->resetPasswordForCredentials($credentials, $input, $token);
 	}
@@ -186,9 +186,13 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		return $manager;
 	}
 
+	/**
+	 * @param \Mockery\Mock $auth
+	 * @param mixed         $user
+	 */
 	protected function pretendLogin($auth, $user)
 	{
-		$auth->shouldReceive('getUser')->andReturn($user);
+		$auth->shouldReceive('user')->andReturn($user);
 	}
 
 	protected function mockUsers()

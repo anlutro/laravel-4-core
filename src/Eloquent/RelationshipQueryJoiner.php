@@ -24,7 +24,7 @@ class RelationshipQueryJoiner
 	/**
 	 * The query builder.
 	 *
-	 * @var \Illuminate\Database\Eloquent\Builder
+	 * @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
 	 */
 	protected $query;
 
@@ -82,6 +82,13 @@ class RelationshipQueryJoiner
 		return $this;
 	}
 
+	/**
+	 * @param Model  $model
+	 * @param string $name
+	 *
+	 * @return Relation
+	 * @throws \InvalidArgumentException
+	 */
 	protected function getRelation($model, $name)
 	{
 		if (!method_exists($model, $name)) {
@@ -133,11 +140,11 @@ class RelationshipQueryJoiner
 	protected function joinRelation(Relation $relation, $type)
 	{
 		if ($relation instanceof Relations\BelongsToMany) {
-			return $this->joinManyToManyRelation($relation, $type);
+			$this->joinManyToManyRelation($relation, $type);
 		} else if ($relation instanceof Relations\HasOneOrMany) {
-			return $this->joinHasRelation($relation, $type);
+			$this->joinHasRelation($relation, $type);
 		} else if ($relation instanceof Relations\BelongsTo) {
-			return $this->joinBelongsToRelation($relation, $type);
+			$this->joinBelongsToRelation($relation, $type);
 		}
 	}
 

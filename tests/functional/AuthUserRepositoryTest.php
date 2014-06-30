@@ -5,6 +5,16 @@ use Mockery as m;
 class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 {
 	/**
+	 * @var \Mockery\Mock|\Illuminate\Database\Eloquent\Model
+	 */
+	protected $model;
+
+	/**
+	 * @var \Mockery\Mock|\anlutro\LaravelValidation\Validator
+	 */
+	protected $validator;
+
+	/**
 	 * The migrations the test depends on.
 	 */
 	protected function getMigrations()
@@ -165,8 +175,8 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function testSearch()
 	{
 		$repo = $this->makeRepository();
-		$user = $this->createUser('Foo Bar');
-		$user = $this->createUser('Bar Baz');
+		$this->createUser('Foo Bar');
+		$this->createUser('Bar Baz');
 
 		$users = $repo->search('foo')->getAll();
 		$this->assertEquals(1, $users->count());

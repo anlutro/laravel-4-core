@@ -9,11 +9,12 @@
 
 namespace anlutro\Core;
 
-use anlutro\Core\Auth\PasswordBroker;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
+use Illuminate\View\View;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -136,7 +137,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app['router']->filter('auth', 'anlutro\Core\Web\Filters\AuthFilter');
 		$this->app['router']->filter('access', 'anlutro\Core\Web\Filters\AccessFilter');
 		$this->app['router']->filter('csrf', 'anlutro\Core\Web\Filters\CsrfFilter');
-		$this->app['router']->before(function($request) {
+		$this->app['router']->before(function(Request $request) {
 			if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
 				$this->app->bind('anlutro\Core\Web\AuthController', 'anlutro\Core\Web\ApiAuthController');
 				$this->app->bind('anlutro\Core\Web\UserController', 'anlutro\Core\Web\ApiUserController');
@@ -147,21 +148,21 @@ class CoreServiceProvider extends ServiceProvider
 	/**
 	 * Register the user model events.
 	 *
-	 * @param  string $userModel
+	 * @param  string|Model $userModel
 	 *
 	 * @return void
 	 */
 	protected function registerUserEvents($userModel)
 	{
 		// set a random login token on creation.
-		$userModel::creating(function($user) {
+		$userModel::creating(function(Model $user) {
 			if (!isset($user->login_token)) {
 				$user->setAttribute('login_token', Str::random(32));
 			}
 		});
 
 		// set last_login on every successful login.
-		$this->app['events']->listen('auth.login', function($user) {
+		$this->app['events']->listen('auth.login', function(Model $user) {
 			$user->setAttribute('last_login', Carbon::now());
 			$user->save();
 		});
@@ -184,7 +185,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerSidebar()
 	{
-		$this->app['view']->creator('c::sidebar', function($view) {
+		$this->app['view']->creator('c::sidebar', function(View $view) {
 			$view->with('sidebar', new \Illuminate\Support\Collection);
 		});
 	}
@@ -198,9 +199,13 @@ class CoreServiceProvider extends ServiceProvider
 	{
 		if (!$this->providerLoaded('anlutro\Menu\ServiceProvider')) return;
 
+		/** @var \anlutro\Menu\Builder $menu */
 		$menu = $this->app['anlutro\Menu\Builder'];
+		/** @var \Illuminate\Translation\Translator $lang */
 		$lang = $this->app['translator'];
+		/** @var \Illuminate\Routing\UrlGenerator $url */
 		$url = $this->app['url'];
+		/** @var \anlutro\Core\Auth\Users\UserModel|null $user */
 		$user = $this->app['auth']->user();
 
 		$menu->createMenu('left', ['class' => 'nav navbar-nav navbar-left']);

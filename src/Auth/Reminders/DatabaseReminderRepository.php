@@ -10,7 +10,6 @@
 namespace anlutro\Core\Auth\Reminders;
 
 use Illuminate\Auth\Reminders\DatabaseReminderRepository as BaseRepository;
-use Illuminate\Auth\Reminders\RemindableInterface;
 
 /**
  * Repository for database password reminders.

@@ -28,6 +28,7 @@ abstract class AbstractUserManagementCommand extends Command
 	public function getUser()
 	{
 		$class = $this->laravel['config']->get('auth.model');
+		/** @var \Illuminate\Database\Eloquent\Model $model */
 		$model = $this->laravel->make($class);
 		$query = $model->newQuery();
 

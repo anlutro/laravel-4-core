@@ -19,6 +19,26 @@ use Illuminate\Translation\Translator;
 
 class AuthFilter
 {
+	/**
+	 * @var AuthManager|\Illuminate\Auth\Guard
+	 */
+	protected $auth;
+
+	/**
+	 * @var Redirector
+	 */
+	protected $redirect;
+
+	/**
+	 * @var Translator
+	 */
+	protected $translator;
+
+	/**
+	 * @var UrlGenerator
+	 */
+	protected $url;
+
 	public function __construct(
 		AuthManager $auth,
 		Redirector $redirect,

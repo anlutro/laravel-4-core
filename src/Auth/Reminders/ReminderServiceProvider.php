@@ -9,6 +9,7 @@
 
 namespace anlutro\Core\Auth\Reminders;
 
+use anlutro\Core\Auth\UserManager;
 use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;
 use anlutro\Core\CoreServiceProvider;
 
@@ -60,19 +61,20 @@ class ReminderServiceProvider extends BaseProvider
 			$reminders = $app['auth.reminder.repository'];
 			$users = $app['auth']->driver()->getProvider();
 			$mailer = $app['mailer'];
+			$translator = $app['translator'];
 			$config = [
 				'email-view' => $app['config']->get('auth.reminder.email') ?: 'c::auth.reset-email',
 				'queue-email' => (bool) $app['config']->get('c::queue-reminder-mail', false),
 			];
 
-			return new PasswordBroker($users, $reminders, $mailer, $config);
+			return new PasswordBroker($users, $reminders, $mailer, $translator, $config);
 
 		});
 	}
 
 	public function boot()
 	{
-		$this->app->extend('anlutro\Core\Auth\UserManager', function($manager, $app) {
+		$this->app->extend('anlutro\Core\Auth\UserManager', function(UserManager $manager, $app) {
 			$manager->setReminderService($app['auth.reminder']);
 			return $manager;
 		});

@@ -11,6 +11,10 @@ namespace anlutro\Core;
 
 /**
  * Trait for re-usable service provider methods throughout the core package.
+ *
+ * @property \Illuminate\Foundation\Application $app
+ *
+ * @todo PHPdoc for static property $resPath
  */
 trait RouteProviderTrait
 {

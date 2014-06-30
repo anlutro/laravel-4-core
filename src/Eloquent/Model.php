@@ -9,6 +9,7 @@
 
 namespace anlutro\Core\Eloquent;
 
+use Illuminate\Support\Contracts\ArrayableInterface;
 use JsonSerializable;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
@@ -51,7 +52,7 @@ class Model extends BaseModel implements JsonSerializable, StdClassableInterface
 			}
 		}
 
-		return empty($attributes) ? (new StdClass) : json_decode(json_encode($attributes));
+		return empty($attributes) ? (new \StdClass) : json_decode(json_encode($attributes));
 	}
 
 	/**
@@ -69,7 +70,7 @@ class Model extends BaseModel implements JsonSerializable, StdClassableInterface
 	 *
 	 * @param  array  $models
 	 *
-	 * @return \anlutro\Core\BaseCollection
+	 * @return \anlutro\Core\Eloquent\Collection
 	 */
 	public function newCollection(array $models = array())
 	{

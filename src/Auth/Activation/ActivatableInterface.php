@@ -17,20 +17,16 @@ interface ActivatableInterface
 	/**
 	 * Activate a user.
 	 *
-	 * @param  boolean $save If true, save the user to the database.
-	 *
 	 * @return bool
 	 */
-	public function activate($save = false);
+	public function activate();
 
 	/**
 	 * Deactivate a user.
 	 *
-	 * @param  boolean $save If true, save the user to the database.
-	 *
 	 * @return bool
 	 */
-	public function deactivate($save = false);
+	public function deactivate();
 
 	/**
 	 * Get the email that should be used to send activation links.

@@ -33,7 +33,7 @@ class ApiAuthController extends ApiController
 		$this->users = $users;
 
 		$this->beforeFilter(function() {
-			if (!$this->users->activationEnabled()) {
+			if (!$this->users->activationsEnabled()) {
 				throw new \RuntimeException('Activation/registration is not enabled');
 			}
 		}, ['only' => ['attemptRegistration', 'activate']]);

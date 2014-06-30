@@ -17,13 +17,33 @@ use Illuminate\Routing\UrlGenerator;
 
 class MenuViewComposer
 {
+	/**
+	 * @var Builder
+	 */
+	protected $menu;
+
+	/**
+	 * @var AuthManager|\Illuminate\Auth\Guard
+	 */
+	protected $auth;
+
+	/**
+	 * @var UrlGenerator
+	 */
+	protected $url;
+
+	/**
+	 * @var Repository
+	 */
+	protected $config;
+
 	public function __construct(
-		Builder $builder,
+		Builder $menu,
 		AuthManager $auth,
 		UrlGenerator $url,
 		Repository $config
 	) {
-		$this->builder = $builder;
+		$this->menu = $menu;
 		$this->auth = $auth;
 		$this->url = $url;
 		$this->config = $config;
@@ -41,7 +61,7 @@ class MenuViewComposer
 		$menus = [];
 
 		foreach (['left', 'right'] as $key) {
-			$menu = $this->builder->getMenu($key);
+			$menu = $this->menu->getMenu($key);
 			if (!$menu->isEmpty()) {
 				$menus[] = $menu;
 			}

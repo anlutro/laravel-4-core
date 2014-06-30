@@ -19,6 +19,26 @@ use Illuminate\Translation\Translator;
 
 class AccessFilter
 {
+	/**
+	 * @var AuthManager|\Illuminate\Auth\Guard
+	 */
+	protected $auth;
+
+	/**
+	 * @var Config
+	 */
+	protected $config;
+
+	/**
+	 * @var Translator
+	 */
+	protected $translator;
+
+	/**
+	 * @var UrlGenerator
+	 */
+	protected $url;
+
 	public function __construct(
 		AuthManager $auth,
 		Config $config,
@@ -33,6 +53,7 @@ class AccessFilter
 
 	public function filter(Route $route, Request $request, $params)
 	{
+		/** @var \anlutro\Core\Auth\Users\UserModel $user */
 		if (!$user = $this->auth->user()) {
 			throw new \RuntimeException('auth filter must precede access filter');
 		}
@@ -71,6 +92,7 @@ class AccessFilter
 	protected function getHomeUrl()
 	{
 		$path = $this->config->get('c::redirect-login', '/');
+
 		return $this->url->to($path);
 	}
 }

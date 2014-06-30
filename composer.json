@@ -18,7 +18,8 @@
 	"require-dev": {
 		"laravel/laravel": "dev-master",
 		"mockery/mockery": "~0.9",
-		"anlutro/menu": "~0.2"
+		"anlutro/menu": "~0.2",
+		"phpunit/phpunit": "~4.1"
 	},
 	"suggest": {
 		"anlutro/menu": "Menu builder."
