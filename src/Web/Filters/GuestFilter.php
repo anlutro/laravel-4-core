@@ -10,12 +10,11 @@
 namespace anlutro\Core\Web\Filters;
 
 use Illuminate\Auth\AuthManager;
+use Illuminate\Config\Repository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\UrlGenerator;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Config\Repository;
 
 class GuestFilter
 {

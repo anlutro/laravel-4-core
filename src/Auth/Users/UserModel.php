@@ -10,11 +10,11 @@
 namespace anlutro\Core\Auth\Users;
 
 use Illuminate\Auth\UserInterface;
-use anlutro\Core\Auth\Reminders\RemindableInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 use anlutro\Core\Auth\Activation\ActivatableInterface;
+use anlutro\Core\Auth\Reminders\RemindableInterface;
 use anlutro\Core\Eloquent\Model;
 
 /**

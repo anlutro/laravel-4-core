@@ -103,10 +103,10 @@ trait TypeableModelTrait
 	/**
 	 * Add $query->whereType(...) functionality.
 	 *
-	 * @param  Illuminate\Database\Eloquent\Builder $query
+	 * @param  \Illuminate\Database\Eloquent\Builder $query
 	 * @param  string|int $filter
 	 *
-	 * @return Illuminate\Database\Eloquent\Builder
+	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
 	public function scopeWhereType($query, $filter)
 	{

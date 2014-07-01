@@ -11,11 +11,9 @@ namespace anlutro\Core\Web;
 
 use anlutro\LaravelController\Controller;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\View;
 
 use anlutro\Core\Auth\UserManager;
 use anlutro\Core\Auth\Activation\ActivationException;
