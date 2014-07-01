@@ -19,7 +19,7 @@ class UserValidator extends Validator
 	protected function getCommonRules()
 	{
 		return [
-			'username' => ['required', 'min:4', 'alpha_dash', 'unique:<table>,username,<key>'],
+			'username' => ['min:4', 'alpha_dash', 'unique:<table>,username,<key>'],
 			'name' => ['required'],
 			'email' => ['required', 'email', 'unique:<table>,email,<key>'],
 			'phone' => ['numeric'],
@@ -30,6 +30,7 @@ class UserValidator extends Validator
 	protected function getCreateRules()
 	{
 		return [
+			'username' => ['required'],
 			'password' => ['required'],
 		];
 	}
