@@ -70,7 +70,7 @@ trait RouteProviderTrait
 	{
 		$locale = $this->app['translator']->getLocale();
 
-		$data = $this->app['config']->get("c::routes.{$file}");
+		$data = $this->app['config']->get("c::routes/{$file}");
 
 		if (!$data) {
 			return;
