@@ -16,9 +16,6 @@ use anlutro\LaravelRepository\EloquentRepository;
  */
 class UserRepository extends EloquentRepository
 {
-	protected $search;
-	protected $filter;
-
 	public function __construct(UserModel $model, UserValidator $validator)
 	{
 		parent::__construct($model, $validator);
@@ -26,30 +23,16 @@ class UserRepository extends EloquentRepository
 
 	public function search($search)
 	{
-		$this->search = $search;
+		$this->pushCriteria(new SearchCriteria($search));
 
 		return $this;
 	}
 
-	public function filter($filter)
+	public function filter($type)
 	{
-		$this->filter = $filter;
+		$this->pushCriteria(new TypeCriteria($type));
 
 		return $this;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function beforeQuery($query, $many)
-	{
-		if ($this->search) {
-			$query->searchFor($this->search);
-		}
-
-		if ($this->filter) {
-			$query->whereUserType($this->filter);
-		}
 	}
 
 	/**

@@ -70,34 +70,9 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 
 		if (!$this->confirmPassword($password)) return;
 
-		$this->password = $password;
+		$this->setPasswordAttribute($password);
+
 		return $this->save();
-	}
-
-	/**
-	 * Add some simple search functionality.
-	 * 
-	 * $query->searchFor('admin')->get();
-	 */
-	public function scopeSearchFor($query, $search)
-	{
-		$searchable = ['username', 'email', 'name'];
-		
-		return $query->where(function($query) use ($searchable, $search) {
-			foreach ($searchable as $field) {
-				$query->orWhere($field, 'like', '%'.$search.'%');
-			}
-		});
-	}
-
-	/**
-	 * Filter user types.
-	 * 
-	 * $query->whereUserType('superuser')->get();
-	 */
-	public function scopeWhereUserType($query, $level)
-	{
-		return $query->where('user_level', '=', $this->getUserLevelValue($level));
 	}
 
 	/**
