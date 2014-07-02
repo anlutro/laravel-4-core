@@ -53,7 +53,9 @@ class GuestFilter
 	public function filter(Route $route, Request $request)
 	{
 		if ($this->auth->check()) {
-			$url = $this->url->to($this->config->get('c::redirect-login'), '/');
+			$config = $this->config->get('c::redirect-login');
+
+			$url = $config ? $this->url->to($config) : '/';
 
 			return $this->redirect->to($url);
 		}

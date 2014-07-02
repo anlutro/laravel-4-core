@@ -9,8 +9,9 @@ class FiltersTest extends AppTestCase
 	{
 		parent::setUp();
 		$this->app['router']->enableFilters();
-		$this->app['router']->get('/auth-test', ['before' => 'auth', function() { return 'foo'; }]);
-		$this->app['router']->get('/access-test', ['before' => 'auth|access:test', function() { return 'bar'; }]);
+		$this->app['router']->get('/auth-test', ['before' => 'auth', function() { return 'OK'; }]);
+		$this->app['router']->get('/guest-test', ['before' => 'guest', function() { return 'OK'; }]);
+		$this->app['router']->get('/access-test', ['before' => 'auth|access:test', function() { return 'OK'; }]);
 	}
 
 	public function tearDown()
@@ -28,10 +29,26 @@ class FiltersTest extends AppTestCase
 	}
 
 	/** @test */
+	public function guestFilterReturnsNullWhenLoggedOut()
+	{
+		$this->call('get', '/guest-test');
+		$this->assertResponseOk();
+	}
+
+	/** @test */
 	public function authFilterRedirectsWhenLoggedOut()
 	{
 		$this->call('get', '/auth-test');
 		$this->assertRedirectedToAction('anlutro\Core\Web\AuthController@login');
+	}
+
+	/** @test */
+	public function guestFilterRedirectsWhenLoggedIn()
+	{
+		$mockUser = m::mock('anlutro\Core\Auth\Users\UserModel');
+		$this->be($mockUser);
+		$this->call('get', '/guest-test');
+		$this->assertRedirectedTo('/');
 	}
 
 	/** @test */
