@@ -9,11 +9,11 @@
 
 namespace anlutro\Core;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 use Illuminate\View\View;
 
 class CoreServiceProvider extends ServiceProvider

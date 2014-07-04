@@ -9,8 +9,8 @@
 
 namespace anlutro\Core\Web\Composers;
 
-use Illuminate\View\View;
 use Illuminate\Session\Store as Session;
+use Illuminate\View\View;
 
 /**
  * View composer for resources/views/alerts.php

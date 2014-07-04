@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 
-use anlutro\Core\Auth\UserManager;
 use anlutro\Core\Auth\Activation\ActivationException;
+use anlutro\Core\Auth\UserManager;
 
 /**
  * Controller for authentication actions.

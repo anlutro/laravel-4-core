@@ -9,9 +9,9 @@
 
 namespace anlutro\Core\View;
 
+use IteratorAggregate;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
-use IteratorAggregate;
 
 class ScriptCollection implements IteratorAggregate
 {

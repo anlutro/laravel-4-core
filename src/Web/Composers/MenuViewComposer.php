@@ -10,10 +10,10 @@
 namespace anlutro\Core\Web\Composers;
 
 use anlutro\Menu\Builder;
-use Illuminate\View\View;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository;
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\View\View;
 
 class MenuViewComposer
 {

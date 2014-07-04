@@ -9,10 +9,10 @@
 
 namespace anlutro\Core\Console;
 
+use Illuminate\Filesystem\Filesystem;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArrayInput;
-use Illuminate\Filesystem\Filesystem;
 
 class PublishCommand extends Command
 {

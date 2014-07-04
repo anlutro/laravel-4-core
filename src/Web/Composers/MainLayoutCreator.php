@@ -9,9 +9,9 @@
 
 namespace anlutro\Core\Web\Composers;
 
-use Illuminate\View\View;
 use Illuminate\Config\Repository;
 use Illuminate\Translation\Translator;
+use Illuminate\View\View;
 
 use anlutro\Core\View\ScriptCollection;
 

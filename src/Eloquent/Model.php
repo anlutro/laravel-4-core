@@ -9,8 +9,8 @@
 
 namespace anlutro\Core\Eloquent;
 
-use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Database\Eloquent\Model as BaseModel;
+use Illuminate\Support\Contracts\ArrayableInterface;
 use JsonSerializable;
 
 class Model extends BaseModel implements JsonSerializable, StdClassableInterface

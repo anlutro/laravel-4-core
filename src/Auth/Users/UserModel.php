@@ -10,8 +10,8 @@
 namespace anlutro\Core\Auth\Users;
 
 use Illuminate\Auth\UserInterface;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Illuminate\Support\Facades\Hash;
 
 use anlutro\Core\Auth\Activation\ActivatableInterface;
 use anlutro\Core\Auth\Reminders\RemindableInterface;

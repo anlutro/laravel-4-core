@@ -10,10 +10,10 @@
 namespace anlutro\Core;
 
 use Exception;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
+use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ErrorHandler
 {
