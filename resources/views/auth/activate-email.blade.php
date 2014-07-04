@@ -1,4 +1,4 @@
-@extends('layout.email')
+@extends('c::layout.email')
 
 @section('title', Lang::get('c::auth.activate-title'))
 

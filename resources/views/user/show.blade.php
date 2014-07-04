@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('c::layout.main')
 
 @section('title', $user->name ?: $user->username)
 

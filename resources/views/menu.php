@@ -8,9 +8,9 @@
 	</button>
 	<?php endif; ?>
 
-	<?php if ($homeUrl): ?>
+	<?php if (isset($homeUrl)): ?>
 	<a href="<?= $homeUrl ?>" class="navbar-brand"><?= $siteName ?></a>
-	<?php else: ?>
+	<?php elseif (isset($siteName)): ?>
 	<span class="navbar-brand"><?= $siteName ?></span>
 	<?php endif; ?>
 </div>

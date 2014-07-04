@@ -81,6 +81,7 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerViewFiles();
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
+		$this->registerLayoutCreator();
 
 		$this->app->booted(function() {
 			$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
@@ -172,6 +173,11 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	public function registerLayoutCreator()
+	{
+		$this->app['view']->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\MainLayoutCreator');
+	}
+
 	/**
 	 * Register the alerts view composer.
 	 *
@@ -216,7 +222,8 @@ class CoreServiceProvider extends ServiceProvider
 		$menu->createMenu('right', ['class' => 'nav navbar-nav navbar-right']);
 
 		if ($user !== null) {
-			$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
+			$subMenu = $menu->getMenu('right')
+				->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
 			$subMenu->addItem(
 				$lang->get('c::user.profile-title'),
 				$url->action('anlutro\Core\Web\UserController@profile'),
@@ -255,7 +262,9 @@ class CoreServiceProvider extends ServiceProvider
 
 	protected function providerLoaded($provider)
 	{
-		$providers = $this->app['config']->get('app.providers');
+		$providers = $this->app['config']->get('app.providers')
+			+ $this->app->getLoadedProviders();
+
 		return in_array($provider, $providers);
 	}
 

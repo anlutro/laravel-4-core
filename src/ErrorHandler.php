@@ -49,7 +49,9 @@ class ErrorHandler
 
 	protected function handleMissing(NotFoundHttpException $e)
 	{
-		if ($this->app->runningInConsole()) return;
+		if ($this->app->runningInConsole()) {
+			return null;
+		}
 
 		$view = $this->app['view'];
 		$translator = $this->app['translator'];
@@ -81,7 +83,9 @@ class ErrorHandler
 
 	protected function handleGeneric(Exception $e)
 	{
-		if ($this->app->runningInConsole() || Config::get('app.debug')) return;
+		if ($this->app->runningInConsole() || $this->app['config']->get('app.debug')) {
+			return null;
+		}
 
 		$view = $this->app['view'];
 		$translator = $this->app['translator'];
