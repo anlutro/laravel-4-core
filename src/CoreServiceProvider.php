@@ -82,13 +82,16 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
 
-		$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
-		$this->app->bind('anlutro\Core\Auth\Users\UserModel', $userModel);
-		$this->registerUserEvents($userModel);
+		$this->app->booted(function() {
+			$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
+			$this->app->bind('anlutro\Core\Auth\Users\UserModel', $userModel);
+			$this->registerUserEvents($userModel);
 
-		$this->registerAlertComposer();
-		$this->registerSidebar();
-		$this->registerMenus();
+			$this->registerAlertComposer();
+			$this->registerSidebar();
+			$this->registerMenus();
+			$this->registerErrorHandlers();
+		});
 	}
 
 	/**
@@ -241,6 +244,13 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		$this->app['view']->composer('c::menu', 'anlutro\Core\Web\Composers\MenuViewComposer');
+	}
+
+	protected function registerErrorHandlers()
+	{
+		if (!$this->providerLoaded('anlutro\L4SmartErrors\L4SmartErrorsServiceProvider')) return;
+
+		(new ErrorHandler($this->app))->register();
 	}
 
 	protected function providerLoaded($provider)
