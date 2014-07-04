@@ -2,7 +2,7 @@
 
 @section('body')
 
-<div class="container">
+<div class="container layout-no-sidebar">
 
 	<header class="site-header">
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
