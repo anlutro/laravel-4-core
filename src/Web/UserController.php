@@ -91,6 +91,7 @@ class UserController extends Controller
 			'users'       => $users,
 			'userTypes'   => $types,
 			'bulkActions' => $this->getBulkActions(),
+			'showAction'  => $this->action('show'),
 			'editAction'  => $this->action('edit'),
 			'newUrl'      => $this->url('create'),
 			'backUrl'     => URL::to('/'),

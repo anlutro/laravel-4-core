@@ -55,7 +55,11 @@
 				<td>{{ $user->email }}</td>
 				<td>{{ $user->phone }}</td>
 				<td class="text-right">
-					<a href="{{ URL::action($editAction, [$user->id]) }}" class="btn btn-xs btn-default">
+					<a href="{{ URL::action($showAction, [$user->id]) }}" class="btn btn-xs btn-default">
+						<span class="glyphicon glyphicon-eye-open"></span>
+						@lang('c::std.view')
+					</a>
+					<a href="{{ URL::action($editAction, [$user->id]) }}" class="btn btn-xs btn-primary">
 						<span class="glyphicon glyphicon-pencil"></span>
 						@lang('c::std.edit')
 					</a>
