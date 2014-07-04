@@ -59,6 +59,7 @@ class CoreServiceProvider extends ServiceProvider
 		static::$resPath = __DIR__.'/../resources';
 
 		$this->commands([
+			'anlutro\Core\Console\PublishCommand',
 			'anlutro\Core\Auth\Console\CreateUserCommand',
 			'anlutro\Core\Auth\Console\ChangePasswordCommand',
 		]);
