@@ -103,7 +103,7 @@ class ErrorHandler
 	{
 		$translator = $this->app['translator'];
 
-		$contents = $translator->get('site.maintenance-info');
+		$contents = $translator->get('c::std.maintenance-mode');
 
 		return new Response($contents, 503);
 	}

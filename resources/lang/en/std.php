@@ -55,5 +55,6 @@ return array(
 	'until' => 'Until',
 	'token-mismatch' => 'This website uses tokens to protect the server from spam and hacking attempts. The token sent with your request was invalid. Please try again.',
 	'toggle-menu' => 'Open/close menu',
+	'maintenance-info' => 'The site is down for maintenance and will be back momentarily. We apologize for any inconvenience.',
 
 );
