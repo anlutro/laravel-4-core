@@ -1,4 +1,12 @@
 <?php
+/**
+ * Laravel 4 Core
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
+ */
+
 namespace anlutro\Core\Web\Composers;
 
 use Illuminate\View\View;
@@ -9,6 +17,9 @@ use anlutro\Core\View\ScriptCollection;
 
 class MainLayoutCreator
 {
+	protected $config;
+	protected $translator;
+
 	public function __construct(Repository $config, Translator $translator)
 	{
 		$this->config = $config;

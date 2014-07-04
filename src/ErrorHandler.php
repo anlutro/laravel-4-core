@@ -24,11 +24,21 @@ class ErrorHandler
 		$this->app = $app;
 	}
 
+	/**
+	 * Register the error handler.
+	 *
+	 * This method will call pushError() on the application's exception handler
+	 * to put the handlers at the bottom of the stack, giving them the lowest
+	 * possible priority. This means that other error handlers that log the
+	 * errors, send notifications etc. can do their job but return null, then
+	 * these handlers take over.
+	 *
+	 * When using pushError, the most specific handlers should be defined first.
+	 *
+	 * @return void
+	 */
 	public function register()
 	{
-		// 404/missing handler followed by the generic uncaught exception handler. use
-		// pushError to push them at the end of the stack, giving them lower priority.
-		// because we use pushError, the most specific handler needs to be defined first
 		$this->app->pushError(function(NotFoundHttpException $e) {
 			return $this->handleMissing($e);
 		});
@@ -41,7 +51,6 @@ class ErrorHandler
 			return $this->handleGeneric($e);
 		});
 
-		// maintenance mode handler
 		$this->app->down(function() {
 			return $this->handleMaintenance();
 		});

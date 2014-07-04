@@ -9,6 +9,7 @@
 
 namespace anlutro\Core\Web\Composers;
 
+use Illuminate\View\View;
 use Illuminate\Session\Store as Session;
 
 /**
@@ -23,7 +24,7 @@ class AlertsComposer
 		$this->session = $session;
 	}
 
-	public function compose($view)
+	public function compose(View $view)
 	{
 		$view->alerts = $this->getAlerts();
 	}
