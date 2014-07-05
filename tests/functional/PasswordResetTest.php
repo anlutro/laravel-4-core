@@ -6,7 +6,7 @@ use Illuminate\Mail\Message;
 use Mockery as m;
 use Illuminate\Support\Facades;
 
-class PasswordResetTest extends \AppTestCase
+class PasswordResetTest extends AppTestCase
 {
 	/**
 	 * {@inheritdoc}

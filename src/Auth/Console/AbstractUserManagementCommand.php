@@ -9,9 +9,8 @@
 
 namespace anlutro\Core\Auth\Console;
 
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputOption;
 
 use anlutro\Core\Console\Command;
 

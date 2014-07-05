@@ -9,9 +9,9 @@
 
 namespace anlutro\Core\Auth\Reminders;
 
-use Illuminate\Mail\Message;
-use Illuminate\Mail\Mailer;
 use Illuminate\Auth\UserProviderInterface;
+use Illuminate\Mail\Mailer;
+use Illuminate\Mail\Message;
 use Illuminate\Translation\Translator;
 
 /**

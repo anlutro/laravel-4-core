@@ -10,9 +10,8 @@
 namespace anlutro\Core\Auth\Activation;
 
 use Illuminate\Auth\UserProviderInterface;
-use Illuminate\Mail\Message;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Mail\Mailer;
+use Illuminate\Mail\Message;
 use Illuminate\Translation\Translator;
 
 class ActivationService

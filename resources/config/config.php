@@ -7,24 +7,17 @@
  * @package  l4-core
  */
 
-return array(
-	/**
-	 * Whether to enable the package's routes.
-	 */
+return [
+	// Whether to enable the package's routes.
 	'enable-routes' => true,
 
-	/**
-	 * The URL prefix to put in front of all the package's routes.
-	 */
+	// The URL prefix to put in front of all the package's routes.
 	'route-prefix' => null,
 
-	/**
-	 * Whether to queue password reminder emails.
-	 */
+	// Whether to queue password reminder emails.
 	'queue-reminder-mail' => false,
 
-	/**
-	 * Where to redirect after login if no "intended" URL is in session.
-	 */
+	// Where to redirect after login if no "intended" URL is in session. This
+	// will be passed to URL::to(), so a relative URI is good enough.
 	'redirect-login' => '/',
-);
+];

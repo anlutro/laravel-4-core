@@ -10,12 +10,11 @@
 namespace anlutro\Core\Web\Filters;
 
 use Illuminate\Auth\AuthManager;
+use Illuminate\Config\Repository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\UrlGenerator;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Config\Repository;
 
 class GuestFilter
 {
@@ -54,7 +53,9 @@ class GuestFilter
 	public function filter(Route $route, Request $request)
 	{
 		if ($this->auth->check()) {
-			$url = $this->url->to($this->config->get('c::redirect-login'), '/');
+			$config = $this->config->get('c::redirect-login');
+
+			$url = $config ? $this->url->to($config) : '/';
 
 			return $this->redirect->to($url);
 		}

@@ -1,6 +1,9 @@
 <?php
+namespace anlutro\Core\Tests;
 
-class DatabaseActivationCodeRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
+use anlutro\LaravelTesting\EloquentTestCase;
+
+class DatabaseActivationCodeRepositoryTest extends EloquentTestCase
 {
 	public function getMigrations()
 	{
@@ -40,12 +43,12 @@ class DatabaseActivationCodeRepositoryTest extends \anlutro\LaravelTesting\Eloqu
 
 	protected function makeRepo()
 	{
-		return new anlutro\Core\Auth\Activation\DatabaseActivationCodeRepository(
+		return new \anlutro\Core\Auth\Activation\DatabaseActivationCodeRepository(
 			$this->capsule->connection(), 'user_activation');
 	}
 
 	public function makeUser(array $attr)
 	{
-		return new anlutro\Core\Auth\Users\UserModel($attr);
+		return new \anlutro\Core\Auth\Users\UserModel($attr);
 	}
 }

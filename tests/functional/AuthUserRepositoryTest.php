@@ -1,4 +1,5 @@
 <?php
+namespace anlutro\Core\Tests;
 
 use Mockery as m;
 
@@ -28,7 +29,7 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	public function setUp()
 	{
 		parent::setUp();
-		$this->container['hash'] = new Illuminate\Hashing\BcryptHasher;
+		$this->container['hash'] = new \Illuminate\Hashing\BcryptHasher;
 	}
 
 	public function tearDown()
@@ -52,7 +53,7 @@ class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 	{
 		$repo = $this->makeRepository();
 		$this->validator->shouldReceive('valid')->once()->with('create', [])->andReturn(false);
-		$this->validator->shouldReceive('getErrors')->once()->andReturn(new Illuminate\Support\MessageBag);
+		$this->validator->shouldReceive('getErrors')->once()->andReturn(new \Illuminate\Support\MessageBag);
 		$this->assertFalse($repo->create([]));
 	}
 

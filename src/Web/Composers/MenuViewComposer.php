@@ -10,10 +10,10 @@
 namespace anlutro\Core\Web\Composers;
 
 use anlutro\Menu\Builder;
-use Illuminate\View\View;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository;
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\View\View;
 
 class MenuViewComposer
 {
@@ -82,8 +82,8 @@ class MenuViewComposer
 
 	protected function getSiteName()
 	{
-		return $this->config->get('site.html-name') ?:
-			($this->config->get('site.name') ?:
+		return $this->config->get('c::site.html-name') ?:
+			($this->config->get('c::site.name') ?:
 			$this->config->get('app.url'));
 	}
 }

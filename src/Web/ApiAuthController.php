@@ -9,11 +9,11 @@
 
 namespace anlutro\Core\Web;
 
-use Illuminate\Support\Facades\Config;
 use anlutro\LaravelController\ApiController;
+use Illuminate\Support\Facades\Config;
 
-use anlutro\Core\Auth\UserManager;
 use anlutro\Core\Auth\Activation\ActivationException;
+use anlutro\Core\Auth\UserManager;
 
 /**
  * Controller for authentication actions.

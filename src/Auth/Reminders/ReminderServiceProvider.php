@@ -9,8 +9,9 @@
 
 namespace anlutro\Core\Auth\Reminders;
 
-use anlutro\Core\Auth\UserManager;
 use Illuminate\Auth\Reminders\ReminderServiceProvider as BaseProvider;
+
+use anlutro\Core\Auth\UserManager;
 use anlutro\Core\CoreServiceProvider;
 
 class ReminderServiceProvider extends BaseProvider

@@ -41,25 +41,6 @@ trait RouteProviderTrait
 	}
 
 	/**
-	 * Include the route file for the correct locale.
-	 *
-	 * @param  string $file
-	 *
-	 * @return void
-	 */
-	protected function requireRouteFile($file)
-	{
-		$locale = $this->app['translator']->getLocale();
-		$path = static::$resPath . '/routes/' . $locale;
-
-		if (!is_dir($path)) {
-			$path = static::$resPath . '/routes/en';
-		}
-
-		require $path . '/' . $file . '.php';
-	}
-
-	/**
 	 * Register routes from the routes.php config file.
 	 *
 	 * @param  string $file
@@ -70,7 +51,7 @@ trait RouteProviderTrait
 	{
 		$locale = $this->app['translator']->getLocale();
 
-		$data = $this->app['config']->get("c::routes.{$file}");
+		$data = $this->app['config']->get("c::routes/{$file}");
 
 		if (!$data) {
 			return;

@@ -1,4 +1,5 @@
 <?php
+namespace anlutro\Core\Tests;
 
 use Mockery as m;
 

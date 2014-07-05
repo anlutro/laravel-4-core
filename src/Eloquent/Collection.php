@@ -9,9 +9,9 @@
 
 namespace anlutro\Core\Eloquent;
 
-use JsonSerializable;
 use Illuminate\Database\Eloquent\Collection as BaseCollection;
 use Illuminate\Support\Contracts\ArrayableInterface;
+use JsonSerializable;
 
 class Collection extends BaseCollection implements JsonSerializable, StdClassableInterface
 {

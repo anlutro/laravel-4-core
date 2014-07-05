@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Translation\Translator;
 
@@ -30,6 +31,11 @@ class AuthFilter
 	protected $redirect;
 
 	/**
+	 * @var Store
+	 */
+	protected $session;
+
+	/**
 	 * @var Translator
 	 */
 	protected $translator;
@@ -43,10 +49,12 @@ class AuthFilter
 		AuthManager $auth,
 		Redirector $redirect,
 		Translator $translator,
+		Store $session,
 		UrlGenerator $url
 	) {
 		$this->auth = $auth;
 		$this->redirect = $redirect;
+		$this->session = $session;
 		$this->translator = $translator;
 		$this->url = $url;
 	}
@@ -66,7 +74,12 @@ class AuthFilter
 			return Response::json(['error' => $message], 403);
 		} else {
 			$url = $this->url->action('anlutro\Core\Web\AuthController@login');
-			return $this->redirect->guest($url)
+
+			$intended = $request->getMethod() == 'GET' ? $request->fullUrl() :
+				($request->header('referer') ?: '/');
+			$this->session->put('url.intended', $intended);
+
+			return $this->redirect->to($url)
 				->withErrors($message);
 		}
 	}

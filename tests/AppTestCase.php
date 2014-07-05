@@ -1,4 +1,5 @@
 <?php
+namespace anlutro\Core\Tests;
 
 /**
  * Test case that boots the whole application.
@@ -18,7 +19,10 @@ class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 	 */
 	protected function getExtraProviders()
 	{
-		return ['anlutro\Core\CoreServiceProvider'];
+		return [
+			'anlutro\Menu\ServiceProvider',
+			'anlutro\Core\CoreServiceProvider',
+		];
 	}
 
 	public function createApplication()
@@ -42,13 +46,6 @@ class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 	{
 		parent::setUp();
 
-		// the package's views extends the 'layout.main' view which must be
-		// present. if it is not present, add our dummy views
-		if (
-			!$this->app['view']->exists('layout.main')
-			|| !$this->app['view']->exists('layout.email')
-		) {
-			$this->app['view']->addLocation(__DIR__ . '/resources/views');
-		}
+		$this->app['view']->alias('c::layout.main-nosidebar', 'c::layout.main');
 	}
 }

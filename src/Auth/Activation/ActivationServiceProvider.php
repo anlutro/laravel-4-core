@@ -9,8 +9,9 @@
 
 namespace anlutro\Core\Auth\Activation;
 
-use anlutro\Core\Auth\UserManager;
 use Illuminate\Support\ServiceProvider;
+
+use anlutro\Core\Auth\UserManager;
 use anlutro\Core\CoreServiceProvider;
 
 class ActivationServiceProvider extends ServiceProvider

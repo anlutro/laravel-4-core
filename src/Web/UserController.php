@@ -10,11 +10,8 @@
 namespace anlutro\Core\Web;
 
 use anlutro\LaravelController\Controller;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\View;
 
 use anlutro\Core\Auth\UserManager;
 
@@ -94,6 +91,7 @@ class UserController extends Controller
 			'users'       => $users,
 			'userTypes'   => $types,
 			'bulkActions' => $this->getBulkActions(),
+			'showAction'  => $this->action('show'),
 			'editAction'  => $this->action('edit'),
 			'newUrl'      => $this->url('create'),
 			'backUrl'     => URL::to('/'),

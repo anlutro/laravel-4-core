@@ -1,4 +1,6 @@
 <?php
+namespace anlutro\Core\Tests;
+
 use Mockery as m;
 use Illuminate\Support\Facades;
 use anlutro\Core\Auth\Activation\Activation;

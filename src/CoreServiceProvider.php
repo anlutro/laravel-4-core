@@ -9,11 +9,11 @@
 
 namespace anlutro\Core;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 use Illuminate\View\View;
 
 class CoreServiceProvider extends ServiceProvider
@@ -59,6 +59,7 @@ class CoreServiceProvider extends ServiceProvider
 		static::$resPath = __DIR__.'/../resources';
 
 		$this->commands([
+			'anlutro\Core\Console\PublishCommand',
 			'anlutro\Core\Auth\Console\CreateUserCommand',
 			'anlutro\Core\Auth\Console\ChangePasswordCommand',
 		]);
@@ -81,14 +82,18 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerViewFiles();
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
+		$this->registerLayoutCreator();
 
-		$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
-		$this->app->bind('anlutro\Core\Auth\Users\UserModel', $userModel);
-		$this->registerUserEvents($userModel);
+		$this->app->booted(function() {
+			$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
+			$this->app->bind('anlutro\Core\Auth\Users\UserModel', $userModel);
+			$this->registerUserEvents($userModel);
 
-		$this->registerAlertComposer();
-		$this->registerSidebar();
-		$this->registerMenus();
+			$this->registerAlertComposer();
+			$this->registerSidebar();
+			$this->registerMenus();
+			$this->registerErrorHandlers();
+		});
 	}
 
 	/**
@@ -169,6 +174,11 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	public function registerLayoutCreator()
+	{
+		$this->app['view']->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\MainLayoutCreator');
+	}
+
 	/**
 	 * Register the alerts view composer.
 	 *
@@ -213,7 +223,8 @@ class CoreServiceProvider extends ServiceProvider
 		$menu->createMenu('right', ['class' => 'nav navbar-nav navbar-right']);
 
 		if ($user !== null) {
-			$subMenu = $menu->getMenu('right')->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
+			$subMenu = $menu->getMenu('right')
+				->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
 			$subMenu->addItem(
 				$lang->get('c::user.profile-title'),
 				$url->action('anlutro\Core\Web\UserController@profile'),
@@ -243,9 +254,18 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app['view']->composer('c::menu', 'anlutro\Core\Web\Composers\MenuViewComposer');
 	}
 
+	protected function registerErrorHandlers()
+	{
+		if (!$this->providerLoaded('anlutro\L4SmartErrors\L4SmartErrorsServiceProvider')) return;
+
+		(new ErrorHandler($this->app))->register();
+	}
+
 	protected function providerLoaded($provider)
 	{
-		$providers = $this->app['config']->get('app.providers');
+		$providers = $this->app['config']->get('app.providers')
+			+ $this->app->getLoadedProviders();
+
 		return in_array($provider, $providers);
 	}
 
