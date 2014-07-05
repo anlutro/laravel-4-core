@@ -62,8 +62,7 @@ trait RouteProviderTrait
 
 		foreach ($data as $name => $route) {
 			$key = "c::routes.{$name}";
-			$translatedUrl = $translator->trans($key);
-			$url = $translatedUrl == $key ? $route['url'] : $translatedUrl;
+			$url = $translator->has($key) ? $translator->trans($key) : $route['url'];
 			$method = $route['method'];
 			unset($route['url'], $route['method']);
 			$route['as'] = "c::$name";
