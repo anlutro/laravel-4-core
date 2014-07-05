@@ -11,7 +11,7 @@ class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 	 */
 	public function getVendorPath()
 	{
-		return __DIR__.'/../vendor';
+		return __DIR__.'/../../vendor';
 	}
 
 	/**

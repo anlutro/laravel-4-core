@@ -29,6 +29,11 @@
 			"anlutro\\Core\\": "src/"
 		}
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"anlutro\\Core\\Tests\\": "tests/src/"
+		}
+	},
 	"config": {
 		"preferred-install": "dist"	
 	},

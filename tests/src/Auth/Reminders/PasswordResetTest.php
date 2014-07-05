@@ -1,10 +1,11 @@
 <?php
-namespace anlutro\Core\Tests;
+namespace anlutro\Core\Tests\Auth\Reminders;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Mail\Message;
 use Mockery as m;
 use Illuminate\Support\Facades;
+use anlutro\Core\Tests\AppTestCase;
 
 class PasswordResetTest extends AppTestCase
 {

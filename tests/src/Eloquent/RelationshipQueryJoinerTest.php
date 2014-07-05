@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\Core\Tests;
+namespace anlutro\Core\Tests\Eloquent;
 
 use anlutro\LaravelTesting\EloquentTestCase;
 use anlutro\Core\Eloquent\RelationshipQueryJoiner;

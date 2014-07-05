@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\Core\Tests;
+namespace anlutro\Core\Tests\Eloquent;
 
 use Mockery as m;
 use PHPUnit_Framework_TestCase;

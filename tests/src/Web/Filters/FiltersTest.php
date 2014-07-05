@@ -1,7 +1,8 @@
 <?php
-namespace anlutro\Core\Tests;
+namespace anlutro\Core\Tests\Web\Filters;
 
 use Mockery as m;
+use anlutro\Core\Tests\AppTestCase;
 
 class FiltersTest extends AppTestCase
 {

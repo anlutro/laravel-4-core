@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\Core\Tests;
+namespace anlutro\Core\Tests\Auth\Activation;
 
 use Mockery as m;
 use Carbon\Carbon;

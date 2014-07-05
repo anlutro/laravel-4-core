@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\Core\Tests;
+namespace anlutro\Core\Tests\Web\Filters;
 
 use PHPUnit_Framework_TestCase;
 
