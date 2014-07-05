@@ -62,7 +62,7 @@ class MenuViewComposer
 
 		foreach (['left', 'right'] as $key) {
 			$menu = $this->menu->getMenu($key);
-			if (!$menu->isEmpty()) {
+			if ($menu && !$menu->isEmpty()) {
 				$menus[] = $menu;
 			}
 		}
