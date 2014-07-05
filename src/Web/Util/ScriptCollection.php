@@ -7,7 +7,7 @@
  * @package  l4-core
  */
 
-namespace anlutro\Core\View;
+namespace anlutro\Core\Web\Util;
 
 use IteratorAggregate;
 use RecursiveArrayIterator;

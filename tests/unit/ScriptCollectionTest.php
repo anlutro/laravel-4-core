@@ -3,7 +3,7 @@ namespace anlutro\Core\Tests;
 
 use PHPUnit_Framework_TestCase;
 
-use anlutro\Core\View\ScriptCollection;
+use anlutro\Core\Web\Util\ScriptCollection;
 
 class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 {
