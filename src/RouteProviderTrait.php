@@ -49,23 +49,24 @@ trait RouteProviderTrait
 	 */
 	protected function parseRouteConfig($file)
 	{
-		$locale = $this->app['translator']->getLocale();
-
 		$data = $this->app['config']->get("c::routes/{$file}");
 
 		if (!$data) {
 			return;
 		}
 
-		$router = $this->app['router'];
 		$translator = $this->app['translator'];
+		$router = $this->app['router'];
+		$locale = $translator->getLocale();
 
 		foreach ($data as $name => $route) {
 			$key = "c::routes.{$name}";
 			$url = $translator->has($key) ? $translator->trans($key) : $route['url'];
+
 			$method = $route['method'];
 			unset($route['url'], $route['method']);
 			$route['as'] = "c::$name";
+
 			$router->{$method}($url, $route);
 		}
 	}
