@@ -46,7 +46,7 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 		m::close();
 	}
 
-	public function testGenerate()
+	public function testGenerateSuccess()
 	{
 		$user = $this->getMockUser();
 		$user->shouldReceive('deactivate')->once();
@@ -56,10 +56,26 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 		$this->mailer->shouldReceive('send')->once()->andReturn(true);
 		$this->mailer->shouldReceive('failures')->once()->andReturn([]);
 
-		$this->assertTrue($this->activation->generate($user));
+		$this->activation->generate($user);
 	}
 
-	public function testActivate()
+	/** @test */
+	public function generateMailerFailure()
+	{
+		$user = $this->getMockUser();
+		$user->shouldReceive('deactivate')->once();
+		$this->codes->shouldReceive('deleteUser')->with($user);
+		$this->codes->shouldReceive('create')->with($user, m::type('string'));
+		$user->shouldReceive('getActivationEmail')->andReturn('test@example.com');
+		$this->mailer->shouldReceive('send')->once()->andReturn(true);
+		$this->mailer->shouldReceive('failures')->once()->andReturn(['test@example.com']);
+
+		$this->setExpectedException('anlutro\Core\Auth\Activation\ActivationException');
+		$this->activation->generate($user);
+	}
+
+	/** @test */
+	public function activateSuccess()
 	{
 		$user = $this->getMockUser();
 		$this->codes->shouldReceive('retrieveEmailByCode')->with('foo')->andReturn('test@example.com');
@@ -67,6 +83,25 @@ class ActivationServiceTest extends PHPUnit_Framework_TestCase
 		$user->shouldReceive('activate')->once()->andReturn(true);
 		$this->codes->shouldReceive('delete')->once()->with('foo')->andReturn(true);
 
+		$this->activation->activate('foo');
+	}
+
+	/** @test */
+	public function activateCannotFindEmail()
+	{
+		$this->codes->shouldReceive('retrieveEmailByCode')->with('foo')->andReturn(null);
+
+		$this->setExpectedException('anlutro\Core\Auth\Activation\ActivationException');
+		$this->activation->activate('foo');
+	}
+
+	/** @test */
+	public function activateCannotFindUserForEmail()
+	{
+		$this->codes->shouldReceive('retrieveEmailByCode')->with('foo')->andReturn('test@example.com');
+		$this->users->shouldReceive('retrieveByCredentials')->with(['email' => 'test@example.com'])->andReturn(null);
+
+		$this->setExpectedException('anlutro\Core\Auth\Activation\ActivationException');
 		$this->activation->activate('foo');
 	}
 

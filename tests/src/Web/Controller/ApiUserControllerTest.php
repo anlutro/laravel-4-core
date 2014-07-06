@@ -51,9 +51,12 @@ class ApiUserControllerTest extends AppTestCase
 	protected function setupUpdateExpectation($input, $id, $result)
 	{
 		$user = $this->expectFindUser($id);
-		$this->users->shouldReceive('updateAsAdmin')->once()
-			->with($user, $input)
-			->andReturn($result);
+		$expectation = $this->users->shouldReceive('updateAsAdmin')->once()->with($user, $input);
+		if ($result instanceof \Exception) {
+			$expectation->andThrow($result);
+		} else {
+			$expectation->andReturn($result);
+		}
 		return $user;
 	}
 
@@ -86,14 +89,12 @@ class ApiUserControllerTest extends AppTestCase
 	{
 		$input = ['foo' => 'bar'];
 		$this->users->shouldReceive('updateCurrentProfile')
-			->with($input)->andReturn(false);
-		$this->users->shouldReceive('getErrors')
-			->andReturn(['baz' => 'bar']);
+			->with($input)->andThrow(new \anlutro\LaravelValidation\ValidationException(['baz' => 'bar']));
 
 		$response = $this->postAction('updateProfile', [], $input);
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals(400, $response->getStatusCode());
-		$this->assertEquals('bar', $data->errors->baz);
+		$this->assertEquals(['bar'], $data->errors->baz);
 	}
 
 	protected function setUpIndexExpectations($results = array())
@@ -203,15 +204,13 @@ class ApiUserControllerTest extends AppTestCase
 	public function testUpdateFailure()
 	{
 		$input = ['foo' => 'bar']; $id = 1;
-		$this->setupUpdateExpectation($input, $id, false);
-		$this->users->shouldReceive('getErrors')
-			->andReturn(['baz' => 'bar']);
+		$this->setupUpdateExpectation($input, $id, new \anlutro\LaravelValidation\ValidationException(['baz' => 'bar']));
 
 		$response = $this->postAction('update', [$id], $input);
 
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals(400, $response->getStatusCode());
-		$this->assertEquals('bar', $data->errors->baz);
+		$this->assertEquals(['bar'], $data->errors->baz);
 	}
 
 	public function testStoreSuccess()
@@ -232,15 +231,12 @@ class ApiUserControllerTest extends AppTestCase
 	{
 		$input = ['foo' => 'bar'];
 		$this->users->shouldReceive('create')->once()
-			->with($input)->andReturn(false);
-		$this->users->shouldReceive('getErrors')->once()
-			->andReturn(['baz' => 'bar']);
+			->with($input)->andThrow(new \anlutro\LaravelValidation\ValidationException(['baz' => 'bar']));
 
 		$response = $this->postAction('store', [], $input);
-
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals(400, $response->getStatusCode());
-		$this->assertEquals('bar', $data->errors->baz);
+		$this->assertEquals(['bar'], $data->errors->baz);
 	}
 
 	protected function getMockUser()

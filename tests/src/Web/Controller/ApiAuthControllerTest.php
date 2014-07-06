@@ -77,18 +77,46 @@ class ApiAuthControllerTest extends AppTestCase
 		$this->assertEquals(403, $response->getStatusCode());
 	}
 
-	public function testRegister()
+	protected function setupRegister(array $input, \Exception $exception = null)
 	{
 		$this->manager->shouldReceive('setActivationService')->once();
 		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
-		$input = ['foo' => 'bar'];
-		$this->manager->shouldReceive('register')->once()
-			->with($input)->andReturn(true);
+		$expectation = $this->manager->shouldReceive('register')->once()->with($input);
+		if ($exception) {
+			$expectation->andThrow($exception);
+		}
+	}
+
+	public function testRegister()
+	{
+		$this->setupRegister($input = ['foo' => 'bar']);
 
 		$response = $this->postAction('attemptRegistration', [], $input);
 
 		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
+	}
+
+	/** @test */
+	public function registerValidationFails()
+	{
+		$this->setupRegister($input = ['foo' => 'bar'], new \anlutro\LaravelValidation\ValidationException([]));
+		
+		$response = $this->postAction('attemptRegistration', [], $input);
+
+		$data = $this->assertResponseJson($response);
+		$this->assertEquals(400, $response->getStatusCode());
+	}
+
+	/** @test */
+	public function registerActivationFails()
+	{
+		$this->setupRegister($input = ['foo' => 'bar'], new \anlutro\Core\Auth\Activation\ActivationException());
+
+		$response = $this->postAction('attemptRegistration', [], $input);
+		
+		$data = $this->assertResponseJson($response);
+		$this->assertEquals(400, $response->getStatusCode());
 	}
 
 	public function testActivation()

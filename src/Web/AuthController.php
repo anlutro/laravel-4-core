@@ -10,6 +10,7 @@
 namespace anlutro\Core\Web;
 
 use anlutro\LaravelController\Controller;
+use anlutro\LaravelValidation\ValidationException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
@@ -122,13 +123,18 @@ class AuthController extends Controller
 	{
 		$input = $this->input();
 
-		if ($this->users->register($input)) {
+		try {
+			$this->users->register($input);
 			return $this->redirect('login')
 				->with('success', Lang::get('c::auth.register-success'));
-		} else {
+		} catch (ValidationException $e) {
 			return $this->redirect('register')
-				->withErrors($this->users->getErrors())
+				->withErrors($e->getErrors())
 				->withInput();
+		} catch (ActivationException $e) {
+			if (Config::get('app.debug')) throw $e;
+			return $this->redirect('register')
+				->withErrors(Lang::get('c::auth.activation-failed'));
 		}
 	}
 

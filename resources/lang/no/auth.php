@@ -25,6 +25,7 @@ return array(
 	'logout-success' => 'Du er nå logget ut.',
 	'register-title' => 'Registrer bruker',
 	'register-success' => 'Brukeren din ble registrert, men må aktiveres før du kan logge inn. Sjekk e-posten din for videre instrukser.',
+	'register-failure' => 'Vi kunne ikke registrere brukeren din for øyeblikket. Vennligst prøv igjen senere.',
 	'reset-success' => 'Passordet ditt ble tilbakestilt. Du kan nå logge inn med det nye passordet ditt.',
 	'reset-token-invalid' => 'Ugyldig tilbakestillingskode.',
 	'resetpass-instructions' => 'Hvis du har glemt passordet ditt, kan vi sende instrukser for hvordan du tilbakestiller passordet ditt til e-posten din.',

@@ -10,6 +10,7 @@
 namespace anlutro\Core\Web;
 
 use anlutro\LaravelController\ApiController;
+use anlutro\LaravelValidation\ValidationException;
 use Illuminate\Support\Facades\Config;
 
 use anlutro\Core\Auth\Activation\ActivationException;
@@ -85,11 +86,15 @@ class ApiAuthController extends ApiController
 	 */
 	public function attemptRegistration()
 	{
-		if ($user = $this->users->register($this->input())) {
+		try {
+			$user = $this->users->register($this->input());
 			$data = ['status' => 'registered', 'user' => $user];
 			return $this->jsonResponse($data, 200);
-		} else {
-			return $this->error($this->users->getErrors());
+		} catch (ValidationException $e) {
+			return $this->error($e->getErrors());
+		} catch (ActivationException $e) {
+			if (Config::get('app.debug')) throw $e;
+			return $this->error(['registration failed, please try again later']);
 		}
 	}
 

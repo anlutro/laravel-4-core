@@ -22,16 +22,23 @@ class UserControllerTest extends AppTestCase
 
 	protected function setUpProfileUpdateExpectations($input, $result)
 	{
-		$this->users->shouldReceive('updateCurrentProfile')
-			->with($input)->andReturn($result);
+		$expectation = $this->users->shouldReceive('updateCurrentProfile')->with($input);
+		if ($result instanceof \Exception) {
+			$expectation->andThrow($result);
+		} else {
+			$expectation->andReturn($result);
+		}
 	}
 
 	protected function setupUpdateExpectation($input, $id, $result)
 	{
 		$user = $this->expectFindUser($id);
-		$this->users->shouldReceive('updateAsAdmin')->once()
-			->with($user, $input)
-			->andReturn($result);
+		$expectation = $this->users->shouldReceive('updateAsAdmin')->once()->with($user, $input);
+		if ($result instanceof \Exception) {
+			$expectation->andThrow($result);
+		} else {
+			$expectation->andReturn($result);
+		}
 		return $user;
 	}
 
@@ -60,11 +67,7 @@ class UserControllerTest extends AppTestCase
 
 	public function testUpdateProfileFailure()
 	{
-		$input = ['foo' => 'bar'];
-		$this->users->shouldReceive('updateCurrentProfile')
-			->with($input)->andReturn(false);
-		$this->users->shouldReceive('getErrors')
-			->andReturn(['baz' => 'bar']);
+		$this->setUpProfileUpdateExpectations($input = ['foo' => 'bar'], new \anlutro\LaravelValidation\ValidationException(['baz' => 'bar']));
 
 		$this->postAction('updateProfile', [], $input);
 
@@ -180,9 +183,7 @@ class UserControllerTest extends AppTestCase
 	public function testUpdateFailure()
 	{
 		$input = ['foo' => 'bar']; $id = 1;
-		$this->setupUpdateExpectation($input, $id, false);
-		$this->users->shouldReceive('getErrors')
-			->andReturn(['baz' => 'bar']);
+		$this->setupUpdateExpectation($input, $id, new \anlutro\LaravelValidation\ValidationException(['baz' => 'bar']));
 
 		$this->postAction('update', [$id], $input);
 
@@ -230,11 +231,8 @@ class UserControllerTest extends AppTestCase
 
 	public function testStoreFailure()
 	{
-		$input = ['foo' => 'bar'];
 		$this->users->shouldReceive('create')->once()
-			->with($input)->andReturn(false);
-		$this->users->shouldReceive('getErrors')->once()
-			->andReturn('baz');
+			->with($input = ['foo' => 'bar'])->andThrow(new \anlutro\LaravelValidation\ValidationException(['baz']));
 
 		$this->postAction('store', [], $input);
 

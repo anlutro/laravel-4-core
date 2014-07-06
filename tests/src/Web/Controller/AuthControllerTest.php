@@ -76,19 +76,43 @@ class AuthControllerTest extends AppTestCase
 		$this->assertResponseOk();
 	}
 
-	public function testRegisterSubmit()
+	protected function setupRegister(array $input, \Exception $exception = null)
 	{
 		$this->manager->shouldReceive('setActivationService')->once();
 		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
+		$expectation = $this->manager->shouldReceive('register')->once()->with($input);
+		if ($exception) {
+			$expectation->andThrow($exception);
+		}
+	}
 
-		$input = ['foo' => 'bar'];
-		$this->manager->shouldReceive('register')->once()
-			->with($input)->andReturn(true);
+	public function testRegisterSubmit()
+	{
+		$this->setupRegister($input = ['foo' => 'bar']);
 
 		$this->postAction('attemptRegistration', [], $input);
-
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHas('success');
+	}
+
+	/** @test */
+	public function registerSubmitValidationFails()
+	{
+		$this->setupRegister($input = ['foo' => 'bar'], new \anlutro\LaravelValidation\ValidationException([]));
+
+		$this->postAction('attemptRegistration', [], $input);
+		$this->assertRedirectedToAction('register');
+		$this->assertSessionHasErrors();
+	}
+
+	/** @test */
+	public function registerSubmitActivationFails()
+	{
+		$this->setupRegister($input = ['foo' => 'bar'], new \anlutro\Core\Auth\Activation\ActivationException());
+
+		$this->postAction('attemptRegistration', [], $input);
+		$this->assertRedirectedToAction('register');
+		$this->assertSessionHasErrors();
 	}
 
 	public function testActivation()

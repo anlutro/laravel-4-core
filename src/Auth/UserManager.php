@@ -10,7 +10,9 @@
 namespace anlutro\Core\Auth;
 
 use Illuminate\Auth\AuthManager;
+use Illuminate\Database\Connection;
 use Illuminate\Translation\Translator;
+use anlutro\LaravelValidation\ValidationException;
 
 use anlutro\Core\Auth\Activation\ActivationService;
 use anlutro\Core\Auth\Reminders\PasswordBroker;
@@ -22,6 +24,11 @@ use anlutro\Core\Auth\Users\UserRepository;
  */
 class UserManager
 {
+	/**
+	 * @var Connection
+	 */
+	protected $db;
+
 	/**
 	 * @var UserRepository
 	 */
@@ -48,16 +55,20 @@ class UserManager
 	protected $reminders;
 
 	/**
+	 * @param Connection     $db
 	 * @param UserRepository $users
 	 * @param AuthManager    $auth
 	 * @param Translator     $translator
 	 */
 	public function __construct(
+		Connection $db,
 		UserRepository $users,
 		AuthManager $auth,
 		Translator $translator
 	) {
+		$this->db = $db;
 		$this->users = $users;
+		$this->users->toggleExceptions(true);
 		$this->auth = $auth;
 		$this->translator = $translator;
 	}
@@ -127,7 +138,7 @@ class UserManager
 	 *
 	 * @param  array  $attributes
 	 *
-	 * @return UserModel|false
+	 * @return UserModel
 	 */
 	public function create(array $attributes)
 	{
@@ -141,13 +152,15 @@ class UserManager
 
 		$this->checkPermissions($level);
 
-		if (!$user = $this->users->createAsAdmin($attributes)) return false;
+		return $this->db->transaction(function() use($attributes) {
+			$user = $this->users->createAsAdmin($attributes);
 
-		if (!$user->is_active && !empty($attributes['send_activation'])) {
-			$this->sendActivationCode($user);
-		}
+			if (!$user->is_active && !empty($attributes['send_activation'])) {
+				$this->sendActivationCode($user);
+			}
 
-		return $user;
+			return $user;
+		});
 	}
 
 	/**
@@ -155,15 +168,17 @@ class UserManager
 	 *
 	 * @param  array  $attributes
 	 *
-	 * @return UserModel|false
+	 * @return UserModel
 	 */
 	public function register(array $attributes)
 	{
-		if (!$user = $this->users->create($attributes)) return false;
+		return $this->db->transaction(function() use($attributes) {
+			$user = $this->users->create($attributes);
 
-		$this->sendActivationCode($user);
+			$this->sendActivationCode($user);
 
-		return $user;
+			return $user;
+		});
 	}
 
 	/**
@@ -178,10 +193,7 @@ class UserManager
 		$user = $this->getCurrentUser();
 
 		if (empty($attributes['old_password']) || !$user->confirmPassword($attributes['old_password'])) {
-			$this->users->getErrors()
-				->add('password', $this->translate('c::auth.invalid-password'));
-
-			return false;
+			throw new ValidationException(['password' => $this->translate('c::auth.invalid-password')]);
 		}
 
 		return $this->users->update($user, $attributes);
@@ -255,12 +267,13 @@ class UserManager
 	{
 		$credentials['is_active'] = 1;
 
-		if ($this->auth->attempt($credentials)) {
-			$this->getCurrentUser()->rehashPassword($credentials['password']);
-			return true;
-		} else {
+		if (!$this->auth->attempt($credentials)) {
 			return false;
 		}
+
+		$this->getCurrentUser()->rehashPassword($credentials['password']);
+
+		return true;
 	}
 
 	/**
@@ -318,9 +331,7 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		if (!$user = $this->users->findByCredentials(['email' => $email])) {
-			return false;
-		}
+		$user = $this->users->findByCredentials(['email' => $email]);
 
 		return $this->reminders->requestReset($user);
 	}
@@ -356,9 +367,7 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		if (!$user = $this->users->findByCredentials($credentials)) {
-			return false;
-		}
+		$user = $this->users->findByCredentials($credentials);
 
 		return $this->resetPassword($user, $attributes, $token);
 	}
@@ -378,9 +387,7 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		if (!$this->users->validPasswordReset($attributes)) {
-			return false;
-		}
+		$this->users->validPasswordReset($attributes);
 
 		$newPassword = $attributes['password'];
 

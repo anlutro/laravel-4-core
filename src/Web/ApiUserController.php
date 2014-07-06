@@ -10,6 +10,7 @@
 namespace anlutro\Core\Web;
 
 use anlutro\LaravelController\ApiController;
+use anlutro\LaravelValidation\ValidationException;
 
 use anlutro\Core\Auth\UserManager;
 
@@ -50,10 +51,11 @@ class ApiUserController extends ApiController
 	 */
 	public function updateProfile()
 	{
-		if ($this->users->updateCurrentProfile($this->input())) {
+		try {
+			$this->users->updateCurrentProfile($this->input());
 			return $this->jsonResponse(['user' => $this->users->getCurrentUser()]);
-		} else {
-			return $this->error($this->users->getErrors());
+		} catch (ValidationException $e) {
+			return $this->error($e->getMessageBag());
 		}
 	}
 
@@ -121,10 +123,13 @@ class ApiUserController extends ApiController
 	{
 		if (!$user = $this->users->findByKey($userId)) {
 			return $this->notFound();
-		} elseif ($this->users->updateAsAdmin($user, $this->input())) {
+		}
+
+		try {
+			$this->users->updateAsAdmin($user, $this->input());
 			return $this->jsonResponse(['user' => $user]);
-		} else {
-			return $this->error($this->users->getErrors());
+		} catch (ValidationException $e) {
+			return $this->error($e->getMessageBag());
 		}
 	}
 
@@ -153,10 +158,11 @@ class ApiUserController extends ApiController
 	 */
 	public function store()
 	{
-		if ($user = $this->users->create($this->input())) {
+		try {
+			$user = $this->users->create($this->input());
 			return $this->jsonResponse(['user' => $user]);
-		} else {
-			return $this->error($this->users->getErrors());
+		} catch (ValidationException $e) {
+			return $this->error($e->getMessageBag());
 		}
 	}
 }

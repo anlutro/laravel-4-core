@@ -25,6 +25,7 @@ return array(
 	'logout-success' => 'You are now logged out.',
 	'register-title' => 'Register user',
 	'register-success' => 'Your account was successfully registered, but needs to be activated before you may log in. Check your e-mail for instructions on how to activate your account.',
+	'register-failure' => 'We failed to complete the registration process. Please try again later.',
 	'reset-success' => 'The password was reset. You may now log in with your new password.',
 	'reset-token-invalid' => 'Invalid password token.',
 	'resetpass-instructions' => 'If you\'ve forgotten your password, we can send you an e-mail with instructions on how to reset your password.',

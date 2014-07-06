@@ -44,7 +44,7 @@ class ActivationService
 	 *
 	 * @param  ActivatableInterface $user
 	 *
-	 * @return boolean
+	 * @return void
 	 */
 	public function generate(ActivatableInterface $user)
 	{
@@ -57,7 +57,7 @@ class ActivationService
 		$this->codes->create($user, $code);
 
 		// send the email
-		return $this->emailActivationCode($user, $code);
+		$this->emailActivationCode($user, $code);
 	}
 
 	/**
@@ -66,7 +66,9 @@ class ActivationService
 	 * @param  ActivatableInterface $user
 	 * @param  string               $code
 	 *
-	 * @return boolean
+	 * @return void
+	 *
+	 * @throws ActivationException
 	 */
 	protected function emailActivationCode(ActivatableInterface $user, $code)
 	{
@@ -84,7 +86,9 @@ class ActivationService
 				->subject($this->translator->get('c::auth.activate-title'));
 		});
 
-		return count($this->mailer->failures()) == 0;
+		if (count($this->mailer->failures()) > 0) {
+			throw new ActivationException('Could not send activation e-mail');
+		}
 	}
 
 	/**
@@ -107,12 +111,10 @@ class ActivationService
 		$user = $this->findUserByEmail($email);
 
 		if (!$user) {
-			throw new ActivationException('Email found for activation code, but No user found for email');
+			throw new ActivationException('Email found for activation code, but no user found for email');
 		}
 
-		if (!$this->activateUser($user)) {
-			throw new ActivationException('User found, but could not activate');
-		}
+		$this->activateUser($user);
 
 		$this->codes->delete($code);
 	}
@@ -136,11 +138,15 @@ class ActivationService
 	 *
 	 * @param  ActivatableInterface $user
 	 *
-	 * @return boolean
+	 * @return void
 	 */
 	protected function activateUser(ActivatableInterface $user)
 	{
-		return $user->activate(true);
+		try {
+			$user->activate();
+		} catch (\Exception $e) {
+			throw new ActivationException('Could not activate user - '.$e->getMessage(), $e->getCode(), $e);
+		}
 	}
 
 	/**

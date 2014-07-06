@@ -65,6 +65,10 @@ class CoreServiceProvider extends ServiceProvider
 		]);
 
 		$this->app->bind('anlutro\Core\Auth\UserManager');
+
+		$this->app->bind('Illuminate\Database\Connection', function($app) {
+			return $app->make('db')->connection();
+		});
 	}
 
 	/**

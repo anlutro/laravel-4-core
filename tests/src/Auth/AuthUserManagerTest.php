@@ -14,9 +14,10 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function testCreateWithSufficientAccess()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers();
 		$auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$user = $this->mockUser(); $user->user_level = 100;
 		$this->pretendLogin($auth, $user);
 
@@ -34,9 +35,10 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateWithInsufficientAccess()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers();
 		$auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$this->pretendLogin($auth, $user = $this->mockUser());
 		$user->access_level = 50;
 
@@ -45,29 +47,13 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$result = $mng->create($input);
 	}
 
-	public function testCreateRepositoryFails()
-	{
-		$users = $this->mockUsers();
-		$auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
-		$user = $this->mockUser(); $user->user_level = 100;
-		$this->pretendLogin($auth, $user);
-
-		$input = ['username' => 'foobar', 'user_level' => '1'];
-		$users->shouldReceive('createAsAdmin')->once()->with($input)
-			->andReturn(false);
-		$users->shouldReceive('getErrors')->once()->andReturn('foo');
-
-		$this->assertFalse($mng->create($input));
-		$this->assertEquals('foo', $mng->getErrors());
-	}
-
 	public function testCreateAndSendActivation()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers();
 		$auth = $this->mockAuth();
 		$activations = $this->mockActivations();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator(), $activations);
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator(), $activations);
 		$user = $this->mockUser(); $user->user_level = 100;
 		$this->pretendLogin($auth, $user);
 
@@ -85,9 +71,10 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testCreateAndSendActivationWithoutSettingService()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers();
 		$auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$user = $this->mockUser(); $user->user_level = 100;
 		$this->pretendLogin($auth, $user);
 
@@ -101,10 +88,11 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function testRegister()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers();
 		$auth = $this->mockAuth();
 		$activations = $this->mockActivations();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator(), $activations);
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator(), $activations);
 
 		$input = ['username' => 'foobar', 'user_level' => '20', 'user_type' => 'asdf', 'is_active' => '1'];
 		$users->shouldReceive('create')->once()->with($input)
@@ -116,8 +104,9 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function testUpdateCurrentProfileSuccess()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$input = ['foo' => 'bar', 'old_password' => 'baz'];
 		$this->pretendLogin($auth, $mockUser = $this->mockUser());
 		$mockUser->shouldReceive('confirmPassword')->once()->with('baz')->andReturn(true);
@@ -127,19 +116,22 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function testUpdateCurrentProfileIncorrectPassword()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$input = ['foo' => 'bar', 'old_password' => 'baz'];
 		$this->pretendLogin($auth, $mockUser = $this->mockUser());
 		$mockUser->shouldReceive('confirmPassword')->once()->with('baz')->andReturn(false);
-		$users->shouldReceive('getErrors->add')->once()->with('password', 'c::auth.invalid-password');
-		$this->assertFalse($mng->updateCurrentProfile($input));
+
+		$this->setExpectedException('anlutro\LaravelValidation\ValidationException');
+		$mng->updateCurrentProfile($input);
 	}
 
 	public function testUpdateCurrentProfileValidationFails()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$input = ['foo' => 'bar', 'old_password' => 'baz'];
 		$this->pretendLogin($auth, $mockUser = $this->mockUser());
 		$mockUser->shouldReceive('confirmPassword')->once()->with('baz')->andReturn(true);
@@ -149,8 +141,9 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function testLogin()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator());
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$input = ['username' => 'foo', 'password' => 'bar'];
 		$auth->shouldReceive('attempt')->once()->with($input + ['is_active' => 1])->andReturn(true);
 		$auth->shouldReceive('user->rehashPassword')->once()->with('bar');
@@ -159,9 +152,10 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function testRequestPasswordResetForEmail()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
 		$reminders = $this->mockReminders();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator(), null, $reminders);
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator(), null, $reminders);
 		$users->shouldReceive('findByCredentials')->once()->with(['email' => 'foo@bar.com'])->andReturn($mockUser = $this->mockUser());
 		$reminders->shouldReceive('requestReset')->once()->with($mockUser)->andReturn(true);
 		$this->assertTrue($mng->requestPasswordResetForEmail('foo@bar.com'));
@@ -169,9 +163,10 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 
 	public function testResetPasswordForCredentials()
 	{
+		$db = $this->mockDb();
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
 		$reminders = $this->mockReminders();
-		$mng = $this->makeManager($users, $auth, $this->mockTranslator(), null, $reminders);
+		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator(), null, $reminders);
 		$credentials = ['username' => 'foo'];
 		$input = ['password' => 'bar'];
 		$token = 'baz';
@@ -181,9 +176,9 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$mng->resetPasswordForCredentials($credentials, $input, $token);
 	}
 
-	protected function makeManager($users, $auth, $translator, $activations = null, $reminders = null)
+	protected function makeManager($db, $users, $auth, $translator, $activations = null, $reminders = null)
 	{
-		$manager = new \anlutro\Core\Auth\UserManager($users, $auth, $translator);
+		$manager = new \anlutro\Core\Auth\UserManager($db, $users, $auth, $translator);
 		if ($activations) $manager->setActivationService($activations);
 		if ($reminders) $manager->setReminderService($reminders);
 		return $manager;
@@ -198,9 +193,18 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$auth->shouldReceive('user')->andReturn($user);
 	}
 
+	protected function mockDb()
+	{
+		$mock = m::mock('Illuminate\Database\Connection');
+		$mock->shouldReceive('transaction')->andReturnUsing(function($callback) { return $callback(m::self()); })->byDefault();
+		return $mock;
+	}
+
 	protected function mockUsers()
 	{
-		return m::mock('anlutro\Core\Auth\Users\UserRepository');
+		$mock = m::mock('anlutro\Core\Auth\Users\UserRepository');
+		$mock->shouldReceive('toggleExceptions')->once();
+		return $mock;
 	}
 
 	protected function mockAuth()

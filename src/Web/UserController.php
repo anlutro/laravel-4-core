@@ -10,6 +10,7 @@
 namespace anlutro\Core\Web;
 
 use anlutro\LaravelController\Controller;
+use anlutro\LaravelValidation\ValidationException;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 
@@ -58,10 +59,11 @@ class UserController extends Controller
 	{
 		$redirect = $this->redirect('profile');
 
-		if ($this->users->updateCurrentProfile($this->input())) {
+		try {
+			$this->users->updateCurrentProfile($this->input());
 			return $redirect->with('success', Lang::get('c::user.profile-update-success'));
-		} else {
-			return $redirect->withErrors($this->users->getErrors());
+		} catch (ValidationException $e) {
+			return $redirect->withErrors($e);
 		}
 	}
 
@@ -186,10 +188,11 @@ class UserController extends Controller
 
 		$redirect = $this->redirect('edit', [$user->id]);
 
-		if ($this->users->updateAsAdmin($user, $this->input())) {
+		try {
+			$this->users->updateAsAdmin($user, $this->input());
 			return $redirect->with('success', Lang::get('c::user.update-success'));
-		} else {
-			return $redirect->withErrors($this->users->getErrors());
+		} catch (ValidationException $e) {
+			return $redirect->withErrors($e);
 		}
 	}
 
@@ -240,12 +243,13 @@ class UserController extends Controller
 	{
 		$input = $this->input();
 
-		if ($user = $this->users->create($input)) {
+		try {
+			$user = $this->users->create($input);
 			return $this->redirect('edit', [$user->id])
 				->with('success', Lang::get('c::user.create-success'));
-		} else {
+		} catch (ValidationException $e) {
 			return $this->redirect('create')
-				->withErrors($this->users->getErrors())
+				->withErrors($e)
 				->withInput();
 		}
 	}

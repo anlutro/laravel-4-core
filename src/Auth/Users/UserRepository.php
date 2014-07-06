@@ -68,7 +68,7 @@ class UserRepository extends EloquentRepository
 	 */
 	public function createAsAdmin(array $attributes)
 	{
-		$user = $this->getNew($attributes);
+		$user = $this->getNew();
 
 		// set the user level
 		if (!empty($attributes['user_level'])) {
