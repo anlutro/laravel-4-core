@@ -97,9 +97,4 @@ class PasswordResetTest extends AppTestCase
 	{
 		return m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
 	}
-
-	public function setMailExpectations()
-	{
-		
-	}
 }
