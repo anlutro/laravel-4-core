@@ -241,32 +241,32 @@ class CoreServiceProvider extends ServiceProvider
 				->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
 			$subMenu->addItem(
 				$lang->get('c::user.profile-title'),
-				$url->action('anlutro\Core\Web\UserController@profile'),
+				$url->route('c::profile'),
 				['id' => 'profile']
 			);
 
 			if ($user->hasAccess('admin')) {
 				$subMenu->addItem(
 					$lang->get('c::user.admin-userlist'),
-					$url->action('anlutro\Core\Web\UserController@index'),
+					$url->route('c::user.index'),
 					['id' => 'userlist']
 				);
 				$subMenu->addItem(
 					$lang->get('c::user.admin-newuser'),
-					$url->action('anlutro\Core\Web\UserController@create'),
+					$url->route('c::user.create'),
 					['id' => 'add-user']
 				);
 			}
 
 			$subMenu->addItem(
 				$lang->get('c::auth.logout'),
-				$url->action('anlutro\Core\Web\AuthController@logout'),
+				$url->route('c::logout'),
 				['id' => 'log-out']
 			);
 		} else {
 			$menu->getMenu('right')->addItem(
 				$lang->get('c::auth.login-title'),
-				$url->action('anlutro\Core\Web\AuthController@login'),
+				$url->route('c::login'),
 				['id' => 'log-in', 'glyph' => 'log-in']
 			);
 		}
