@@ -5,6 +5,7 @@ use PHPUnit_Framework_TestCase;
 use Mockery as m;
 use anlutro\Core\Web\Composers\MainLayoutCreator;
 
+/** @small */
 class MainLayoutCreatorTest extends PHPUnit_Framework_TestCase
 {
 	public function tearDown()

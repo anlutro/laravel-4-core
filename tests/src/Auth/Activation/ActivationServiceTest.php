@@ -5,6 +5,7 @@ use Mockery as m;
 use PHPUnit_Framework_TestCase;
 use anlutro\Core\Auth\Activation\ActivationService;
 
+/** @small */
 class ActivationServiceTest extends PHPUnit_Framework_TestCase
 {
 	/**

@@ -6,6 +6,7 @@ use PHPUnit_Framework_TestCase;
 use anlutro\Core\Auth\Reminders\PasswordBroker;
 use Illuminate\Support\Facades;
 
+/** @small */
 class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 {
 	/**

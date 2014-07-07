@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Eloquent;
 use anlutro\LaravelTesting\EloquentTestCase;
 use anlutro\Core\Eloquent\RelationshipQueryJoiner;
 
+/** @small */
 class RelationshipQueryJoinerTest extends EloquentTestCase
 {
 	/** @test */

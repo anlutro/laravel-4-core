@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use PHPUnit_Framework_TestCase;
 use anlutro\Core\Auth\Activation\DatabaseActivationCodeRepository;
 
+/** @small */
 class ActivationCodeRepositoryTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()

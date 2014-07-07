@@ -6,6 +6,7 @@ use Mockery as m;
 use anlutro\Menu\Builder;
 use anlutro\Core\Web\Composers\MenuViewComposer;
 
+/** @small */
 class MenuViewComposerTest extends PHPUnit_Framework_TestCase
 {
 	public function tearDown()

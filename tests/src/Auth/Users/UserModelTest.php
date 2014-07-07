@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Auth\Users;
 use PHPUnit_Framework_TestCase;
 use Illuminate\Support\Facades\Hash;
 
+/** @small */
 class UserModelTest extends PHPUnit_Framework_TestCase
 {
 	/**

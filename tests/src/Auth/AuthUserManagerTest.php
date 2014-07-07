@@ -4,7 +4,7 @@ namespace anlutro\Core\Tests\Auth;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-
+/** @small */
 class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 {
 	public function tearDown()

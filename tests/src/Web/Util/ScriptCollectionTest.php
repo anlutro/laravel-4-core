@@ -5,6 +5,7 @@ use PHPUnit_Framework_TestCase;
 
 use anlutro\Core\Web\Util\ScriptCollection;
 
+/** @small */
 class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 {
 	/** @test */

@@ -3,10 +3,11 @@ namespace anlutro\Core\Tests\Auth\Users;
 
 use Mockery as m;
 
+/** @large */
 class AuthUserRepositoryTest extends \anlutro\LaravelTesting\EloquentTestCase
 {
 	/**
-	 * @var \Mockery\Mock|\Illuminate\Database\Eloquent\Model
+	 * @var \Illuminate\Database\Eloquent\Model
 	 */
 	protected $model;
 

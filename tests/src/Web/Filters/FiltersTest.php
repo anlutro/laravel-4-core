@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Web\Filters;
 use Mockery as m;
 use anlutro\Core\Tests\AppTestCase;
 
+/** @medium */
 class FiltersTest extends AppTestCase
 {
 	public function setUp()

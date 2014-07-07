@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Web\Controller;
 use Mockery as m;
 use anlutro\Core\Tests\AppTestCase;
 
+/** @medium */
 class ApiAuthControllerTest extends AppTestCase
 {
 	protected $controller = 'anlutro\Core\Web\AuthController';

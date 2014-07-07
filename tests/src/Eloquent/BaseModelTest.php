@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Eloquent;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
+/** @small */
 class BaseEloquentClassesTest extends PHPUnit_Framework_TestCase
 {
 	public function testModelToStdClass()

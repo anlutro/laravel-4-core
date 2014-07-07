@@ -8,6 +8,7 @@ use Illuminate\Support\Facades;
 use anlutro\Core\Tests\AppTestCase;
 use anlutro\Core\Auth\AuthenticationException;
 
+/** @large */
 class PasswordResetTest extends AppTestCase
 {
 	/**

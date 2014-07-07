@@ -3,6 +3,7 @@ namespace anlutro\Core\Tests\Auth\Reminders;
 
 use anlutro\LaravelTesting\EloquentTestCase;
 
+/** @medium */
 class DatabaseActivationCodeRepositoryTest extends EloquentTestCase
 {
 	public function getMigrations()

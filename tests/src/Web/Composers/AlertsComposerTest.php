@@ -8,6 +8,7 @@ use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use anlutro\Core\Web\Composers\AlertsComposer;
 
+/** @small */
 class AlertsComposerTest extends PHPUnit_Framework_TestCase
 {
 	public function tearDown()

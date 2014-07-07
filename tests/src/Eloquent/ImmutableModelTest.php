@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Eloquent;
 use anlutro\LaravelTesting\EloquentTestCase;
 use Mockery as m;
 
+/** @small */
 class ImmutableModelTest extends EloquentTestCase
 {
 	/** @test */

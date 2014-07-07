@@ -6,6 +6,7 @@ use Illuminate\Support\Facades;
 use anlutro\Core\Auth\Activation\Activation;
 use anlutro\Core\Tests\AppTestCase;
 
+/** @medium */
 class AuthControllerTest extends AppTestCase
 {
 	protected $controller = 'anlutro\Core\Web\AuthController';
