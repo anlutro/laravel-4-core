@@ -48,6 +48,6 @@ class MainLayoutCreator
 
 	protected function getGaCode()
 	{
-		return $this->translator->get('c::site.ga-code');
+		return $this->config->get('c::site.ga-code');
 	}
 }

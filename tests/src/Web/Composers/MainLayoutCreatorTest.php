@@ -36,8 +36,8 @@ class MainLayoutCreatorTest extends PHPUnit_Framework_TestCase
 	/** @test */
 	public function configAndTranslatorValuesAreAdded()
 	{
-		$config = ['c::site.name' => 'title'];
-		$translations = ['c::site.description' => 'description', 'c::site.ga-code' => 'code'];
+		$config = ['c::site.name' => 'title', 'c::site.ga-code' => 'code'];
+		$translations = ['c::site.description' => 'description'];
 		$view = $this->callCreator($config, $translations);
 		$this->assertEquals('title', $view->title);
 		$this->assertEquals('description', $view->description);
