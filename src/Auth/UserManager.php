@@ -259,15 +259,16 @@ class UserManager
 	/**
 	 * Given correct credentials, log a user in.
 	 *
-	 * @param  array  $credentials
+	 * @param  array   $credentials
+	 * @param  boolean $remember
 	 *
 	 * @return bool
 	 */
-	public function login(array $credentials)
+	public function login(array $credentials, $remember = false)
 	{
 		$credentials['is_active'] = 1;
 
-		if (!$this->auth->attempt($credentials)) {
+		if (!$this->auth->attempt($credentials, $remember)) {
 			return false;
 		}
 

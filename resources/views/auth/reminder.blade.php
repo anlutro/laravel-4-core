@@ -20,11 +20,15 @@
 	</div>
 
 	<div class="form-group">
-		<div class="col-sm-5 col-sm-offset-2">
+		<div class="col-sm-10 col-sm-offset-2">
 			<button type="submit" class="btn btn-primary">
 				<span class="glyphicon glyphicon-send"></span>
 				@lang('c::auth.resetpass-send')
 			</button>
+			<a href="{{ $loginUrl }}" class="btn btn-default">
+				<span class="glyphicon glyphicon-log-in"></span>
+				@lang('c::auth.login-link')
+			</a>
 		</div>
 	</div>
 

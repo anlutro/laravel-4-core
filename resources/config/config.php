@@ -17,6 +17,9 @@ return [
 	// Whether to queue password reminder emails.
 	'queue-reminder-mail' => false,
 
+	// allow "remember me" option when logging in
+	'login-remember' => false,
+
 	// Where to redirect after login if no "intended" URL is in session. This
 	// will be passed to URL::to(), so a relative URI is good enough.
 	'redirect-login' => '/',

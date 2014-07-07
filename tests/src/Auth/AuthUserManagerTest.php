@@ -145,7 +145,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 		$users = $this->mockUsers(); $auth = $this->mockAuth();
 		$mng = $this->makeManager($db, $users, $auth, $this->mockTranslator());
 		$input = ['username' => 'foo', 'password' => 'bar'];
-		$auth->shouldReceive('attempt')->once()->with($input + ['is_active' => 1])->andReturn(true);
+		$auth->shouldReceive('attempt')->once()->with($input + ['is_active' => 1], false)->andReturn(true);
 		$auth->shouldReceive('user->rehashPassword')->once()->with('bar');
 		$mng->login($input);
 	}

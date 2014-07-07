@@ -35,7 +35,7 @@ class AuthControllerTest extends AppTestCase
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
 		$credentials = array_only($input, ['username', 'password']);
-		$this->manager->shouldReceive('login')->with($credentials)->andReturn(true);
+		$this->manager->shouldReceive('login')->with($credentials, false)->andReturn(true);
 
 		$this->postAction('login', [], $input);
 
@@ -47,7 +47,7 @@ class AuthControllerTest extends AppTestCase
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
 		$credentials = array_only($input, ['username', 'password']);
-		$this->manager->shouldReceive('login')->with($credentials)->andReturn(false);
+		$this->manager->shouldReceive('login')->with($credentials, false)->andReturn(false);
 
 		$this->postAction('login', [], $input);
 

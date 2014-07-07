@@ -5,9 +5,7 @@
 @section('content')
 
 <div class="panel panel-default login-panel">
-	<div class="panel-heading">
-		<h3 class="panel-title">{{ Lang::get('c::auth.login-title') }}</h3>
-	</div>
+	<h1 class="text-center">{{ Lang::get('c::auth.login-title') }}</h1>
 	<div class="panel-body">
 		{{ Form::open(['url' => $formAction, 'class' => 'form-horizontal', 'role' => 'form']) }}
 
@@ -24,6 +22,18 @@
 					{{ Form::password('password', ['class' => 'form-control']) }}
 				</div>
 			</div>
+
+			@if ($remember)
+			<div class="form-group">
+				<div class="col-sm-9 col-sm-offset-3">
+					<div class="checkbox">
+						<label>
+							{{ Form::checkbox('remember_me') }} {{ Lang::get('c::auth.login-remember') }}
+						</label>
+					</div>
+				</div>
+			</div>
+			@endif
 
 			<div class="form-group">
 				<div class="col-sm-offset-3 col-sm-9">

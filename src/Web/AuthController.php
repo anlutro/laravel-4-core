@@ -59,6 +59,7 @@ class AuthController extends Controller
 	{
 		$viewData = [
 			'formAction' => $this->url('attemptLogin'),
+			'remember' => Config::get('c::login-remember', false),
 		];
 
 		if ($this->remindersEnabled()) {
@@ -80,8 +81,10 @@ class AuthController extends Controller
 			'password'  => $this->input('password'),
 		];
 
+		$remember = Config::get('c::login-remember') && $this->input('remember_me');
+
 		try {
-			if ($this->users->login($credentials)) {
+			if ($this->users->login($credentials, $remember)) {
 				$url = Config::get('c::redirect-login', '/');
 				return Redirect::intended($url)
 					->with('success', Lang::get('c::auth.login-success'));
@@ -173,6 +176,7 @@ class AuthController extends Controller
 	{
 		return $this->view('c::auth.reminder', [
 			'formAction' => $this->url('sendReminder'),
+			'loginUrl' => $this->url('@login'),
 		]);
 	}
 
