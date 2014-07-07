@@ -84,6 +84,8 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerConfigFiles();
 		$this->registerLangFiles();
 		$this->registerViewFiles();
+
+		$this->registerAuthDriver();
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
 		$this->registerLayoutCreator();
@@ -134,6 +136,14 @@ class CoreServiceProvider extends ServiceProvider
 		}
 
 		$this->app['view']->addNamespace($this->namespace, static::$resPath . '/views');
+	}
+
+	protected function registerAuthDriver()
+	{
+		$this->app['auth']->extend('eloquent-exceptions', function() {
+			$model = $this->app['config']['auth.model'];
+			return new Auth\Laravel\EloquentUserProvider($this->app['hash'], $model);
+		});
 	}
 
 	/**
