@@ -5,15 +5,15 @@
 @section('content')
 
 <div class="page-header">
-	<h1>{{ $user->name ?: $user->username }}</h1>
+	<h1>{{{ $user->name ?: $user->username }}}</h1>
 </div>
 
 <dl class="dl-horizontal">
 	<dt>@lang('c::user.username-field')</dt>
-	<dd>{{ $user->username }}</dd>
+	<dd>{{{ $user->username }}}</dd>
 
 	<dt>@lang('c::user.name-field')</dt>
-	<dd>{{ $user->name }}</dd>
+	<dd>{{{ $user->name }}}</dd>
 
 	<dt>@lang('c::user.email-field')</dt>
 	<dd>{{ $user->email ? HTML::mailto($user->email) : '' }}</dd>
