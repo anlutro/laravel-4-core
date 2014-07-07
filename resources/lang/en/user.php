@@ -10,6 +10,7 @@
 return array(
 
 	'active-field' => 'Active',
+	'activation-field' => 'Send activation instructions',
 	'admin-newuser' => 'Add user',
 	'admin-edituser' => 'Edit user',
 	'admin-title' => 'Administration',

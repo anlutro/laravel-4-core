@@ -10,6 +10,7 @@
 return array(
 
 	'active-field' => 'Aktiv',
+	'activation-field' => 'Send aktiveringsinstrukser',
 	'admin-newuser' => 'Ny bruker',
 	'admin-edituser' => 'Rediger bruker',
 	'admin-title' => 'Administrasjon',

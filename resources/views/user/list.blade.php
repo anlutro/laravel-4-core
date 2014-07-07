@@ -13,7 +13,7 @@
 	<div class="form-group">
 		{{ Form::select('usertype', $userTypes, Input::get('usertype'), ['class' => 'form-control input-sm']) }}
 	</div>
-	{{ Form::submit(Lang::get('c::std.search'), ['class' => 'btn btn-default btn-sm']) }}
+	<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-search"></span> @lang('c::std.search')</button>
 
 	<span class="pull-right">
 		<a href="{{ $backUrl }}" class="btn btn-default btn-sm">

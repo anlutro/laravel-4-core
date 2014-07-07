@@ -231,6 +231,7 @@ class UserController extends Controller
 			'userTypes'  => $this->getUserTypes(),
 			'formAction' => $this->url('store'),
 			'backUrl'    => $this->url('index'),
+			'activate'   => $this->users->activationsEnabled(),
 		]);
 	}
 

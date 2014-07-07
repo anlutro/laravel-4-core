@@ -197,6 +197,7 @@ class UserControllerTest extends AppTestCase
 			->andReturn($this->getMockUser());
 		$this->users->shouldReceive('getUserTypes')->once()
 			->andReturn([]);
+		$this->users->shouldReceive('activationsEnabled')->once();
 
 		$this->getAction('create');
 
