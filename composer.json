@@ -30,7 +30,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"anlutro\\Core\\Tests\\": "tests/src/"
+			"anlutro\\Core\\Tests\\": "tests/"
 		}
 	},
 	"config": {
