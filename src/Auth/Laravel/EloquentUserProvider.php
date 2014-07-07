@@ -26,7 +26,7 @@ class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 
 	public function retrieveByToken($id, $token)
 	{
-		if ($user = parent::retrieveByToken($id)) {
+		if ($user = parent::retrieveByToken($id, $token)) {
 			return $user;
 		}
 		
