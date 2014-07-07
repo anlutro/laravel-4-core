@@ -6,6 +6,7 @@ use Illuminate\Mail\Message;
 use Mockery as m;
 use Illuminate\Support\Facades;
 use anlutro\Core\Tests\AppTestCase;
+use anlutro\Core\Auth\AuthenticationException;
 
 class PasswordResetTest extends AppTestCase
 {
@@ -23,11 +24,6 @@ class PasswordResetTest extends AppTestCase
 	public function createApplication()
 	{
 		$app = parent::createApplication();
-		$providers = $app['config']->get('app.providers');
-		$providers = array_filter($providers, function($provider) {
-			return strpos($provider, 'Reminder' !== null);
-		});
-		$app['config']->set('app.providers', $providers);
 		$app['config']->set('auth.reminder.email', null);
 		return $app;
 	}
@@ -86,8 +82,12 @@ class PasswordResetTest extends AppTestCase
 		$result = $manager->resetPasswordForCredentials(['email' => 'foo@bar.com'], ['password' => 'barfoo', 'password_confirmation' => 'barfoo'], $token);
 		$this->assertEquals(true, $result, $manager->getErrors());
 
-		$result = $manager->login(['username' => 'foobar', 'password' => 'foobar']);
-		$this->assertEquals(false, $result);
+		try {
+			$manager->login(['username' => 'foobar', 'password' => 'foobar']);
+		} catch (AuthenticationException $e) {
+			$this->assertEquals('Incorrect password', $e->getMessage());
+		}
+
 		$result = $manager->login(['username' => 'foobar', 'password' => 'barfoo']);
 		$this->assertEquals(true, $result);
 	}

@@ -43,6 +43,7 @@ class ReminderServiceProvider extends BaseProvider
 	 */
 	protected function registerReminderRepository()
 	{
+		unset($this->app['auth.reminder.repository']);
 		$this->app->bindShared('auth.reminder.repository', function($app) {
 
 			$connection = $app['db']->connection();
@@ -57,6 +58,7 @@ class ReminderServiceProvider extends BaseProvider
 
 	protected function registerPasswordBroker()
 	{
+		unset($this->app['auth.reminder']);
 		$this->app->bindShared('auth.reminder', function($app) {
 
 			$reminders = $app['auth.reminder.repository'];
