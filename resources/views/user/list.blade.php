@@ -51,7 +51,12 @@
 					<input type="checkbox" name="bulk[{{ $user->id }}]">
 				</td>
 				<td>{{{ $user->id }}}</td>
-				<td>{{{ $user->name }}}</td>
+				<td>
+					{{{ $user->name }}}
+					@if ($user->user_type !== 'user')
+					<span class="label label-default">@lang('c::user.usertype-'.$user->user_type)</span>
+					@endif
+				</td>
 				<td>{{{ $user->email }}}</td>
 				<td>{{{ $user->phone }}}</td>
 				<td class="text-right">

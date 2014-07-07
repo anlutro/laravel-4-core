@@ -30,11 +30,17 @@ return array(
 	'updating-password-explanation' => 'You only need to fill in the following forms if you intend to change the password.',
 	'update-success' => 'User updated!',
 	'username-field' => 'Username',
-	'usertype-admin' => 'Administrators',
-	'usertype-all' => 'All users',
+
 	'usertype-field' => 'Group',
-	'usertype-user' => 'Normal users',
-	'usertype-mod' => 'Privileged users',
-	'usertype-superadmin' => 'Super Admins',
+	'usertype-user' => 'Normal user',
+	'usertype-mod' => 'Privileged user',
+	'usertype-admin' => 'Administrator',
+	'usertype-superadmin' => 'Superadmin',
+
+	'usertypes-all' => 'All users',
+	'usertypes-user' => 'Normal users',
+	'usertypes-mod' => 'Privileged users',
+	'usertypes-admin' => 'Administrators',
+	'usertypes-superadmin' => 'Superadmins',
 
 );

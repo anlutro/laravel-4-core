@@ -30,11 +30,17 @@ return array(
 	'updating-password-explanation' => 'Du trenger ikke fylle inn de følgende feltene med mindre du vil endre passordet.',
 	'update-success' => 'Brukeren ble oppdatert!',
 	'username-field' => 'Brukernavn',
-	'usertype-admin' => 'Administratorer',
-	'usertype-all' => 'Alle brukere',
+
 	'usertype-field' => 'Gruppe',
-	'usertype-user' => 'Vanlige brukere',
-	'usertype-mod' => 'Priviligerte brukere',
-	'usertype-superadmin' => 'Superbrukere',
+	'usertype-admin' => 'Administrator',
+	'usertype-user' => 'Vanlig bruker',
+	'usertype-mod' => 'Priviligert bruker',
+	'usertype-superadmin' => 'Superbruker',
+
+	'usertypes-admin' => 'Administratorer',
+	'usertypes-all' => 'Alle brukere',
+	'usertypes-user' => 'Vanlige brukere',
+	'usertypes-mod' => 'Priviligerte brukere',
+	'usertypes-superadmin' => 'Superbrukere',
 
 );
