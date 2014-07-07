@@ -86,7 +86,7 @@ class UserController extends Controller
 			->paginate(20)
 			->getAll();
 
-		$types = ['all' => Lang::get('c::user.usertype-all')]
+		$types = ['' => Lang::get('c::user.usertype-all')]
 			+ $this->getUserTypes();
 
 		return $this->view('c::user.list', [
