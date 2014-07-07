@@ -24,15 +24,6 @@ class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 		throw new AuthenticationException("No user with identifier [$id] found");
 	}
 
-	public function retrieveByToken($id, $token)
-	{
-		if ($user = parent::retrieveByToken($id, $token)) {
-			return $user;
-		}
-		
-		throw new AuthenticationException("No user with identifier [$id] and token [$token] found");
-	}
-
 	public function retrieveByCredentials(array $credentials)
 	{
 		if ($user = parent::retrieveByCredentials($credentials)) {
