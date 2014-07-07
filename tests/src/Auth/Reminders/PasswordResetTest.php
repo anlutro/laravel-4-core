@@ -84,6 +84,7 @@ class PasswordResetTest extends AppTestCase
 
 		try {
 			$manager->login(['username' => 'foobar', 'password' => 'foobar']);
+			$this->fail('Exception should have been thrown');
 		} catch (AuthenticationException $e) {
 			$this->assertEquals('Incorrect password', $e->getMessage());
 		}
