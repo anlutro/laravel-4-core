@@ -15,6 +15,7 @@ return array(
 	'admin-title' => 'Administration',
 	'admin-userlist' => 'List of users',
 	'create-success' => 'User created!',
+	'delete-confirm' => 'Are you sure you want to delete this user?',
 	'email-field' => 'E-mail',
 	'model-profile' => 'Profile',
 	'model-user' => 'User',

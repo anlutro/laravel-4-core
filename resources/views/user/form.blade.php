@@ -92,7 +92,7 @@
 				@lang('c::std.back')
 			</a>
 			@if (isset($deleteUrl))
-			<button type="button" id="delete" class="btn btn-danger" data-deleteurl="{{ $deleteUrl }}">
+			<button type="button" id="delete-user-button" class="btn btn-danger" data-delete-url="{{ $deleteUrl }}" data-confirm-msg="{{ Lang::get('c::user.delete-confirm') }}">
 				<span class="glyphicon glyphicon-trash"></span>
 				@lang('c::std.delete')
 			</button>
@@ -101,5 +101,25 @@
 	</div>
 
 {{ Form::close() }}
+
+@stop
+
+@section('scripts')
+
+<script>
+$(function() {
+	$('#delete-user-button').click(function() {
+		var $this = $(this);
+		if (!window.confirm($this.data('confirm-msg'))) {
+			return;
+		}
+
+		var form = $this.closest('form');
+		form.attr('action', $this.data('delete-url'));
+		form.append('<input type="hidden" name="_method" value="delete">');
+		form.submit();
+	});
+});
+</script>
 
 @stop

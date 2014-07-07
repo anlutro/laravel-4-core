@@ -47,14 +47,14 @@ return array(
 
 	// other misc stuff
 	'browsehappy' => 'You are using an <strong>outdated</strong> browser. Please <a href=":url">upgrade your browser</a> to improve your experience.',
+	'from' => 'From',
 	'home' => 'Home',
+	'maintenance-info' => 'The site is down for maintenance and will be back momentarily. We apologize for any inconvenience.',
 	'page-not-found' => 'The page you were looking for was not found!',
+	'toggle-menu' => 'Open/close menu',
+	'token-mismatch' => 'This website uses tokens to protect the server from spam and hacking attempts. The token sent with your request was invalid. Please try again.',
 	'under-construction' => 'Under construction',
 	'under-construction-text' => 'This part of the website is currently under construction. Please check again later!',
-	'from' => 'From',
 	'until' => 'Until',
-	'token-mismatch' => 'This website uses tokens to protect the server from spam and hacking attempts. The token sent with your request was invalid. Please try again.',
-	'toggle-menu' => 'Open/close menu',
-	'maintenance-info' => 'The site is down for maintenance and will be back momentarily. We apologize for any inconvenience.',
 
 );

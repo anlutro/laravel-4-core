@@ -15,6 +15,7 @@ return array(
 	'admin-title' => 'Administrasjon',
 	'admin-userlist' => 'Brukerliste',
 	'create-success' => 'Brukeren ble laget!',
+	'delete-confirm' => 'Er du sikker på at du vil slette denne brukeren?',
 	'email-field' => 'E-post',
 	'model-profile' => 'Profil',
 	'model-user' => 'Bruker',
