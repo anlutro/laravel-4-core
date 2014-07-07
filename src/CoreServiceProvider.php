@@ -263,6 +263,12 @@ class CoreServiceProvider extends ServiceProvider
 				$url->action('anlutro\Core\Web\AuthController@logout'),
 				['id' => 'log-out']
 			);
+		} else {
+			$menu->getMenu('right')->addItem(
+				$lang->get('c::auth.login-title'),
+				$url->action('anlutro\Core\Web\AuthController@login'),
+				['id' => 'log-in', 'glyph' => 'log-in']
+			);
 		}
 
 		$this->app['view']->composer('c::menu', 'anlutro\Core\Web\Composers\MenuViewComposer');
