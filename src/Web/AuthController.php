@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 
+use anlutro\Core\Auth\AuthenticationException;
 use anlutro\Core\Auth\Activation\ActivationException;
 use anlutro\Core\Auth\UserManager;
 
@@ -79,11 +80,16 @@ class AuthController extends Controller
 			'password'  => $this->input('password'),
 		];
 
-		if ($this->users->login($credentials)) {
-			$url = Config::get('c::redirect-login', '/');
-			return Redirect::intended($url)
-				->with('success', Lang::get('c::auth.login-success'));
-		} else {
+		try {
+			if ($this->users->login($credentials)) {
+				$url = Config::get('c::redirect-login', '/');
+				return Redirect::intended($url)
+					->with('success', Lang::get('c::auth.login-success'));
+			}
+
+			throw new AuthenticationException(Lang::get('c::auth.login-failure'));
+		} catch (AuthenticationException $e) {
+			if (Config::get('app.debug')) throw $e;
 			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.login-failure'));
 		}
