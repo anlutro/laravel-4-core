@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Request;
 
 use anlutro\Core\Auth\AuthenticationException;
 use anlutro\Core\Auth\Activation\ActivationException;
+use anlutro\Core\Auth\Reminders\ReminderException;
 use anlutro\Core\Auth\UserManager;
 
 /**
@@ -25,6 +26,11 @@ use anlutro\Core\Auth\UserManager;
  */
 class AuthController extends Controller
 {
+	/**
+	 * @var boolean
+	 */
+	protected $debug;
+
 	/**
 	 * @var \anlutro\Core\Auth\UserManager
 	 */
@@ -35,6 +41,7 @@ class AuthController extends Controller
 	 */
 	public function __construct(UserManager $users)
 	{
+		$this->debug = (bool) Config::get('app.debug');
 		$this->users = $users;
 
 		$this->beforeFilter(function() {
@@ -86,7 +93,7 @@ class AuthController extends Controller
 			return Redirect::intended($url)
 				->with('success', Lang::get('c::auth.login-success'));
 		} catch (AuthenticationException $e) {
-			if (Config::get('app.debug')) throw $e;
+			if ($this->debug) throw $e;
 			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.login-failure'));
 		}
@@ -135,7 +142,7 @@ class AuthController extends Controller
 				->withErrors($e->getErrors())
 				->withInput();
 		} catch (ActivationException $e) {
-			if (Config::get('app.debug')) throw $e;
+			if ($this->debug) throw $e;
 			return $this->redirect('register')
 				->withErrors(Lang::get('c::auth.activation-failed'));
 		}
@@ -155,7 +162,7 @@ class AuthController extends Controller
 			$msg = Lang::get('c::auth.activation-success');
 			return $this->redirect('login')->with('success', $msg);
 		} catch (ActivationException $e) {
-			if (Config::get('app.debug')) throw $e;
+			if ($this->debug) throw $e;
 			return $this->redirect('login')
 				->withErrors(Lang::get('c::auth.activation-failed'));
 		}
@@ -181,10 +188,12 @@ class AuthController extends Controller
 	 */
 	public function sendReminder()
 	{
-		if ($this->users->requestPasswordResetForEmail($this->input('email'))) {
+		try {
+			$this->users->requestPasswordResetForEmail($this->input('email'));
 			return $this->redirect('login')
-				->with('info', Lang::get('c::auth.reminder-sent'));
-		} else {
+				->with('info', Lang::get('c::auth.resetpass-sent'));
+		} catch (ReminderException $e) {
+			if ($this->debug) throw $e;
 			return $this->redirect('reminder')
 				->withErrors(Lang::get('c::std.failure'));
 		}
@@ -218,10 +227,12 @@ class AuthController extends Controller
 		$token = $this->input('token');
 		$input = $this->input(['password', 'password_confirmation']);
 
-		if ($this->users->resetPasswordForCredentials($credentials, $input, $token)) {
+		try {
+			$this->users->resetPasswordForCredentials($credentials, $input, $token);
 			return $this->redirect('login')
 				->with('success', Lang::get('c::auth.reset-success'));
-		} else {
+		} catch (ReminderException $e) {
+			if ($this->debug) throw $e;
 			return $this->redirect('login')
 				->withErrors(Lang::get('reminders.token'));
 		}

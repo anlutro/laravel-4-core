@@ -91,7 +91,9 @@ class PasswordBroker
 				->subject($this->translator->get('c::auth.resetpass-title'));
 		});
 
-		return true;
+		if (count($this->mailer->failures()) > 0) {
+			throw new ReminderException('Could not send password reset e-mail');
+		}
 	}
 
 	/**
@@ -106,7 +108,8 @@ class PasswordBroker
 	public function resetUser(RemindableInterface $user, $token, $newPassword)
 	{
 		if (!$this->reminders->exists($user, $token)) {
-			return false;
+			$email = $user->getReminderEmail();
+			throw new ReminderException("Reset token not found or did not belong to this user - email: $email - token: $token");
 		}
 
 		$user->setPassword($newPassword);

@@ -203,7 +203,7 @@ class AuthUserManagerTest extends PHPUnit_Framework_TestCase
 	protected function mockUsers()
 	{
 		$mock = m::mock('anlutro\Core\Auth\Users\UserRepository');
-		$mock->shouldReceive('toggleExceptions')->once();
+		$mock->shouldReceive('toggleExceptions')->byDefault();
 		return $mock;
 	}
 

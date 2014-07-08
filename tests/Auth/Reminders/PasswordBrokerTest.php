@@ -94,7 +94,8 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 		$this->reminders->shouldReceive('exists')->once()
 			->with($user, $token)->andReturn(false);
 
-		$this->assertFalse($this->getBroker()->resetUser($user, $token, $newPassword));
+		$this->setExpectedException('anlutro\Core\Auth\Reminders\ReminderException');
+		$this->getBroker()->resetUser($user, $token, $newPassword);
 	}
 	
 	protected function setupMailExpectations($method = 'send', $success = true)
@@ -102,7 +103,8 @@ class PasswordBrokerTest extends PHPUnit_Framework_TestCase
 		$queue = ($method == 'send') ? false : true;
 		$method = $queue ? 'queue' : 'send';
 		$this->config['queue-email'] = $queue;
-		$this->mailer->shouldReceive($method)->once()->andReturn($success);
+		$this->mailer->shouldReceive($method)->once();
+		$this->mailer->shouldReceive('failures')->once()->andReturn($success ? [] : ['foo']);
 	}
 
 	protected function getMockUser($email = 'test@example.com')

@@ -68,7 +68,6 @@ class UserManager
 	) {
 		$this->db = $db;
 		$this->users = $users;
-		$this->users->toggleExceptions(true);
 		$this->auth = $auth;
 		$this->translator = $translator;
 	}
@@ -152,6 +151,8 @@ class UserManager
 
 		$this->checkPermissions($level);
 
+		$this->users->toggleExceptions(true);
+
 		return $this->db->transaction(function() use($attributes) {
 			$user = $this->users->createAsAdmin($attributes);
 
@@ -172,6 +173,8 @@ class UserManager
 	 */
 	public function register(array $attributes)
 	{
+		$this->users->toggleExceptions(true);
+
 		return $this->db->transaction(function() use($attributes) {
 			$user = $this->users->create($attributes);
 
@@ -337,9 +340,15 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
-		$user = $this->users->findByCredentials(['email' => $email]);
+		return $this->db->transaction(function() use($email) {
+			$user = $this->users->findByCredentials(['email' => $email]);
 
-		return $this->reminders->requestReset($user);
+			if (!$user) {
+				throw new Reminders\ReminderException;
+			}
+
+			return $this->reminders->requestReset($user);
+		});
 	}
 
 	/**
@@ -375,6 +384,10 @@ class UserManager
 
 		$user = $this->users->findByCredentials($credentials);
 
+		if (!$user) {
+			throw new Reminders\ReminderException;
+		}
+
 		return $this->resetPassword($user, $attributes, $token);
 	}
 
@@ -393,6 +406,7 @@ class UserManager
 			throw new \RuntimeException('Password reset service not set.');
 		}
 
+		$this->users->toggleExceptions(true);
 		$this->users->validPasswordReset($attributes);
 
 		$newPassword = $attributes['password'];

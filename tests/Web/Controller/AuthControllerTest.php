@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Web\Controller;
 use Mockery as m;
 use Illuminate\Support\Facades;
 use anlutro\Core\Auth\Activation\Activation;
+use anlutro\Core\Auth\Reminders\ReminderException;
 use anlutro\Core\Tests\AppTestCase;
 
 /** @medium */
@@ -145,7 +146,7 @@ class AuthControllerTest extends AppTestCase
 
 		$input = ['email' => 'foo', 'bar' => 'baz'];
 		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
-			->with($input['email'])->andReturn(false);
+			->with($input['email'])->andThrow(new ReminderException);
 
 		$this->postAction('sendReminder', [], $input);
 
@@ -194,8 +195,13 @@ class AuthControllerTest extends AppTestCase
 		$credentials = array_only($input, ['username']);
 		$passwords = array_only($input, ['password', 'password_confirmation']);
 		$token = $input['token'];
-		$this->manager->shouldReceive('resetPasswordForCredentials')->once()
-			->with($credentials, $passwords, $token)->andReturn($result);
+		$expectation = $this->manager->shouldReceive('resetPasswordForCredentials')
+			->once()->with($credentials, $passwords, $token);
+		if ($result) {
+			$expectation->andReturn(true);
+		} else {
+			$expectation->andThrow(new ReminderException);
+		}
 	}
 
 	public function testResetFailure()
