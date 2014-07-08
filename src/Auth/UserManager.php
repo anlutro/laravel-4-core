@@ -252,7 +252,7 @@ class UserManager
 		$level = (int) $this->getCurrentUser()->user_level;
 
 		if ($level < (int) $against) {
-			throw new AccessDeniedException;
+			throw new AccessDeniedException("Logged in user (level $level) cannot modify user with level $against");
 		}
 	}
 
