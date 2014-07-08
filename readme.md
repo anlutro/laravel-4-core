@@ -2,35 +2,63 @@
 
 This is my personal development boilerplate for Laravel 4. It includes user management and authentication controllers, views, language files and more.
 
-As this is a repository mostly for my personal (re-)use, I do not recommend you ever install this into your project as I will never bother to document everything. Instead, draw inspiration from it, pick up tricks here and there from reading source code.
+As this is a repository mostly for my personal use, I do not recommend you ever install this into your project as I will never bother to document everything. Instead, draw inspiration from it, pick up tricks here and there from reading source code.
 
 Also check out the following repositories, which contains classes that this package uses. These are suited to be included in your own projects and are more thoroughly documented.
 
-- https://github.com/anlutro/laravel-repository
-- https://github.com/anlutro/laravel-validation
+- https://github.com/anlutro/laravel-4-smart-errors
 - https://github.com/anlutro/laravel-controller
+- https://github.com/anlutro/laravel-repository
 - https://github.com/anlutro/laravel-testing
+- https://github.com/anlutro/laravel-validation
+- https://github.com/anlutro/php-menu
+
+## Prerequisites
+
+- Bootstrap 3 stylesheet with the necessary Javascript installed and included
+- Optional: The package anlutro/php-menu installed and its service provider registered
+- Optional: The package anlutro/l4-smart-errors installed and its service provider registered
 
 ## Installation
 
-`composer require anlutro/l4-core`
+`composer require anlutro/l4-core` - pick the latest minor release tag from github or packagist. For example, `0.16.*`
 
 Add `anlutro\Core\CoreServiceProvider` to the list of providers in `app/config/app.php`.
 
-If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `anlutro\Core\Auth\Reminders\ReminderServiceProvider`. If you want access to activation, add `anlutro\Core\Auth\Activation\ActivationServiceProvider` as well. Ideally you should never touch any of these but just let the `anlutro\Core\Auth\UserManager` class do its stuff.
+Run `artisan core:publish config` to publish config files. You can do the same with "migration", "lang" and "view" if you want. Delete the published files you don't want to override.
 
-The package does not use default config/migration paths, so in order to publish those you have to use the following commands:
+Remove everything from app/start/global.php except the line that sets up the logger.
 
-	php artisan config:publish --package=anlutro/l4-core --path=vendor/anlutro/l4-core/resources/config
-	cp ./vendor/anlutro/l4-core/resources/migrations/* ./app/database/migrations
+In app/config/auth.php, set the driver to "eloquent-exceptions".
 
-## Assumptions about your app
+In app/start/global.php or a serviceprovider's boot method, you need to add some code.
 
-You have one layout view available: `layout.main`.
+```php
+// either one of these, depending on if you want a sidebar or not
+View::alias('c::layout.main-nosidebar', 'c::layout.main');
+View::alias('c::layout.main-sidebar', 'c::layout.main');
 
-Your layout defines the sections 'title', 'content' and 'scripts' (at the end of the body tag, for javascript).
+// register CSS and JS files to be included
+View::composer('c::layout.main-generic', function($view) {
+	$view->styles->add(URL::asset('css/app.min.css'));
+	$view->headScripts->add(URL::asset('js/modernizr.min.js'));
+	$view->bodyScripts->add(URL::asset('js/jquery.min.js'));
+	$view->bodyScripts->add(URL::asset('js/bootstrap.min.js'));
+	$view->bodyScripts->add(URL::asset('js/app.min.js'));
+});
+```
 
-You have a Bootstrap 3-derived stylesheet.
+### Password reset
+
+If you want the new and improved password reset/reminder functionality, remove the default ReminderServiceProvider from the providers array and replace it with `anlutro\Core\Auth\Reminders\ReminderServiceProvider`.
+
+### User registration and activation
+
+If you want access to activation, add `anlutro\Core\Auth\Activation\ActivationServiceProvider` as well.
+
+### Improved form builder
+
+Replace the default Laravel HtmlServiceProvider with `anlutro\Core\Form\ServiceProvider` in the providers array.
 
 ## Contact
 
