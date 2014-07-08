@@ -31,6 +31,7 @@ return array(
 	'updating-password-explanation' => 'You only need to fill in the following forms if you intend to change the password.',
 	'update-success' => 'User updated!',
 	'username-field' => 'Username',
+	'user-inactive' => 'Inaktiv',
 
 	'usertype-field' => 'Group',
 	'usertype-user' => 'Normal user',

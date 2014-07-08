@@ -54,7 +54,10 @@
 				<td>
 					{{{ $user->name }}}
 					@if ($user->user_type !== 'user')
-					<span class="label label-default">@lang('c::user.usertype-'.$user->user_type)</span>
+					<span class="label label-info">@lang('c::user.usertype-'.$user->user_type)</span>
+					@endif
+					@if (!$user->is_active)
+					<span class="label label-default">@lang('c::user.user-inactive')</span>
 					@endif
 				</td>
 				<td>{{{ $user->email }}}</td>

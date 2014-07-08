@@ -31,6 +31,7 @@ return array(
 	'updating-password-explanation' => 'Du trenger ikke fylle inn de følgende feltene med mindre du vil endre passordet.',
 	'update-success' => 'Brukeren ble oppdatert!',
 	'username-field' => 'Brukernavn',
+	'user-inactive' => 'Inaktiv',
 
 	'usertype-field' => 'Gruppe',
 	'usertype-admin' => 'Administrator',
