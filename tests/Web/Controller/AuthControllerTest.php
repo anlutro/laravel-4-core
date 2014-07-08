@@ -5,10 +5,9 @@ use Mockery as m;
 use Illuminate\Support\Facades;
 use anlutro\Core\Auth\Activation\Activation;
 use anlutro\Core\Auth\Reminders\ReminderException;
-use anlutro\Core\Tests\AppTestCase;
 
 /** @medium */
-class AuthControllerTest extends AppTestCase
+class AuthControllerTest extends AuthControllerTestCase
 {
 	protected $controller = 'anlutro\Core\Web\AuthController';
 
@@ -36,8 +35,7 @@ class AuthControllerTest extends AppTestCase
 	public function testLoginSuccess()
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
-		$credentials = array_only($input, ['username', 'password']);
-		$this->manager->shouldReceive('login')->with($credentials, false)->andReturn(true);
+		$this->setupLoginExpectations($input, true);
 
 		$this->postAction('login', [], $input);
 
@@ -48,8 +46,7 @@ class AuthControllerTest extends AppTestCase
 	public function testLoginFailure()
 	{
 		$input = ['username' => 'foo', 'password' => 'bar', 'baz' => 'bar'];
-		$credentials = array_only($input, ['username', 'password']);
-		$this->manager->shouldReceive('login')->with($credentials, false)->andThrow(new \anlutro\Core\Auth\AuthenticationException);
+		$this->setupLoginExpectations($input, false);
 
 		$this->postAction('login', [], $input);
 
@@ -78,19 +75,9 @@ class AuthControllerTest extends AppTestCase
 		$this->assertResponseOk();
 	}
 
-	protected function setupRegister(array $input, \Exception $exception = null)
-	{
-		$this->manager->shouldReceive('setActivationService')->once();
-		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
-		$expectation = $this->manager->shouldReceive('register')->once()->with($input);
-		if ($exception) {
-			$expectation->andThrow($exception);
-		}
-	}
-
 	public function testRegisterSubmit()
 	{
-		$this->setupRegister($input = ['foo' => 'bar']);
+		$this->setupRegisterExpectations($input = ['foo' => 'bar']);
 
 		$this->postAction('attemptRegistration', [], $input);
 		$this->assertRedirectedToAction('login');
@@ -100,7 +87,7 @@ class AuthControllerTest extends AppTestCase
 	/** @test */
 	public function registerSubmitValidationFails()
 	{
-		$this->setupRegister($input = ['foo' => 'bar'], new \anlutro\LaravelValidation\ValidationException([]));
+		$this->setupRegisterExpectations($input = ['foo' => 'bar'], new \anlutro\LaravelValidation\ValidationException([]));
 
 		$this->postAction('attemptRegistration', [], $input);
 		$this->assertRedirectedToAction('register');
@@ -110,23 +97,31 @@ class AuthControllerTest extends AppTestCase
 	/** @test */
 	public function registerSubmitActivationFails()
 	{
-		$this->setupRegister($input = ['foo' => 'bar'], new \anlutro\Core\Auth\Activation\ActivationException());
+		$this->setupRegisterExpectations($input = ['foo' => 'bar'], new \anlutro\Core\Auth\Activation\ActivationException());
 
 		$this->postAction('attemptRegistration', [], $input);
 		$this->assertRedirectedToAction('register');
 		$this->assertSessionHasErrors();
 	}
 
-	public function testActivation()
+	public function testActivationSuccess()
 	{
-		$this->manager->shouldReceive('setActivationService')->once();
-		$this->app->register('anlutro\Core\Auth\Activation\ActivationServiceProvider');
+		$this->setupActivationExpectations('foo', true);
 
-		$this->manager->shouldReceive('activateByCode')->with('foo')->once()->andReturn(true);
-		
 		$this->getAction('activate', ['activation_code' => 'foo']);
 
 		$this->assertRedirectedToAction('anlutro\Core\Web\AuthController@login');
+		$this->assertSessionHas('success');
+	}
+
+	public function testActivationFailure()
+	{
+		$this->setupActivationExpectations('foo', false);
+
+		$this->getAction('activate', ['activation_code' => 'foo']);
+
+		$this->assertRedirectedToAction('anlutro\Core\Web\AuthController@login');
+		$this->assertSessionHasErrors();
 	}
 
 	public function testResetStepOneForm()
@@ -141,12 +136,8 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetStepOneFailure()
 	{
-		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
-
-		$input = ['email' => 'foo', 'bar' => 'baz'];
-		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
-			->with($input['email'])->andThrow(new ReminderException);
+		$input = ['email' => 'foo@bar.com', 'bar' => 'baz'];
+		$this->setupRequestResetExpectations('foo@bar.com', false);
 
 		$this->postAction('sendReminder', [], $input);
 
@@ -156,13 +147,8 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetStepOneSuccess()
 	{
-		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
-
-		$input = ['email' => 'foo', 'bar' => 'baz'];
-		$mockUser = $this->getMockUser();
-		$this->manager->shouldReceive('requestPasswordResetForEmail')->once()
-			->with($input['email'])->andReturn(true);
+		$input = ['email' => 'foo@bar.com', 'bar' => 'baz'];
+		$this->setupRequestResetExpectations('foo@bar.com', true);
 
 		$this->postAction('sendReminder', [], $input);
 
@@ -190,25 +176,8 @@ class AuthControllerTest extends AppTestCase
 		$this->assertRedirectedToAction('login');
 	}
 
-	protected function setupResetExpectations(array $input, $result)
-	{
-		$credentials = array_only($input, ['username']);
-		$passwords = array_only($input, ['password', 'password_confirmation']);
-		$token = $input['token'];
-		$expectation = $this->manager->shouldReceive('resetPasswordForCredentials')
-			->once()->with($credentials, $passwords, $token);
-		if ($result) {
-			$expectation->andReturn(true);
-		} else {
-			$expectation->andThrow(new ReminderException);
-		}
-	}
-
 	public function testResetFailure()
 	{
-		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
-
 		$input = [
 			'username' => 'bar',
 			'token' => 'baz',
@@ -216,7 +185,7 @@ class AuthControllerTest extends AppTestCase
 			'password_confirmation' => 'bar',
 			'foo' => 'baz'
 		];
-		$this->setupResetExpectations($input, false);
+		$this->setupResetPasswordExpectations($input, false);
 
 		$this->postAction('attemptReset', [], $input);
 
@@ -226,9 +195,6 @@ class AuthControllerTest extends AppTestCase
 
 	public function testResetSuccess()
 	{
-		$this->manager->shouldReceive('setReminderService')->once();
-		$this->app->register('anlutro\Core\Auth\Reminders\ReminderServiceProvider');
-
 		$input = [
 			'username' => 'bar',
 			'token' => 'baz',
@@ -236,7 +202,7 @@ class AuthControllerTest extends AppTestCase
 			'password_confirmation' => 'bar',
 			'foo' => 'baz'
 		];
-		$this->setupResetExpectations($input, true);
+		$this->setupResetPasswordExpectations($input, true);
 
 		$this->postAction('attemptReset', [], $input);
 

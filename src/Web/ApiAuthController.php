@@ -13,7 +13,9 @@ use anlutro\LaravelController\ApiController;
 use anlutro\LaravelValidation\ValidationException;
 use Illuminate\Support\Facades\Config;
 
+use anlutro\Core\Auth\AuthenticationException;
 use anlutro\Core\Auth\Activation\ActivationException;
+use anlutro\Core\Auth\Reminders\ReminderException;
 use anlutro\Core\Auth\UserManager;
 
 /**
@@ -21,6 +23,11 @@ use anlutro\Core\Auth\UserManager;
  */
 class ApiAuthController extends ApiController
 {
+	/**
+	 * @var boolean
+	 */
+	protected $debug;
+
 	/**
 	 * @var \anlutro\Core\Auth\UserManager
 	 */
@@ -31,6 +38,7 @@ class ApiAuthController extends ApiController
 	 */
 	public function __construct(UserManager $users)
 	{
+		$this->debug = (bool) Config::get('app.debug');
 		$this->users = $users;
 
 		$this->beforeFilter(function() {
@@ -58,11 +66,15 @@ class ApiAuthController extends ApiController
 			'password'  => $this->input('password'),
 		];
 
-		if ($this->users->login($credentials)) {
+		$remember = Config::get('c::login-remember') && $this->input('remember_me');
+
+		try {
+			$this->users->login($credentials, $remember);
 			$user = $this->users->getCurrentUser();
 			$data = ['status' => 'logged in', 'user' => $user];
 			return $this->jsonResponse($data, 200);
-		} else {
+		} catch (AuthenticationException $e) {
+			if ($this->debug) throw $e;
 			return $this->status('login failed', 401);
 		}
 	}
@@ -93,7 +105,7 @@ class ApiAuthController extends ApiController
 		} catch (ValidationException $e) {
 			return $this->error($e->getErrors());
 		} catch (ActivationException $e) {
-			if (Config::get('app.debug')) throw $e;
+			if ($this->debug) throw $e;
 			return $this->error(['registration failed, please try again later']);
 		}
 	}
@@ -111,7 +123,7 @@ class ApiAuthController extends ApiController
 			$this->users->activateByCode($code);
 			return $this->success();
 		} catch (ActivationException $e) {
-			if (Config::get('app.debug')) throw $e;
+			if ($this->debug) throw $e;
 			return $this->error(['activation failed']);
 		}
 	}
@@ -123,9 +135,10 @@ class ApiAuthController extends ApiController
 	 */
 	public function sendReminder()
 	{
-		if ($this->users->requestPasswordResetForEmail($this->input('email'))) {
+		try {
+			$this->users->requestPasswordResetForEmail($this->input('email'));
 			return $this->success(['reminder email sent']);
-		} else {
+		} catch (ReminderException $e) {
 			return $this->error(['no user with that e-mail']);
 		}
 	}
@@ -141,11 +154,11 @@ class ApiAuthController extends ApiController
 		$token = $this->input('token');
 		$input = $this->input(['password', 'password_confirmation']);
 
-		if ($this->users->resetPasswordForCredentials($credentials, $input, $token)) {
+		try {
+			$this->users->resetPasswordForCredentials($credentials, $input, $token);
 			return $this->success(['password reset, please log in']);
-		} else {
-			$errors = array_merge($this->users->getErrors(), ['password could not be reset']);
-			return $this->error($errors);
+		} catch (ReminderException $e) {
+			return $this->error(['password could not be reset']);
 		}
 	}
 }
