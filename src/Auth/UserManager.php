@@ -263,13 +263,18 @@ class UserManager
 	 * @param  boolean $remember
 	 *
 	 * @return bool
+	 * @throws AuthenticationException
 	 */
 	public function login(array $credentials, $remember = false)
 	{
 		$credentials['is_active'] = 1;
 
+		// if the "eloquent-exceptions" driver is being used, an exception will
+		// be thrown if authentication failed. if one of the stock drivers are
+		// being used, it will just return false, and we have to throw the
+		// exception ourselves, with less information.
 		if (!$this->auth->attempt($credentials, $remember)) {
-			return false;
+			throw new AuthenticationException('Illuminate\Auth\Guard::attempt returned false');
 		}
 
 		$this->getCurrentUser()->rehashPassword($credentials['password']);
