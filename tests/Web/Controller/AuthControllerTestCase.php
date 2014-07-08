@@ -23,6 +23,12 @@ abstract class AuthControllerTestCase extends AppTestCase
 		$this->app->instance('anlutro\Core\Auth\UserManager', $this->manager);
 	}
 
+	public function tearDown()
+	{
+		parent::tearDown();
+		m::close();
+	}
+
 	protected function setupLoginExpectations(array $input, $result)
 	{
 		$credentials = array_only($input, ['username', 'password']);

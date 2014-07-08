@@ -2,18 +2,15 @@
 namespace anlutro\Core\Tests\Web\Controller;
 
 use Mockery as m;
-use anlutro\Core\Tests\AppTestCase;
 
 /** @medium */
-class ApiUserControllerTest extends AppTestCase
+class ApiUserControllerTest extends UserControllerTestCase
 {
 	protected $controller = 'anlutro\Core\Web\UserController';
 
 	public function setUp()
 	{
 		parent::setUp();
-		$this->users = m::mock('anlutro\Core\Auth\UserManager');
-		$this->app->instance('anlutro\Core\Auth\UserManager', $this->users);
 
 		// instead of setting up the filters and having to deal with auth/csrf, just
 		// bind the controllers manually
@@ -24,11 +21,6 @@ class ApiUserControllerTest extends AppTestCase
 		$this->client->setServerParameter('HTTP_X-Requested-With', 'XMLHttpRequest');
 		$this->client->setServerParameter('HTTP_CONTENT_TYPE', 'application/json');
 		$this->client->setServerParameter('HTTP_ACCEPT', 'application/json');
-	}
-
-	public function tearDown()
-	{
-		m::close();
 	}
 
 	public function assertResponseJson($response)
@@ -51,7 +43,7 @@ class ApiUserControllerTest extends AppTestCase
 
 	protected function setupUpdateExpectation($input, $id, $result)
 	{
-		$user = $this->expectFindUser($id);
+		$user = $this->setupFindExpectations($id);
 		$expectation = $this->users->shouldReceive('updateAsAdmin')->once()->with($user, $input);
 		if ($result instanceof \Exception) {
 			$expectation->andThrow($result);
@@ -171,7 +163,7 @@ class ApiUserControllerTest extends AppTestCase
 		$this->assertEquals(404, $response->getStatusCode());
 	}
 
-	protected function expectFindUser($id)
+	protected function setupFindExpectations($id)
 	{
 		$mockUser = $this->getMockUser();
 		$mockUser->id = $id;
@@ -181,7 +173,7 @@ class ApiUserControllerTest extends AppTestCase
 
 	public function testShow()
 	{
-		$id = 1; $user = $this->expectFindUser($id);
+		$id = 1; $user = $this->setupFindExpectations($id);
 
 		$response = $this->getAction('show', [$id]);
 		

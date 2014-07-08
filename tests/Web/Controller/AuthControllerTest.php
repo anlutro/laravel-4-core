@@ -11,18 +11,6 @@ class AuthControllerTest extends AuthControllerTestCase
 {
 	protected $controller = 'anlutro\Core\Web\AuthController';
 
-	public function setUp()
-	{
-		parent::setUp();
-		$this->manager = m::mock('anlutro\Core\Auth\UserManager');
-		$this->app->instance('anlutro\Core\Auth\UserManager', $this->manager);
-	}
-
-	public function tearDown()
-	{
-		m::close();
-	}
-
 	public function testLogin()
 	{
 		$this->manager->shouldReceive('remindersEnabled')->once()->andReturn(false);

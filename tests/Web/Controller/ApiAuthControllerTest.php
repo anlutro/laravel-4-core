@@ -23,11 +23,6 @@ class ApiAuthControllerTest extends AuthControllerTestCase
 		$this->client->setServerParameter('HTTP_ACCEPT', 'application/json');
 	}
 
-	public function tearDown()
-	{
-		m::close();
-	}
-
 	public function assertResponseJson($response)
 	{
 		$this->assertInstanceOf('Illuminate\Http\JsonResponse', $response);

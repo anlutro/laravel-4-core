@@ -2,46 +2,11 @@
 namespace anlutro\Core\Tests\Web\Controller;
 
 use Mockery as m;
-use anlutro\Core\Tests\AppTestCase;
 
 /** @medium */
-class UserControllerTest extends AppTestCase
+class UserControllerTest extends UserControllerTestCase
 {
 	protected $controller = 'anlutro\Core\Web\UserController';
-
-	public function setUp()
-	{
-		parent::setUp();
-		$this->users = m::mock('anlutro\Core\Auth\UserManager');
-		$this->app->instance('anlutro\Core\Auth\UserManager', $this->users);
-	}
-
-	public function tearDown()
-	{
-		m::close();
-	}
-
-	protected function setUpProfileUpdateExpectations($input, $result)
-	{
-		$expectation = $this->users->shouldReceive('updateCurrentProfile')->with($input);
-		if ($result instanceof \Exception) {
-			$expectation->andThrow($result);
-		} else {
-			$expectation->andReturn($result);
-		}
-	}
-
-	protected function setupUpdateExpectation($input, $id, $result)
-	{
-		$user = $this->expectFindUser($id);
-		$expectation = $this->users->shouldReceive('updateAsAdmin')->once()->with($user, $input);
-		if ($result instanceof \Exception) {
-			$expectation->andThrow($result);
-		} else {
-			$expectation->andReturn($result);
-		}
-		return $user;
-	}
 
 	public function testViewProfile()
 	{
@@ -74,14 +39,6 @@ class UserControllerTest extends AppTestCase
 
 		$this->assertRedirectedToAction('profile');
 		$this->assertSessionHasErrors('baz');
-	}
-
-	protected function setUpIndexExpectations($results = array())
-	{
-		$this->users->shouldReceive('getUserTypes')->once()
-			->andReturn([]);
-		$this->users->shouldReceive('paginate->getAll')->once()
-			->andReturn($results);
 	}
 
 	public function testIndex()
@@ -140,17 +97,9 @@ class UserControllerTest extends AppTestCase
 		$this->assertSessionHasErrors();
 	}
 
-	protected function expectFindUser($id)
-	{
-		$mockUser = $this->getMockUser();
-		$mockUser->id = $id;
-		$this->users->shouldReceive('findByKey')->once()->andReturn($mockUser);
-		return $mockUser;
-	}
-
 	public function testShow()
 	{
-		$id = 1; $user = $this->expectFindUser($id);
+		$id = 1; $user = $this->setupFindExpectations($id);
 
 		$this->getAction('show', [$id]);
 
@@ -160,7 +109,7 @@ class UserControllerTest extends AppTestCase
 
 	public function testEdit()
 	{
-		$id = 1; $user = $this->expectFindUser($id);
+		$id = 1; $user = $this->setupFindExpectations($id);
 		$this->users->shouldReceive('getUserTypes')->once()->andReturn([]);
 		$this->users->shouldReceive('checkPermissions')->once()->with($user);
 
@@ -240,12 +189,5 @@ class UserControllerTest extends AppTestCase
 
 		$this->assertRedirectedToAction('create');
 		$this->assertSessionHasErrors();
-	}
-
-	protected function getMockUser()
-	{
-		$user = m::mock('anlutro\Core\Auth\Users\UserModel')->makePartial();
-		$user->is_active = '1';
-		return $user;
 	}
 }
