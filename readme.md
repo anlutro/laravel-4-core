@@ -58,7 +58,7 @@ If you want access to activation, add `anlutro\Core\Auth\Activation\ActivationSe
 
 ### Improved form builder
 
-Replace the default Laravel HtmlServiceProvider with `anlutro\Core\Form\ServiceProvider` in the providers array.
+Replace the default Laravel HtmlServiceProvider with `anlutro\Core\Html\ServiceProvider` in the providers array.
 
 ## Contact
 

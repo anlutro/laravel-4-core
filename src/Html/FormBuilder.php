@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\Core\Form;
+namespace anlutro\Core\Html;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Html\FormBuilder as BaseFormBuilder;

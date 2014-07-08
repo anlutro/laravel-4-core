@@ -1,5 +1,5 @@
 <?php
-namespace anlutro\Core\Form;
+namespace anlutro\Core\Html;
 
 use Illuminate\Html\HtmlServiceProvider as BaseServiceProvider;
 
