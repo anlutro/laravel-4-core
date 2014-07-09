@@ -13,10 +13,19 @@ use IteratorAggregate;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 
+/**
+ * Collection for holding HTML scripts such as CSS and JS files.
+ */
 class ScriptCollection implements IteratorAggregate
 {
 	protected $scripts = [];
 
+	/**
+	 * Add a script to the collection.
+	 *
+	 * @param string  $url
+	 * @param integer $priority Larger number = higher priority = comes before other scripts
+	 */
 	public function add($url, $priority = 0)
 	{
 		if (!is_string($url)) {
@@ -28,6 +37,13 @@ class ScriptCollection implements IteratorAggregate
 		$this->scripts[$priority][] = $url;
 	}
 
+	/**
+	 * Remove a script from the collection.
+	 *
+	 * @param  string $url
+	 *
+	 * @return void
+	 */
 	public function remove($url)
 	{
 		foreach ($this->scripts as $key => $scripts) {
@@ -39,6 +55,9 @@ class ScriptCollection implements IteratorAggregate
 		}
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getIterator()
 	{
 		krsort($this->scripts);
@@ -46,6 +65,11 @@ class ScriptCollection implements IteratorAggregate
 		return new RecursiveIteratorIterator(new RecursiveArrayIterator($this->scripts));
 	}
 
+	/**
+	 * Get all the items in the collection as a flat array.
+	 *
+	 * @return array
+	 */
 	public function all()
 	{
 		return iterator_to_array($this->getIterator(), false);
