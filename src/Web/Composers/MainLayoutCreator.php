@@ -13,7 +13,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Translation\Translator;
 use Illuminate\View\View;
 
-use anlutro\Core\Web\Util\ScriptCollection;
+use anlutro\Core\Html\ScriptCollection;
 
 class MainLayoutCreator
 {

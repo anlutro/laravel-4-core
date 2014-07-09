@@ -1,9 +1,9 @@
 <?php
-namespace anlutro\Core\Tests\Web\Filters;
+namespace anlutro\Core\Tests\Html;
 
 use PHPUnit_Framework_TestCase;
 
-use anlutro\Core\Web\Util\ScriptCollection;
+use anlutro\Core\Html\ScriptCollection;
 
 /** @small */
 class ScriptCollectionTest extends PHPUnit_Framework_TestCase
