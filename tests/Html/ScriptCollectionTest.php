@@ -9,6 +9,22 @@ use anlutro\Core\Html\ScriptCollection;
 class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 {
 	/** @test */
+	public function invalidUrlArgumentThrowsException()
+	{
+		$collection = new ScriptCollection;
+		$this->setExpectedException('InvalidArgumentException');
+		$collection->add(1);
+	}
+
+	/** @test */
+	public function invalidPriorityArgumentThrowsException()
+	{
+		$collection = new ScriptCollection;
+		$this->setExpectedException('InvalidArgumentException');
+		$collection->add('foo', 'bar');
+	}
+
+	/** @test */
 	public function canIterate()
 	{
 		$collection = new ScriptCollection;
@@ -33,9 +49,10 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 	{
 		$collection = new ScriptCollection;
 		$collection->add('a', 1);
-		$collection->add('b', 3);
-		$collection->add('c', 2);
-		$this->assertEquals(['b', 'c', 'a'], $collection->all());
+		$collection->add('b', 1);
+		$collection->add('c', 3);
+		$collection->add('d', 2);
+		$this->assertEquals(['c', 'd', 'a', 'b'], $collection->all());
 	}
 
 	/** @test */
@@ -43,8 +60,9 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 	{
 		$collection = new ScriptCollection;
 		$collection->add('a', 1);
-		$collection->add('b', 3);
-		$collection->add('c', 2);
+		$collection->add('b', 1);
+		$collection->add('c', 3);
+		$collection->add('d', 2);
 		$found = [];
 		foreach ($collection as $key => $value) {
 			$found[] = $value;

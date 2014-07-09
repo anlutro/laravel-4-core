@@ -29,10 +29,14 @@ class ScriptCollection implements IteratorAggregate
 	public function add($url, $priority = 0)
 	{
 		if (!is_string($url)) {
-			throw new \InvalidArgumentException('$url must be a string');
+			$message = 'Argument 1 passed to '.__METHOD__.' must be of the type string, '.gettype($url).' given';
+			throw new \InvalidArgumentException($message);
 		}
 
-		$priority = (int) $priority;
+		if (!is_integer($priority)) {
+			$message = 'Argument 2 passed to '.__METHOD__.' must be of the type integer, '.gettype($priority).' given';
+			throw new \InvalidArgumentException($message);
+		}
 
 		$this->scripts[$priority][] = $url;
 	}
