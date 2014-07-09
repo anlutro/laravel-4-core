@@ -17,22 +17,22 @@ class ScriptCollection implements IteratorAggregate
 {
 	protected $scripts = [];
 
-	public function add($script, $priority = 0)
+	public function add($url, $priority = 0)
 	{
-		if (!is_string($script)) {
-			throw new \InvalidArgumentException('$script must be a string');
+		if (!is_string($url)) {
+			throw new \InvalidArgumentException('$url must be a string');
 		}
 
 		$priority = (int) $priority;
 
-		$this->scripts[$priority][] = $script;
+		$this->scripts[$priority][] = $url;
 	}
 
-	public function remove($remove)
+	public function remove($url)
 	{
 		foreach ($this->scripts as $key => $scripts) {
 			foreach ($scripts as $innerKey => $script) {
-				if ($script == $remove) {
+				if ($script == $url) {
 					unset($this->scripts[$key][$innerKey]);
 				}
 			}
