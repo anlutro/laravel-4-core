@@ -14,6 +14,8 @@ use Illuminate\View\View;
 
 class SidebarLayoutCreator
 {
+	protected $menu;
+
 	public function __construct(Builder $menu)
 	{
 		$this->menu = $menu;
