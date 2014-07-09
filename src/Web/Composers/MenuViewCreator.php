@@ -15,7 +15,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\View\View;
 
-class MenuViewComposer
+class MenuViewCreator
 {
 	/**
 	 * @var Builder
@@ -49,7 +49,7 @@ class MenuViewComposer
 		$this->config = $config;
 	}
 
-	public function compose(View $view)
+	public function create(View $view)
 	{
 		$view->menus = $this->getMenus();
 		$view->homeUrl = $this->getHomeUrl();
@@ -58,16 +58,14 @@ class MenuViewComposer
 
 	protected function getMenus()
 	{
-		$menus = [];
+		return [$this->createMenu('left'), $this->createMenu('right')];
+	}
 
-		foreach (['left', 'right'] as $key) {
-			$menu = $this->menu->getMenu($key);
-			if ($menu && !$menu->isEmpty()) {
-				$menus[] = $menu;
-			}
-		}
-
-		return $menus;
+	protected function createMenu($location)
+	{
+		return $this->menu->hasMenu($location)
+			? $this->menu->getMenu($location)
+			: $this->menu->createMenu($location, ['class' => 'nav navbar-nav navbar-'.$location]);
 	}
 
 	protected function getHomeUrl()

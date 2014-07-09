@@ -15,7 +15,7 @@ use Illuminate\View\View;
 /**
  * View composer for resources/views/alerts.php
  */
-class AlertsComposer
+class AlertsViewCreator
 {
 	protected $session;
 
@@ -24,7 +24,7 @@ class AlertsComposer
 		$this->session = $session;
 	}
 
-	public function compose(View $view)
+	public function create(View $view)
 	{
 		$view->alerts = $this->getAlerts();
 	}

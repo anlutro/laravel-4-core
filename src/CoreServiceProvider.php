@@ -43,6 +43,13 @@ class CoreServiceProvider extends ServiceProvider
 	protected $namespace;
 
 	/**
+	 * The name of the user model class.
+	 *
+	 * @var string
+	 */
+	protected $userModel;
+
+	/**
 	 * The path to the packages's resources directory.
 	 *
 	 * @var string
@@ -69,6 +76,9 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app->bind('Illuminate\Database\Connection', function($app) {
 			return $app->make('db')->connection();
 		});
+
+		$this->userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
+		$this->app->bind('anlutro\Core\Auth\Users\UserModel', $this->userModel);
 	}
 
 	/**
@@ -88,16 +98,10 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerAuthDriver();
 		$this->registerRoutes('core');
 		$this->addRouteFilters();
-		$this->registerLayoutCreator();
+		$this->registerViewEvents();
 
 		$this->app->booted(function() {
-			$userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
-			$this->app->bind('anlutro\Core\Auth\Users\UserModel', $userModel);
-			$this->registerUserEvents($userModel);
-
-			$this->registerAlertComposer();
-			$this->registerSidebar();
-			$this->registerMenus();
+			$this->registerUserEvents($this->userModel);
 			$this->registerErrorHandlers();
 		});
 	}
@@ -188,30 +192,22 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
-	public function registerLayoutCreator()
+	protected function registerViewEvents()
 	{
 		$this->app['view']->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\MainLayoutCreator');
-	}
 
-	/**
-	 * Register the alerts view composer.
-	 *
-	 * @return void
-	 */
-	protected function registerAlertComposer()
-	{
-		$this->app['view']->composer('c::alerts', 'anlutro\Core\Web\Composers\AlertsComposer');
-	}
+		$this->app['view']->creator('c::layout.main-sidebar', 'anlutro\Core\Web\Composers\SidebarLayoutCreator');
 
-	/**
-	 * Register the sidebar view creator.
-	 *
-	 * @return void
-	 */
-	protected function registerSidebar()
-	{
+		$this->app['view']->creator('c::alerts', 'anlutro\Core\Web\Composers\AlertsViewCreator');
+
 		$this->app['view']->creator('c::sidebar', function(View $view) {
 			$view->with('sidebar', new \Illuminate\Support\Collection);
+		});
+
+		$this->app['view']->creator('c::menu', 'anlutro\Core\Web\Composers\MenuViewCreator');
+
+		$this->app['view']->composer('c::menu', function() {
+			$this->registerMenus();
 		});
 	}
 
@@ -222,8 +218,6 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerMenus()
 	{
-		if (!$this->providerLoaded('anlutro\Menu\ServiceProvider')) return;
-
 		/** @var \anlutro\Menu\Builder $menu */
 		$menu = $this->app['anlutro\Menu\Builder'];
 		/** @var \Illuminate\Translation\Translator $lang */
@@ -232,9 +226,6 @@ class CoreServiceProvider extends ServiceProvider
 		$url = $this->app['url'];
 		/** @var \anlutro\Core\Auth\Users\UserModel|null $user */
 		$user = $this->app['auth']->user();
-
-		$menu->createMenu('left', ['class' => 'nav navbar-nav navbar-left']);
-		$menu->createMenu('right', ['class' => 'nav navbar-nav navbar-right']);
 
 		if ($user !== null) {
 			$subMenu = $menu->getMenu('right')
@@ -270,8 +261,6 @@ class CoreServiceProvider extends ServiceProvider
 				['id' => 'log-in', 'glyph' => 'log-in']
 			);
 		}
-
-		$this->app['view']->composer('c::menu', 'anlutro\Core\Web\Composers\MenuViewComposer');
 	}
 
 	protected function registerErrorHandlers()

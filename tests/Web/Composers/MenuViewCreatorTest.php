@@ -4,17 +4,17 @@ namespace anlutro\Core\Tests\Web\Composers;
 use PHPUnit_Framework_TestCase;
 use Mockery as m;
 use anlutro\Menu\Builder;
-use anlutro\Core\Web\Composers\MenuViewComposer;
+use anlutro\Core\Web\Composers\MenuViewCreator;
 
 /** @small */
-class MenuViewComposerTest extends PHPUnit_Framework_TestCase
+class MenuViewCreatorTest extends PHPUnit_Framework_TestCase
 {
 	public function tearDown()
 	{
 		m::close();
 	}
 
-	public function makeComposer(array $configData = array())
+	public function makeCreator(array $configData = array())
 	{
 		$this->builder = new Builder;
 		$this->auth = m::mock('Illuminate\Auth\AuthManager');
@@ -24,7 +24,7 @@ class MenuViewComposerTest extends PHPUnit_Framework_TestCase
 		$this->config->shouldReceive('get')->andReturnUsing(function($key, $default = null) use($configData) {
 			return array_get($configData, $key, $default);
 		});
-		return new MenuViewComposer($this->builder, $this->auth, $this->url, $this->config);
+		return new MenuViewCreator($this->builder, $this->auth, $this->url, $this->config);
 	}
 
 	public function mockView()
@@ -32,85 +32,70 @@ class MenuViewComposerTest extends PHPUnit_Framework_TestCase
 		return m::mock('Illuminate\View\View')->makePartial();
 	}
 
-	public function callComposer()
+	public function callCreator()
 	{
-		$composer = $this->makeComposer();
-		$composer->compose($view = $this->mockView());
+		$creator = $this->makeCreator();
+		$creator->create($view = $this->mockView());
 		return $view;
 	}
 
 	/** @test */
-	public function noMenusAddsEmptyArray()
+	public function menusAreAdded()
 	{
-		$view = $this->callComposer();
-		$this->assertEquals([], $view->menus);
-	}
-
-	/** @test */
-	public function emptyMenuIsNotAdded()
-	{
-		$composer = $this->makeComposer();
-		$this->builder->createMenu('left');
-		$composer->compose($view = $this->mockView());
-		$this->assertEquals(0, count($view->menus));
-	}
-
-	/** @test */
-	public function nonEmptyMenuIsAdded()
-	{
-		$composer = $this->makeComposer();
-		$this->builder->createMenu('left')->addItem('foo', 'bar');
-		$composer->compose($view = $this->mockView());
-		$this->assertEquals(1, count($view->menus));
+		$view = $this->callCreator();
+		$this->assertTrue($this->builder->hasMenu('left'));
+		$this->assertTrue($this->builder->hasMenu('right'));
+		$this->assertSame($this->builder->getMenu('left'), $view->menus[0]);
+		$this->assertSame($this->builder->getMenu('right'), $view->menus[1]);
 	}
 
 	/** @test */
 	public function homeUrlIsNotSetForGuests()
 	{
-		$composer = $this->makeComposer();
+		$creator = $this->makeCreator();
 		$this->auth->shouldReceive('check')->once()->andReturn(false);
-		$composer->compose($view = $this->mockView());
+		$creator->create($view = $this->mockView());
 		$this->assertEquals(null, $view->homeUrl);
 	}
 
 	/** @test */
 	public function homeUrlIsSetForLoggedInUsers()
 	{
-		$composer = $this->makeComposer(['c::redirect-login' => '/foo']);
+		$creator = $this->makeCreator(['c::redirect-login' => '/foo']);
 		$this->auth->shouldReceive('check')->once()->andReturn(true);
 		$this->url->shouldReceive('to')->once()->with('/foo')->andReturn('localhost/foo');
-		$composer->compose($view = $this->mockView());
+		$creator->create($view = $this->mockView());
 		$this->assertEquals('localhost/foo', $view->homeUrl);
 	}
 
 	/** @test */
 	public function siteNamePrioritisesHtmlNameOverEverything()
 	{
-		$composer = $this->makeComposer([
+		$creator = $this->makeCreator([
 			'c::site.html-name' => 'foo',
 			'c::site.name' => 'bar',
 			'app.url' => 'baz',
 		]);
-		$composer->compose($view = $this->mockView());
+		$creator->create($view = $this->mockView());
 		$this->assertEquals('foo', $view->siteName);
 	}
 
 	/** @test */
 	public function siteNamePrioritisesNameOverAppUrl()
 	{
-		$composer = $this->makeComposer([
+		$creator = $this->makeCreator([
 			'c::site.name' => 'bar',
 			'app.url' => 'baz',
 		]);
-		$composer->compose($view = $this->mockView());
+		$creator->create($view = $this->mockView());
 		$this->assertEquals('bar', $view->siteName);
 	}
 
 	/** @test */
 	public function siteNameFallsBackOnAppUrl()
 	{
-		$composer = $this->makeComposer(['app.url' => 'baz']);
-		$composer->compose($view = $this->mockView());
+		$creator = $this->makeCreator(['app.url' => 'baz']);
+		$creator->create($view = $this->mockView());
 		$this->assertEquals('baz', $view->siteName);
 	}
 }

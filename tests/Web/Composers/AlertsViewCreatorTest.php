@@ -6,10 +6,10 @@ use Mockery as m;
 use Illuminate\Session\Store;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
-use anlutro\Core\Web\Composers\AlertsComposer;
+use anlutro\Core\Web\Composers\AlertsViewCreator;
 
 /** @small */
-class AlertsComposerTest extends PHPUnit_Framework_TestCase
+class AlertsViewCreatorTest extends PHPUnit_Framework_TestCase
 {
 	public function tearDown()
 	{
@@ -22,11 +22,11 @@ class AlertsComposerTest extends PHPUnit_Framework_TestCase
 		return new Store(__CLASS__, $handler);
 	}
 
-	public function callComposer($session)
+	public function callCreator($session)
 	{
-		$composer = new AlertsComposer($session);
+		$composer = new AlertsViewCreator($session);
 		$view = m::mock('Illuminate\View\View')->makePartial();
-		$composer->compose($view);
+		$composer->create($view);
 		return $view;
 	}
 
@@ -35,7 +35,7 @@ class AlertsComposerTest extends PHPUnit_Framework_TestCase
 	{
 		$session = $this->makeSession();
 		$session->put('errors', new MessageBag(['foo', 'bar']));
-		$view = $this->callComposer($session);
+		$view = $this->callCreator($session);
 		$alerts = $view->alerts;
 		$this->assertEquals('danger', $alerts[0]->type);
 		$this->assertEquals('Foo', $alerts[0]->message);
