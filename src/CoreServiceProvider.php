@@ -63,7 +63,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		static::$resPath = __DIR__.'/../resources';
+		static::$resPath = dirname(__DIR__).'/resources';
 
 		$this->commands([
 			'anlutro\Core\Console\PublishCommand',
@@ -96,12 +96,12 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerViewFiles();
 
 		$this->registerAuthDriver();
+		$this->registerRouteFilters();
 		$this->registerRoutes('core');
-		$this->addRouteFilters();
 		$this->registerViewEvents();
+		$this->registerUserEvents($this->userModel);
 
 		$this->app->booted(function() {
-			$this->registerUserEvents($this->userModel);
 			$this->registerErrorHandlers();
 		});
 	}
@@ -113,7 +113,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerConfigFiles()
 	{
-		$this->app['config']->package('anlutro/l4-core', static::$resPath . '/config', 'c');
+		$this->app['config']->package($this->package, static::$resPath . '/config', $this->namespace);
 	}
 
 	/**
@@ -142,6 +142,12 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app['view']->addNamespace($this->namespace, static::$resPath . '/views');
 	}
 
+	/**
+	 * Register the custom "eloquent-exceptions" driver that throws descriptive
+	 * exceptions when authentication fails.
+	 *
+	 * @return void
+	 */
 	protected function registerAuthDriver()
 	{
 		$this->app['auth']->extend('eloquent-exceptions', function() {
@@ -155,7 +161,7 @@ class CoreServiceProvider extends ServiceProvider
 	 * 
 	 * @return void
 	 */
-	protected function addRouteFilters()
+	protected function registerRouteFilters()
 	{
 		$this->app['router']->filter('guest', 'anlutro\Core\Web\Filters\GuestFilter');
 		$this->app['router']->filter('auth', 'anlutro\Core\Web\Filters\AuthFilter');
@@ -192,6 +198,11 @@ class CoreServiceProvider extends ServiceProvider
 		});
 	}
 
+	/**
+	 * Register view events (composers and creators).
+	 *
+	 * @return void
+	 */
 	protected function registerViewEvents()
 	{
 		$this->app['view']->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\MainLayoutCreator');
@@ -212,7 +223,7 @@ class CoreServiceProvider extends ServiceProvider
 	}
 
 	/**
-	 * Register the default menu composer.
+	 * Add menu items.
 	 *
 	 * @return void
 	 */
@@ -263,6 +274,11 @@ class CoreServiceProvider extends ServiceProvider
 		}
 	}
 
+	/**
+	 * Register the default/fallback error handlers.
+	 *
+	 * @return void
+	 */
 	protected function registerErrorHandlers()
 	{
 		if (!$this->providerLoaded('anlutro\L4SmartErrors\L4SmartErrorsServiceProvider')) return;
@@ -270,6 +286,13 @@ class CoreServiceProvider extends ServiceProvider
 		(new ErrorHandler($this->app))->register();
 	}
 
+	/**
+	 * Check if a service provider is present in the application.
+	 *
+	 * @param  string $provider
+	 *
+	 * @return boolean
+	 */
 	protected function providerLoaded($provider)
 	{
 		$providers = $this->app['config']->get('app.providers')
@@ -278,6 +301,11 @@ class CoreServiceProvider extends ServiceProvider
 		return in_array($provider, $providers);
 	}
 
+	/**
+	 * Get the path to the core resource files.
+	 *
+	 * @return string
+	 */
 	public static function getResPath()
 	{
 		return static::$resPath;
