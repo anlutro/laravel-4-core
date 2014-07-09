@@ -41,7 +41,7 @@ class ScriptCollection implements IteratorAggregate
 
 	public function getIterator()
 	{
-		ksort($this->scripts);
+		krsort($this->scripts);
 
 		return new RecursiveIteratorIterator(new RecursiveArrayIterator($this->scripts));
 	}

@@ -32,8 +32,8 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 	public function canAddWithPriority()
 	{
 		$collection = new ScriptCollection;
-		$collection->add('a', 3);
-		$collection->add('b', 1);
+		$collection->add('a', 1);
+		$collection->add('b', 3);
 		$collection->add('c', 2);
 		$this->assertEquals(['b', 'c', 'a'], $collection->all());
 	}
@@ -42,8 +42,8 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 	public function foreachAndAllYieldSameResults()
 	{
 		$collection = new ScriptCollection;
-		$collection->add('a', 3);
-		$collection->add('b', 1);
+		$collection->add('a', 1);
+		$collection->add('b', 3);
 		$collection->add('c', 2);
 		$found = [];
 		foreach ($collection as $key => $value) {
