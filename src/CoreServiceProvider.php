@@ -240,7 +240,7 @@ class CoreServiceProvider extends ServiceProvider
 
 		if ($user !== null) {
 			$subMenu = $menu->getMenu('right')
-				->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user']);
+				->addSubmenu($user->name, ['id' => 'user', 'glyphicon' => 'user'], 99);
 			$subMenu->addItem(
 				$lang->get('c::user.profile-title'),
 				$url->route('c::profile'),
@@ -269,7 +269,8 @@ class CoreServiceProvider extends ServiceProvider
 			$menu->getMenu('right')->addItem(
 				$lang->get('c::auth.login-title'),
 				$url->route('c::login'),
-				['id' => 'log-in', 'glyph' => 'log-in']
+				['id' => 'log-in', 'glyph' => 'log-in'],
+				99
 			);
 		}
 	}
