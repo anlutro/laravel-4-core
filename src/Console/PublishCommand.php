@@ -19,6 +19,8 @@ class PublishCommand extends Command
 	protected $name = 'core:publish';
 	protected $description = 'Publish anlutro/l4-core resources.';
 
+	protected $files;
+
 	public function __construct(Filesystem $files)
 	{
 		parent::__construct();
