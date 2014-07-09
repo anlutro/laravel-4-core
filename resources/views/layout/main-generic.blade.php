@@ -11,13 +11,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		@foreach($styles as $style)
-		<link media="all" type="text/css" rel="stylesheet" href="{{ $style }}">
+		<link media="all" type="text/css" rel="stylesheet" href="{{ asset($style) }}">
 		@endforeach
 
 		@yield('head')
 
 		@foreach($headScripts as $script)
-		<script type="text/javascript" src="{{ $script }}"></script>
+		<script type="text/javascript" src="{{ asset($script) }}"></script>
 		@endforeach
 	</head>
 	<body>
@@ -25,7 +25,7 @@
 		@yield('body')
 
 		@foreach($bodyScripts as $script)
-		<script type="text/javascript" src="{{ $script }}"></script>
+		<script type="text/javascript" src="{{ asset($script) }}"></script>
 		@endforeach
 
 		@yield('scripts')
