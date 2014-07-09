@@ -1,9 +1,20 @@
 <?php
+/**
+ * Laravel 4 Core
+ *
+ * @author   Andreas Lutro <anlutro@gmail.com>
+ * @license  http://opensource.org/licenses/MIT
+ * @package  l4-core
+ */
+
 namespace anlutro\Core\Html;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Html\FormBuilder as BaseFormBuilder;
 
+/**
+ * Improved form builder.
+ */
 class FormBuilder extends BaseFormBuilder
 {
 	/**
@@ -50,22 +61,20 @@ class FormBuilder extends BaseFormBuilder
 	 */
 	protected function getModelValueAttribute($name)
 	{
-		$key = $this->transformKey($name);
-
+		$segments = explode('.', $this->transformKey($name));
 		$data = $this->model;
 
-		foreach (explode('.', $key) as $segment) {
+		foreach ($segments as $key) {
 			if (is_array($data)) {
-				$data = array_get($data, $segment);
+				$data = array_key_exists($key, $data) ? $data[$key] : null;
 			} elseif ($data instanceof Collection) {
-				$data = $data->find($segment);
+				$data = $data->find($key);
 			} elseif ($data instanceof \ArrayAccess) {
-				if (!$data->offsetExists($segment)) return;
-				$data = $data->offsetGet($segment);
+				$data = $data->offsetExists($key) ? $data->offsetGet($key) : null;
 			} elseif (is_object($data)) {
-				$data = object_get($data, $segment);
+				$data = isset($data->$key) ? $data->$key : null;
 			} else {
-				return $data;
+				return null;
 			}
 		}
 
