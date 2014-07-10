@@ -69,4 +69,14 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 		}
 		$this->assertEquals($found, $collection->all());
 	}
+
+	/** @test */
+	public function canAddDebugUrls()
+	{
+		$collection = new ScriptCollection(false);
+		$collection->add(['foo.css', 'foo.min.css']);
+		$this->assertEquals(['foo.css'], $collection->all());
+		$collection->setDebug(true);
+		$this->assertEquals(['foo.min.css'], $collection->all());
+	}
 }

@@ -28,6 +28,8 @@ class GenericLayoutCreator
 
 	public function create(View $view)
 	{
+		ScriptCollection::setGlobalDebug($this->config->get('app.debug'));
+
 		$view->styles = new ScriptCollection;
 		$view->headScripts = new ScriptCollection;
 		$view->bodyScripts = new ScriptCollection;
