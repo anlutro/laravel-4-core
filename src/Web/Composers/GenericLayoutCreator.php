@@ -30,6 +30,8 @@ class GenericLayoutCreator
 	{
 		ScriptCollection::setGlobalDebug($this->config->get('app.debug'));
 
+		$view->lang = $this->translator->getLocale();
+
 		$view->styles = new ScriptCollection;
 		$view->headScripts = new ScriptCollection;
 		$view->bodyScripts = new ScriptCollection;
