@@ -19,6 +19,14 @@
 		@foreach($headScripts as $script)
 		<script type="text/javascript" src="{{ asset($script) }}"></script>
 		@endforeach
+
+		@foreach ($conditionals as $condition => $scripts)
+		<!--[if {{ $condition }}]>
+		@foreach ($scripts as $script)
+		{{ $script }}
+		@endforeach
+		-->
+		@endforeach
 	</head>
 	<body>
 

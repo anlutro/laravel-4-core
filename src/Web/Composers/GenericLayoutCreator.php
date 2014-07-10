@@ -33,6 +33,9 @@ class GenericLayoutCreator
 		$view->styles = new ScriptCollection;
 		$view->headScripts = new ScriptCollection;
 		$view->bodyScripts = new ScriptCollection;
+
+		$view->conditionals = [];
+
 		$view->title = $this->getTitle();
 		$view->description = $this->getDescription();
 		$view->gaCode = $this->getGaCode();
