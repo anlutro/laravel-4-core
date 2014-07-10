@@ -12,7 +12,7 @@
 		</nav>
 	</header>
 
-	<main class="site-main">
+	<main class="site-main" id="site-main-content">
 		@include('c::alerts')
 		@yield('content')
 	</main>

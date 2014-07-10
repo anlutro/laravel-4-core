@@ -51,6 +51,7 @@ return array(
 	'home' => 'Hjem',
 	'maintenance-mode' => 'Siden er nede for vedlikehold og vil være tilbake så snart som mulig. Vi beklager ulempene dette medfører.',
 	'page-not-found' => 'Siden du prøvde besøke finnes ikke!',
+	'skip-to-content' => 'Hopp til hovedinnhold',
 	'toggle-menu' => 'Åpne/lukk meny',
 	'token-mismatch' => 'Denne nettsiden sender en unik kode med hver forespørsel for å beskytte mot spam og forsøk på hacking. Koden som ble sent med denne forespørselen var ugyldig. Vennligst prøv igjen.',
 	'under-construction' => 'Under konstruksjon',

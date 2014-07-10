@@ -30,6 +30,8 @@
 	</head>
 	<body>
 
+		<a class="sr-only sr-only-focusable" href="#site-main-content">@lang('c::std.skip-to-content')</a>
+
 		@yield('body')
 
 		@foreach($bodyScripts as $script)

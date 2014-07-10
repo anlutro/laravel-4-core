@@ -13,7 +13,7 @@
 	</header>
 
 	<main class="site-main">
-		<div class="container-fluid">
+		<div class="container-fluid" id="site-main-content">
 			@include('c::alerts')
 			@yield('content')
 		</div>

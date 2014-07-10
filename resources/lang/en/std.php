@@ -51,6 +51,7 @@ return array(
 	'home' => 'Home',
 	'maintenance-info' => 'The site is down for maintenance and will be back momentarily. We apologize for any inconvenience.',
 	'page-not-found' => 'The page you were looking for was not found!',
+	'skip-to-content' => 'Skip to main content',
 	'toggle-menu' => 'Open/close menu',
 	'token-mismatch' => 'This website uses tokens to protect the server from spam and hacking attempts. The token sent with your request was invalid. Please try again.',
 	'under-construction' => 'Under construction',
