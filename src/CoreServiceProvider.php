@@ -205,19 +205,23 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerViewEvents()
 	{
-		$this->app['view']->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\GenericLayoutCreator');
+		$view = $this->app['view'];
 
-		$this->app['view']->creator('c::layout.main-sidebar', 'anlutro\Core\Web\Composers\SidebarLayoutCreator');
+		$view->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\GenericLayoutCreator');
 
-		$this->app['view']->creator('c::alerts', 'anlutro\Core\Web\Composers\AlertsViewCreator');
+		$view->creator(['c::layout.main-sidebar', 'c::layout.main-nosidebar'], 'anlutro\Core\Web\Composers\MainLayoutCreator');
 
-		$this->app['view']->creator('c::sidebar', function(View $view) {
+		$view->creator('c::layout.main-sidebar', 'anlutro\Core\Web\Composers\SidebarLayoutCreator');
+
+		$view->creator('c::alerts', 'anlutro\Core\Web\Composers\AlertsViewCreator');
+
+		$view->creator('c::sidebar', function(View $view) {
 			$view->with('sidebar', new \Illuminate\Support\Collection);
 		});
 
-		$this->app['view']->creator('c::menu', 'anlutro\Core\Web\Composers\MenuViewCreator');
+		$view->creator('c::menu', 'anlutro\Core\Web\Composers\MenuViewCreator');
 
-		$this->app['view']->composer('c::menu', function() {
+		$view->composer('c::menu', function() {
 			$this->registerMenus();
 		});
 	}

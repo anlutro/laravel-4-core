@@ -27,8 +27,7 @@
 
 	<footer class="site-footer">
 		<div class="container-fluid">
-			{{ Config::get('c::site.copyright-date') }} &copy; {{ Config::get('c::site.copyright-holder') }}<br>
-			{{ Lang::get('c::site.made-by') }}
+			{{ is_array($footer) ? implode('<br>', $footer) : $footer }}
 		</div>
 </footer>
 
