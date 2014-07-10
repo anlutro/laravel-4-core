@@ -205,7 +205,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerViewEvents()
 	{
-		$this->app['view']->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\MainLayoutCreator');
+		$this->app['view']->creator('c::layout.main-generic', 'anlutro\Core\Web\Composers\GenericLayoutCreator');
 
 		$this->app['view']->creator('c::layout.main-sidebar', 'anlutro\Core\Web\Composers\SidebarLayoutCreator');
 

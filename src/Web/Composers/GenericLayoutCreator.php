@@ -15,7 +15,7 @@ use Illuminate\View\View;
 
 use anlutro\Core\Html\ScriptCollection;
 
-class MainLayoutCreator
+class GenericLayoutCreator
 {
 	protected $config;
 	protected $translator;

@@ -3,10 +3,10 @@ namespace anlutro\Core\Tests\Web\Composers;
 
 use PHPUnit_Framework_TestCase;
 use Mockery as m;
-use anlutro\Core\Web\Composers\MainLayoutCreator;
+use anlutro\Core\Web\Composers\GenericLayoutCreator;
 
 /** @small */
-class MainLayoutCreatorTest extends PHPUnit_Framework_TestCase
+class GenericLayoutCreatorTest extends PHPUnit_Framework_TestCase
 {
 	public function tearDown()
 	{
@@ -23,7 +23,7 @@ class MainLayoutCreatorTest extends PHPUnit_Framework_TestCase
 		$translator->shouldReceive('get')->andReturnUsing(function($key) use($translations) {
 			return array_get($translations, $key);
 		});
-		return new MainLayoutCreator($config, $translator);
+		return new GenericLayoutCreator($config, $translator);
 	}
 
 	public function callCreator(array $config, array $translations)
