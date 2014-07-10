@@ -21,7 +21,7 @@ class ScriptCollection implements IteratorAggregate
 	protected $debug = false;
 	protected $scripts = [];
 
-	public function setGlobalDebug($toggle)
+	public static function setGlobalDebug($toggle)
 	{
 		static::$globalDebug = (bool) $toggle;
 	}
@@ -96,6 +96,8 @@ class ScriptCollection implements IteratorAggregate
 	 */
 	public function all()
 	{
+		if (!$this->scripts) return [];
+
 		krsort($this->scripts);
 
 		return array_map(function($script) {
