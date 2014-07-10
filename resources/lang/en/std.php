@@ -44,6 +44,7 @@ return array(
 	'search' => 'Search',
 	'execute' => 'Execute',
 	'with-selected' => 'With selected:',
+	'close' => 'Close',
 
 	// other misc stuff
 	'browsehappy' => 'You are using an <strong>outdated</strong> browser. Please <a href=":url">upgrade your browser</a> to improve your experience.',

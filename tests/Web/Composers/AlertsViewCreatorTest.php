@@ -22,9 +22,18 @@ class AlertsViewCreatorTest extends PHPUnit_Framework_TestCase
 		return new Store(__CLASS__, $handler);
 	}
 
-	public function callCreator($session)
+	public function mockTranslator()
 	{
-		$composer = new AlertsViewCreator($session);
+		$mock = m::mock('Illuminate\Translation\Translator');
+		$mock->shouldReceive('get')->andReturnUsing(function($key){ return $key; })->byDefault();
+		$mock->shouldReceive('has')->andReturn(true)->byDefault();
+		return $mock;
+	}
+
+	public function callCreator($session, $translator = null)
+	{
+		if (!$translator) $translator = $this->mockTranslator();
+		$composer = new AlertsViewCreator($session, $translator);
 		$view = m::mock('Illuminate\View\View')->makePartial();
 		$composer->create($view);
 		return $view;

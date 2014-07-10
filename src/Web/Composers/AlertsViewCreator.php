@@ -9,7 +9,8 @@
 
 namespace anlutro\Core\Web\Composers;
 
-use Illuminate\Session\Store as Session;
+use Illuminate\Session\Store;
+use Illuminate\Translation\Translator;
 use Illuminate\View\View;
 
 /**
@@ -17,15 +18,18 @@ use Illuminate\View\View;
  */
 class AlertsViewCreator
 {
+	protected $translator;
 	protected $session;
 
-	public function __construct(Session $session)
+	public function __construct(Store $session, Translator $translator)
 	{
 		$this->session = $session;
+		$this->translator = $translator;
 	}
 
 	public function create(View $view)
 	{
+		$view->close = $this->translator->get('c::std.close');
 		$view->alerts = $this->getAlerts();
 	}
 

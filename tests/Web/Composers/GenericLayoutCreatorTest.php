@@ -20,6 +20,7 @@ class GenericLayoutCreatorTest extends PHPUnit_Framework_TestCase
 			return array_get($configData, $key, $default);
 		});
 		$translator = m::mock('Illuminate\Translation\Translator');
+		$translator->shouldReceive('getLocale')->andReturn('en');
 		$translator->shouldReceive('get')->andReturnUsing(function($key) use($translations) {
 			return array_get($translations, $key);
 		});
