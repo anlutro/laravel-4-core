@@ -102,7 +102,7 @@ class UserRepository extends EloquentRepository
 		if (isset($attributes['username']) && !empty($attributes['username'])) {
 			$user->username = $attributes['username'];
 		}
-		
+
 		if (isset($attributes['user_type']) && !empty($attributes['user_type'])) {
 			$user->user_type = $attributes['user_type'];
 		} elseif (isset($attributes['user_level']) && !empty($attributes['user_level'])) {

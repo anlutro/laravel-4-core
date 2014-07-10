@@ -193,6 +193,8 @@ class UserManager
 	 */
 	public function updateCurrentProfile(array $attributes)
 	{
+		$this->users->toggleExceptions(true);
+
 		$user = $this->getCurrentUser();
 
 		if (empty($attributes['old_password']) || !$user->confirmPassword($attributes['old_password'])) {
@@ -213,6 +215,8 @@ class UserManager
 	public function updateAsAdmin(UserModel $user, array $attributes)
 	{
 		$this->checkPermissions($user);
+
+		$this->users->toggleExceptions(true);
 
 		return $this->users->updateAsAdmin($user, $attributes);
 	}
