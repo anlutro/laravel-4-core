@@ -79,4 +79,23 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 		$collection->setDebug(true);
 		$this->assertEquals(['foo.min.css'], $collection->all());
 	}
+
+	/** @test */
+	public function canReplace()
+	{
+		$collection = new ScriptCollection(false);
+		$collection->add('foo.css');
+		$collection->replace('foo.css', 'bar.css');
+		$this->assertEquals(['bar.css'], $collection->all());
+	}
+
+	/** @test */
+	public function canSetPriority()
+	{
+		$collection = new ScriptCollection(false);
+		$collection->add('foo.css', 10);
+		$collection->add('bar.css', 20);
+		$collection->setPriority('foo.css', 30);
+		$this->assertEquals(['foo.css', 'bar.css'], $collection->all());
+	}
 }
