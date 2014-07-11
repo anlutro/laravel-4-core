@@ -7,48 +7,57 @@
  * @package  l4-core
  */
 
-return array(
+return [
 
-	'access-denied' => 'You do not have permissions to modify this user.',
-	'activate' => 'Activate',
-	'active-field' => 'Active',
-	'activation-field' => 'Send activation instructions',
-	'admin-newuser' => 'Add user',
-	'admin-edituser' => 'Edit user',
-	'admin-title' => 'Administration',
+	// page titles
 	'admin-userlist' => 'List of users',
-	'create-success' => 'User successfully created!',
-	'deactivate' => 'Deactivate',
-	'delete-confirm' => 'Are you sure you want to delete this user?',
-	'delete-success' => 'User successfully deleted!',
-	'email-field' => 'E-mail',
-	'model-profile' => 'Profile',
+	'profile-title' => 'My profile',
+
+	// model strings - used for translations in std.php
+	'model-profile' => 'profile',
 	'model-user' => 'user',
-	'myuser-title' => 'My user',
+
+	// buttons and links
+	'activate' => 'Activate',
+	'admin-edituser' => 'Edit user',
+	'admin-newuser' => 'Add user',
+	'deactivate' => 'Deactivate',
+
+	// field labels
+	'activation-field' => 'Send activation instructions',
+	'active-field' => 'Active',
+	'email-field' => 'E-mail',
 	'name-field' => 'Name',
 	'new-password' => 'New password',
 	'old-password' => 'Old password',
 	'password-field' => 'Password',
 	'phone-field' => 'Phone',
-	'profile-title' => 'My profile',
+	'user-deleted' => 'Deleted',
+	'user-inactive' => 'Inactive',
+	'username-field' => 'Username',
+
+	// messages
+	'access-denied' => 'You do not have permissions to modify this user.',
+	'create-success' => 'User successfully created!',
+	'delete-confirm' => 'Are you sure you want to delete this user?',
+	'delete-success' => 'User successfully deleted!',
 	'profile-update-success' => 'Profile updated!',
 	'restore-success' => 'User successfully restored!',
-	'updating-password-explanation' => 'You only need to fill in the following forms if you intend to change the password.',
 	'update-success' => 'User successfully updated!',
-	'username-field' => 'Username',
-	'user-deleted' => 'Deleted',
-	'user-inactive' => 'Inaktiv',
+	'updating-password-explanation' => 'You only need to fill in the following forms if you intend to change the password.',
 
-	'usertype-field' => 'Group',
-	'usertype-user' => 'Normal user',
-	'usertype-mod' => 'Privileged user',
+	// usertypes - singular (shown in the create/edit user form)
 	'usertype-admin' => 'Administrator',
+	'usertype-field' => 'Group',
+	'usertype-mod' => 'Privileged user',
 	'usertype-superadmin' => 'Superadmin',
+	'usertype-user' => 'Normal user',
 
-	'usertypes-all' => 'All users',
-	'usertypes-user' => 'Normal users',
-	'usertypes-mod' => 'Privileged users',
+	// usertypes - plural (shown in the user list)
 	'usertypes-admin' => 'Administrators',
+	'usertypes-all' => 'All users',
+	'usertypes-mod' => 'Privileged users',
 	'usertypes-superadmin' => 'Superadmins',
+	'usertypes-user' => 'Normal users',
 
-);
+];

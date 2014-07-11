@@ -11,7 +11,7 @@
  * where you provide your own model string.
  */
 
-return array(
+return [
 
 	// semi-localized date/time formats
 	'datetime-format' => 'd.m.Y H:i',
@@ -19,33 +19,33 @@ return array(
 	'time-format' => 'H:i',
 
 	// generic flash messages
-	'generic-success' => 'Forespørselen var vellykket!',
-	'create-success' => ':model laget!',
 	'create-failure' => ':model kunne ikke lagres.',
-	'update-success' => ':model oppdatert!',
-	'update-failure' => ':model kunne ikke oppdateres.',
-	'delete-success' => ':model slettet.',
-	'delete-failure' => ':model kunne ikke slettes.',
+	'create-success' => ':model laget!',
 	'creating' => 'Ny :model',
+	'delete-failure' => ':model kunne ikke slettes.',
+	'delete-success' => ':model slettet.',
 	'editing' => 'Redigerer :model',
-	'not-found' => ':model finnes ikke!',
-	'none-selected' => 'Ingen :model valgt!',
+	'generic-success' => 'Forespørselen var vellykket!',
 	'invalid-action' => 'Ugyldig handling!',
+	'none-selected' => 'Ingen :model valgt!',
+	'not-found' => ':model finnes ikke!',
+	'update-failure' => ':model kunne ikke oppdateres.',
+	'update-success' => ':model oppdatert!',
 
 	// generic button strings
-	'submit' => 'Send inn',
-	'save' => 'Lagre',
-	'update' => 'Oppdater',
-	'delete' => 'Slett',
 	'back' => 'Tilbake',
-	'new' => 'Legg til',
-	'edit' => 'Rediger',
-	'view' => 'Vis',
-	'search' => 'Søk',
-	'execute' => 'Utfør',
-	'with-selected' => 'Med valgte:',
 	'close' => 'Lukk',
+	'delete' => 'Slett',
+	'edit' => 'Rediger',
+	'execute' => 'Utfør',
+	'new' => 'Legg til',
 	'restore' => 'Gjenopprett',
+	'save' => 'Lagre',
+	'search' => 'Søk',
+	'submit' => 'Send inn',
+	'update' => 'Oppdater',
+	'view' => 'Vis',
+	'with-selected' => 'Med valgte:',
 
 	// other misc stuff
 	'browsehappy' => 'Du bruker en <strong>utdatert</strong> nettleser. Vennligst <a href=":url">oppgrader nettleseren din</a> for å få mest ut av denne nettsiden!',
@@ -60,4 +60,4 @@ return array(
 	'under-construction-text' => 'Denen delen av nettsiden er for øyeblikket under konstruksjon. Vennligst prøv igjen senere!',
 	'until' => 'Til',
 
-);
+];

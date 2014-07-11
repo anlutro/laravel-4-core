@@ -11,7 +11,7 @@
  * where you provide your own model string.
  */
 
-return array(
+return [
 
 	// semi-localized date/time formats
 	'datetime-format' => 'Y-m-d H:i',
@@ -19,33 +19,33 @@ return array(
 	'time-format' => 'H:i',
 
 	// generic flash messages
-	'generic-success' => 'The request was successful!',
-	'create-success' => ':model created!',
 	'create-failure' => ':model could not be created.',
-	'update-success' => ':model updated!',
-	'update-failure' => ':model could not be updated.',
-	'delete-success' => ':model deleted.',
-	'delete-failure' => ':model could not be deleted.',
+	'create-success' => ':model created!',
 	'creating' => 'New :model',
+	'delete-failure' => ':model could not be deleted.',
+	'delete-success' => ':model deleted.',
 	'editing' => 'Editing :model',
-	'not-found' => ':model not found!',
-	'none-selected' => 'No :model selected!',
+	'generic-success' => 'The request was successful!',
 	'invalid-action' => 'Invalid action!',
+	'none-selected' => 'No :model selected!',
+	'not-found' => ':model not found!',
+	'update-failure' => ':model could not be updated.',
+	'update-success' => ':model updated!',
 
 	// generic button strings
-	'submit' => 'Submit',
-	'save' => 'Save',
-	'update' => 'Update',
-	'delete' => 'Delete',
 	'back' => 'Back',
-	'new' => 'Add new',
-	'edit' => 'Edit',
-	'view' => 'View',
-	'search' => 'Search',
-	'execute' => 'Execute',
-	'with-selected' => 'With selected:',
 	'close' => 'Close',
+	'delete' => 'Delete',
+	'edit' => 'Edit',
+	'execute' => 'Execute',
+	'new' => 'Add new',
 	'restore' => 'Restore',
+	'save' => 'Save',
+	'search' => 'Search',
+	'submit' => 'Submit',
+	'update' => 'Update',
+	'view' => 'View',
+	'with-selected' => 'With selected:',
 
 	// other misc stuff
 	'browsehappy' => 'You are using an <strong>outdated</strong> browser. Please <a href=":url">upgrade your browser</a> to improve your experience.',
@@ -60,4 +60,4 @@ return array(
 	'under-construction-text' => 'This part of the website is currently under construction. Please check again later!',
 	'until' => 'Until',
 
-);
+];

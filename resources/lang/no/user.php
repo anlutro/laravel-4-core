@@ -7,48 +7,57 @@
  * @package  l4-core
  */
 
-return array(
+return [
 
-	'access-denied' => 'Du har ikke tilgang til å redigere denne brukeren.',
-	'activate' => 'Aktiver',
-	'active-field' => 'Aktiv',
-	'activation-field' => 'Send aktiveringsinstrukser',
-	'admin-newuser' => 'Ny bruker',
-	'admin-edituser' => 'Rediger bruker',
-	'admin-title' => 'Administrasjon',
+	// page titles
 	'admin-userlist' => 'Brukerliste',
-	'create-success' => 'Brukeren ble laget!',
-	'deactivate' => 'Deaktiver',
-	'delete-confirm' => 'Er du sikker på at du vil slette denne brukeren?',
-	'delete-success' => 'Brukeren ble slettet!',
-	'email-field' => 'E-post',
-	'model-profile' => 'Profil',
+	'profile-title' => 'Min profil',
+
+	// model strings - used for translations in std.php
+	'model-profile' => 'profil',
 	'model-user' => 'bruker',
-	'myuser-title' => 'Min bruker',
+
+	// buttons and links
+	'activate' => 'Aktiver',
+	'admin-edituser' => 'Rediger bruker',
+	'admin-newuser' => 'Ny bruker',
+	'deactivate' => 'Deaktiver',
+
+	// field labels
+	'activation-field' => 'Send aktiveringsinstrukser',
+	'active-field' => 'Aktiv',
+	'email-field' => 'E-post',
 	'name-field' => 'Navn',
 	'new-password' => 'Nytt passord',
 	'old-password' => 'Gammelt passord',
 	'password-field' => 'Passord',
 	'phone-field' => 'Telefon',
-	'profile-title' => 'Min profil',
-	'profile-update-success' => 'Profil oppdatert!',
-	'restore-success' => 'Brukeren ble gjenopprettet!',
-	'updating-password-explanation' => 'Du trenger ikke fylle inn de følgende feltene med mindre du vil endre passordet.',
-	'update-success' => 'Brukeren ble oppdatert!',
-	'username-field' => 'Brukernavn',
 	'user-deleted' => 'Slettet',
 	'user-inactive' => 'Inaktiv',
+	'username-field' => 'Brukernavn',
 
-	'usertype-field' => 'Gruppe',
-	'usertype-user' => 'Vanlig bruker',
-	'usertype-mod' => 'Priviligert bruker',
+	// messages
+	'access-denied' => 'Du har ikke tilgang til å redigere denne brukeren.',
+	'create-success' => 'Brukeren ble laget!',
+	'delete-confirm' => 'Er du sikker på at du vil slette denne brukeren?',
+	'delete-success' => 'Brukeren ble slettet!',
+	'profile-update-success' => 'Profil oppdatert!',
+	'restore-success' => 'Brukeren ble gjenopprettet!',
+	'update-success' => 'Brukeren ble oppdatert!',
+	'updating-password-explanation' => 'Du trenger ikke fylle inn de følgende feltene med mindre du vil endre passordet.',
+
+	// usertypes - singular (shown in the create/edit user form)
 	'usertype-admin' => 'Administrator',
+	'usertype-field' => 'Gruppe',
+	'usertype-mod' => 'Priviligert bruker',
 	'usertype-superadmin' => 'Superbruker',
+	'usertype-user' => 'Vanlig bruker',
 
-	'usertypes-all' => 'Alle brukere',
-	'usertypes-user' => 'Vanlige brukere',
-	'usertypes-mod' => 'Priviligerte brukere',
+	// usertypes - plural (shown in the user list)
 	'usertypes-admin' => 'Administratorer',
+	'usertypes-all' => 'Alle brukere',
+	'usertypes-mod' => 'Priviligerte brukere',
 	'usertypes-superadmin' => 'Superbrukere',
+	'usertypes-user' => 'Vanlige brukere',
 
-);
+];
