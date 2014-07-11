@@ -16,9 +16,16 @@ use anlutro\LaravelRepository\EloquentRepository;
  */
 class UserRepository extends EloquentRepository
 {
+	protected $withSoftDeleted;
+
 	public function __construct(UserModel $model, UserValidator $validator)
 	{
 		parent::__construct($model, $validator);
+	}
+
+	public function withSoftDeleted()
+	{
+		$this->withSoftDeleted = true;
 	}
 
 	public function search($search)
@@ -129,10 +136,21 @@ class UserRepository extends EloquentRepository
 		return $result;
 	}
 
+	public function restore($user)
+	{
+		if (!$user->deleted_at) {
+			throw new \InvalidArgumentException("Cannot restore user that has not been soft deleted");
+		}
+
+		$user->restore();
+
+		return true;
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performCreate($user, array $attributes)
+	protected function performCreate($user, array $attributes)
 	{
 		// set the username manually as it is not fillable
 		$user->username = $attributes['username'];
@@ -146,13 +164,20 @@ class UserRepository extends EloquentRepository
 	/**
 	 * {@inheritdoc}
 	 */
-	public function performUpdate($user, array $attributes)
+	protected function performUpdate($user, array $attributes)
 	{
 		if (isset($attributes['password']) && empty($attributes['password'])) {
 			unset($attributes['password']);
 		}
 
 		return parent::performUpdate($user, $attributes);
+	}
+
+	protected function beforeQuery($query, $many)
+	{
+		if ($this->withSoftDeleted) {
+			$query->withTrashed();
+		}
 	}
 
 	/**
@@ -176,17 +201,23 @@ class UserRepository extends EloquentRepository
 		$this->$method($query);
 	}
 
-	/**
-	 * Bulk delete users.
-	 *
-	 * @param  \Illuminate\Database\Eloquent\Builder $query
-	 *
-	 * @return void
-	 */
 	protected function executeBulkDelete($query)
 	{
-		foreach ($query->get() as $model) {
-			$model->delete();
-		}
+		$query->delete();
+	}
+
+	protected function executeBulkRestore($query)
+	{
+		$query->restore();
+	}
+
+	protected function executeBulkActivate($query)
+	{
+		$query->update(['is_active' => true]);
+	}
+
+	protected function executeBulkDeactivate($query)
+	{
+		$query->update(['is_active' => false]);
 	}
 }

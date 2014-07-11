@@ -30,6 +30,10 @@ class ApiUserController extends ApiController
 	public function __construct(UserManager $users)
 	{
 		$this->users = $users;
+
+		if ($this->users->getCurrentUser()->hasAccess('*')) {
+			$this->users->withSoftDeleted();
+		}
 	}
 
 	/**
@@ -78,7 +82,7 @@ class ApiUserController extends ApiController
 			->paginate(20)
 			->getAll();
 
-		return $this->jsonResponse(['users' => $users->toArray()]);
+		return $this->jsonResponse(['users' => $users]);
 	}
 
 	/**

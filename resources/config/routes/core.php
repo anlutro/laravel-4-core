@@ -86,4 +86,10 @@ return [
 		'uses' => 'anlutro\Core\Web\UserController@delete',
 		'before' => ['auth', 'access:admin'],
 	],
+	'user.restore' => [
+		'url' => '/admin/users/{id}/restore',
+		'method' => 'post',
+		'uses' => 'anlutro\Core\Web\UserController@restore',
+		'before' => ['auth', 'access:admin'],
+	],
 ];

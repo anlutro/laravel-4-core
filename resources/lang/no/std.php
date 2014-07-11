@@ -45,6 +45,7 @@ return array(
 	'execute' => 'Utfør',
 	'with-selected' => 'Med valgte:',
 	'close' => 'Lukk',
+	'restore' => 'Gjenopprett',
 
 	// other misc stuff
 	'browsehappy' => 'Du bruker en <strong>utdatert</strong> nettleser. Vennligst <a href=":url">oppgrader nettleseren din</a> for å få mest ut av denne nettsiden!',

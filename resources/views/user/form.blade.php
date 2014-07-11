@@ -89,7 +89,7 @@
 
 	<div class="form-group">
 		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
-			<button type="submit" class="btn btn-primary">
+			<button type="submit" class="btn btn-primary" <?= $user->deleted_at ? 'disabled' : '' ?>>
 				<span class="glyphicon glyphicon-save"></span>
 				@lang('c::std.save')
 			</button>
@@ -98,9 +98,15 @@
 				@lang('c::std.back')
 			</a>
 			@if (isset($deleteUrl))
-			<button type="button" id="delete-user-button" class="btn btn-danger" data-delete-url="{{ $deleteUrl }}" data-confirm-msg="{{ Lang::get('c::user.delete-confirm') }}">
+			<button type="button" id="delete-user-button" class="btn btn-danger" data-delete-url="{{ $deleteUrl }}" data-confirm-msg="{{ Lang::get('c::user.delete-confirm') }}" <?= $user->deleted_at ? 'disabled' : '' ?>>
 				<span class="glyphicon glyphicon-trash"></span>
 				@lang('c::std.delete')
+			</button>
+			@endif
+			@if (isset($restoreUrl))
+			<button type="button" id="restore-user-button" class="btn btn-success" data-restore-url="{{ $restoreUrl }}">
+				<span class="glyphicon glyphicon-retweet"></span>
+				@lang('c::std.restore')
 			</button>
 			@endif
 		</div>
@@ -123,6 +129,12 @@ $(function() {
 		var form = $this.closest('form');
 		form.attr('action', $this.data('delete-url'));
 		form.append('<input type="hidden" name="_method" value="delete">');
+		form.submit();
+	});
+	$('#restore-user-button').click(function() {
+		var $this = $(this);
+		var form = $this.closest('form');
+		form.attr('action', $this.data('restore-url'));
 		form.submit();
 	});
 });

@@ -35,33 +35,11 @@ class ApiUserControllerTest extends UserControllerTestCase
 		$this->assertTrue($response->isOk(), 'Expected status code 200, got '.$actual);
 	}
 
-	protected function setUpProfileUpdateExpectations($input, $result)
-	{
-		$this->users->shouldReceive('updateCurrentProfile')
-			->with($input)->andReturn($result);
-	}
-
-	protected function setupUpdateExpectation($input, $id, $result)
-	{
-		$user = $this->setupFindExpectations($id);
-		$expectation = $this->users->shouldReceive('updateAsAdmin')->once()->with($user, $input);
-		if ($result instanceof \Exception) {
-			$expectation->andThrow($result);
-		} else {
-			$expectation->andReturn($result);
-		}
-		return $user;
-	}
-
 	public function testViewProfile()
 	{
-		$user = $this->getMockUser(); $user->name = 'foo';
-		$this->users->shouldReceive('getCurrentUser')->andReturn($user);
-
 		$response = $this->getAction('profile');
 		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
-		$this->assertEquals('foo', $data->user->name);
 	}
 
 	public function testUpdateProfileSuccess()
@@ -69,13 +47,10 @@ class ApiUserControllerTest extends UserControllerTestCase
 		$input = ['foo' => 'bar'];
 		$this->users->shouldReceive('updateCurrentProfile')
 			->with($input)->andReturn(true);
-		$user = $this->getMockUser(); $user->name = 'foo';
-		$this->users->shouldReceive('getCurrentUser')->andReturn($user);
 
 		$response = $this->postAction('updateProfile', [], $input);
 		$this->assertResponse200($response);
 		$data = $this->assertResponseJson($response);
-		$this->assertEquals('foo', $data->user->name);
 	}
 
 	public function testUpdateProfileFailure()
@@ -88,12 +63,6 @@ class ApiUserControllerTest extends UserControllerTestCase
 		$data = $this->assertResponseJson($response);
 		$this->assertEquals(400, $response->getStatusCode());
 		$this->assertEquals(['bar'], $data->errors->baz);
-	}
-
-	protected function setUpIndexExpectations($results = array())
-	{
-		$this->users->shouldReceive('paginate->getAll')->once()
-			->andReturn(m::mock(['toArray' => $results]));
 	}
 
 	public function testIndex()
@@ -161,14 +130,6 @@ class ApiUserControllerTest extends UserControllerTestCase
 
 		$this->assertResponseJson($response);
 		$this->assertEquals(404, $response->getStatusCode());
-	}
-
-	protected function setupFindExpectations($id)
-	{
-		$mockUser = $this->getMockUser();
-		$mockUser->id = $id;
-		$this->users->shouldReceive('findByKey')->once()->andReturn($mockUser);
-		return $mockUser;
 	}
 
 	public function testShow()

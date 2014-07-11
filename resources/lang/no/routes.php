@@ -21,6 +21,7 @@ return [
 	'user.edit' => '/admin/brukere/{id}',
 	'user.update' => '/admin/brukere/{id}',
 	'user.delete' => '/admin/brukere/{id}',
+	'user.restore' => '/admin/brukere/{id}/gjenopprett',
 	'pwreset.request' => '/passord/glemt',
 	'pwreset.request_post' => '/passord/glemt',
 	'pwreset.reset' => '/passord/tilbakestill',

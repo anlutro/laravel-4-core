@@ -32,6 +32,10 @@ class UserController extends Controller
 	public function __construct(UserManager $users)
 	{
 		$this->users = $users;
+
+		if ($this->users->getCurrentUser()->hasAccess('*')) {
+			$this->users->withSoftDeleted();
+		}
 	}
 
 	/**
@@ -167,6 +171,7 @@ class UserController extends Controller
 			'userTypes'  => $this->getUserTypes(),
 			'formAction' => $this->url('update', [$user->id]),
 			'deleteUrl'  => $this->url('delete', [$user->id]),
+			'restoreUrl' => $user->deleted_at ? $this->url('restore', [$user->id]) : null,
 			'backUrl'    => $this->url('index'),
 		];
 
@@ -209,13 +214,29 @@ class UserController extends Controller
 			return $this->notFound();
 		}
 
-		if ($this->users->delete($user)) {
-			return $this->redirect('index')
-				->with('success', Lang::get('c::user.delete-success'));
-		} else {
-			return $this->redirect('edit', [$user->id])
-				->withErrors(Lang::get('c::user.delete-failure'));
+		$this->users->delete($user);
+
+		return $this->redirect('index')
+			->with('success', Lang::get('c::user.delete-success'));
+	}
+
+	/**
+	 * Restore a soft deleted user.
+	 *
+	 * @param  int $userId
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function restore($userId)
+	{
+		if (!$user = $this->users->findByKey($userId)) {
+			return $this->notFound();
 		}
+
+		$this->users->restore($user);
+
+		return $this->redirect('edit', [$user->id])
+			->with('success', Lang::get('c::user.restore-success'));
 	}
 
 	/**
@@ -260,7 +281,7 @@ class UserController extends Controller
 	 *
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	private function notFound()
+	protected function notFound()
 	{
 		return $this->redirect('index')
 			->withErrors(Lang::get('c::user.not-found'));
@@ -271,7 +292,7 @@ class UserController extends Controller
 	 * 
 	 * @return array|false
 	 */
-	private function getUserTypes()
+	protected function getUserTypes()
 	{
 		$types = $this->users->getUserTypes();
 		$strings = [];
@@ -285,11 +306,14 @@ class UserController extends Controller
 		return $strings;
 	}
 
-	private function getBulkActions()
+	protected function getBulkActions()
 	{
 		return [
-			'-'      => '-',
-			'delete' => Lang::get('c::std.delete'),
+			'-'          => '-',
+			'delete'     => Lang::get('c::std.delete'),
+			'restore'    => Lang::get('c::std.restore'),
+			'activate'   => Lang::get('c::user.activate'),
+			'deactivate' => Lang::get('c::user.deactivate'),
 		];
 	}
 }

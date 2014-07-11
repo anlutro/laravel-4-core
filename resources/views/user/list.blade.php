@@ -59,6 +59,9 @@
 					@if (!$user->is_active)
 					<span class="label label-default">@lang('c::user.user-inactive')</span>
 					@endif
+					@if ($user->deleted_at)
+					<span class="label label-danger">@lang('c::user.user-deleted')</span>
+					@endif
 				</td>
 				<td>{{{ $user->email }}}</td>
 				<td>{{{ $user->phone }}}</td>

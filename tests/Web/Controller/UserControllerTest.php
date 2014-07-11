@@ -10,13 +10,10 @@ class UserControllerTest extends UserControllerTestCase
 
 	public function testViewProfile()
 	{
-		$user = $this->getMockUser();
-		$this->users->shouldReceive('getCurrentUser')->andReturn($user);
-
 		$this->getAction('profile');
 		$this->assertResponseOk();
 		$this->assertRouteHasFilter('auth');
-		$this->assertViewHas('user', $user);
+		$this->assertViewHas('user', $this->currentUser);
 	}
 
 	public function testUpdateProfileSuccess()
@@ -189,5 +186,12 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('create');
 		$this->assertSessionHasErrors();
+	}
+
+	protected function setupIndexExpectations($results = array())
+	{
+		parent::setUpIndexExpectations($results);
+		$this->users->shouldReceive('getUserTypes')->once()
+			->andReturn([]);
 	}
 }

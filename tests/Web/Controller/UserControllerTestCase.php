@@ -12,6 +12,8 @@ class UserControllerTestCase extends AppTestCase
 	{
 		parent::setUp();
 		$this->users = m::mock('anlutro\Core\Auth\UserManager');
+		$this->users->shouldReceive('getCurrentUser')->andReturn($this->currentUser = $this->getMockUser())->byDefault();
+		$this->currentUser->shouldReceive('hasAccess')->with('*')->andReturn(false)->byDefault();
 		$this->app->instance('anlutro\Core\Auth\UserManager', $this->users);
 	}
 
@@ -45,8 +47,6 @@ class UserControllerTestCase extends AppTestCase
 
 	protected function setupIndexExpectations($results = array())
 	{
-		$this->users->shouldReceive('getUserTypes')->once()
-			->andReturn([]);
 		$this->users->shouldReceive('paginate->getAll')->once()
 			->andReturn($results);
 	}

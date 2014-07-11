@@ -19,10 +19,10 @@ class UserValidator extends Validator
 	protected function getCommonRules()
 	{
 		return [
-			'username' => ['min:4', 'alpha_dash', 'unique:<table>,username,<key>'],
+			'username' => ['min:4', 'alpha_dash', $this->unique('username')],
+			'email' => ['required', 'email', $this->unique('email')],
 			'name' => ['required'],
-			'email' => ['required', 'email', 'unique:<table>,email,<key>'],
-			'phone' => ['numeric'],
+			'phone' => ['regex:/^[\d ]+$/'],
 			'password' => ['confirmed', 'min:6'],
 		];
 	}
@@ -45,5 +45,10 @@ class UserValidator extends Validator
 	public function validPasswordReset(array $attributes)
 	{
 		return $this->valid('passwordReset', $attributes, false);
+	}
+
+	protected function unique($column, $softDelete = true)
+	{
+		return 'unique:<table>,'.$column.',<key>'.($softDelete ? ',id,deleted_at,NULL':'');
 	}
 }
