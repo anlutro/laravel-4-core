@@ -2,15 +2,15 @@
 
 @section('body')
 
-<div class="container layout-no-sidebar">
+<header class="site-header" id="site-header">
+	<nav class="navbar navbar-inverse navbar-static-top" id="navbar" role="navigation">
+		<div class="container">
+			@include('c::menu')
+		</div>
+	</nav>
+</header>
 
-	<header class="site-header">
-		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-			<div class="container">
-				@include('c::menu')
-			</div>
-		</nav>
-	</header>
+<div class="container layout-no-sidebar layout-static-navbar">
 
 	<main class="site-main" id="site-main-content">
 		@include('c::alerts')
