@@ -18,6 +18,7 @@ use IteratorAggregate;
 class ScriptCollection implements IteratorAggregate
 {
 	protected static $globalDebug = false;
+	protected $cacheBuster;
 	protected $debug = false;
 	protected $scripts = [];
 
@@ -26,9 +27,10 @@ class ScriptCollection implements IteratorAggregate
 		static::$globalDebug = (bool) $toggle;
 	}
 
-	public function __construct($debug = null)
+	public function __construct($debug = null, $cacheBuster = null)
 	{
 		$this->setDebug($debug);
+		$this->setCacheBuster($cacheBuster);
 	}
 
 	public function setDebug($toggle)
@@ -38,6 +40,16 @@ class ScriptCollection implements IteratorAggregate
 		} else {
 			$this->debug = (bool) $toggle;
 		}
+	}
+
+	public function setCacheBuster($cacheBuster)
+	{
+		if ($cacheBuster !== null && !is_string($cacheBuster)) {
+			throw new \InvalidArgumentException('Cache buster must be a string, '
+				.gettype($cacheBuster).' given');
+		}
+
+		$this->cacheBuster = $cacheBuster;
 	}
 
 	/**
@@ -149,7 +161,18 @@ class ScriptCollection implements IteratorAggregate
 		krsort($this->scripts);
 
 		return array_map(function($script) {
-			return $this->debug ? $script[1] : $script[0];
+			return $this->getUrlFromScript($script);
 		}, call_user_func_array('array_merge', $this->scripts));
+	}
+
+	protected function getUrlFromScript(array $scripts)
+	{
+		$url = $this->debug ? $scripts[1] : $scripts[0];
+
+		if ($this->cacheBuster) {
+			$url .= '?'.$this->cacheBuster;
+		}
+
+		return $url;
 	}
 }

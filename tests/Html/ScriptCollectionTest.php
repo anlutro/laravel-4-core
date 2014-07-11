@@ -98,4 +98,12 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 		$collection->setPriority('foo.css', 30);
 		$this->assertEquals(['foo.css', 'bar.css'], $collection->all());
 	}
+
+	/** @test */
+	public function cacheBusterStringIsAddedAsQueryString()
+	{
+		$collection = new ScriptCollection(false, 'bar');
+		$collection->add('foo.css');
+		$this->assertEquals(['foo.css?bar'], $collection->all());
+	}
 }
