@@ -12,9 +12,11 @@ namespace anlutro\Core\Web;
 use anlutro\LaravelController\Controller;
 use anlutro\LaravelValidation\ValidationException;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 
 use anlutro\Core\Auth\UserManager;
+use anlutro\Core\Auth\AccessDeniedException;
 
 /**
  * Controller for managing users, not including authentication.
@@ -162,7 +164,11 @@ class UserController extends Controller
 			return $this->notFound();
 		}
 
-		$this->users->checkPermissions($user);
+		try {
+			$this->users->checkPermissions($user);
+		} catch (AccessDeniedException $e) {
+			$this->addWarningMessage(Lang::get('c::user.access-denied'));
+		}
 
 		$viewData = [
 			'pageTitle'  => Lang::get('c::user.admin-edituser'),
@@ -176,6 +182,14 @@ class UserController extends Controller
 		];
 
 		return $this->view('c::user.form', $viewData);
+	}
+
+	protected function addWarningMessage($message)
+	{
+		if (!Session::has('errors') || Session::get('errors')->isEmpty()) {
+			Session::put('warning', $message);
+			Session::push('flash.old', 'warning');
+		}
 	}
 
 	/**
@@ -196,6 +210,8 @@ class UserController extends Controller
 		try {
 			$this->users->updateAsAdmin($user, $this->input());
 			return $redirect->with('success', Lang::get('c::user.update-success'));
+		} catch (AccessDeniedException $e) {
+			return $redirect->withErrors(Lang::get('c::user.access-denied'));
 		} catch (ValidationException $e) {
 			return $redirect->withErrors($e);
 		}
@@ -214,10 +230,15 @@ class UserController extends Controller
 			return $this->notFound();
 		}
 
-		$this->users->delete($user);
+		try {
+			$this->users->delete($user);
 
-		return $this->redirect('index')
-			->with('success', Lang::get('c::user.delete-success'));
+			return $this->redirect('index')
+				->with('success', Lang::get('c::user.delete-success'));
+		} catch (AccessDeniedException $e) {
+			return $this->redirect('edit', [$user->id])
+				->withErrors(Lang::get('c::user.access-denied'));
+		}
 	}
 
 	/**

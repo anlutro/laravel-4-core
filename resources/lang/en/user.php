@@ -9,6 +9,7 @@
 
 return array(
 
+	'access-denied' => 'You do not have permissions to modify this user.',
 	'activate' => 'Activate',
 	'active-field' => 'Active',
 	'activation-field' => 'Send activation instructions',

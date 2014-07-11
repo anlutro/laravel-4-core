@@ -9,6 +9,7 @@
 
 return array(
 
+	'access-denied' => 'Du har ikke tilgang til å redigere denne brukeren.',
 	'activate' => 'Aktiver',
 	'active-field' => 'Aktiv',
 	'activation-field' => 'Send aktiveringsinstrukser',
