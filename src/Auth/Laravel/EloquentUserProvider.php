@@ -15,15 +15,6 @@ use anlutro\Core\Auth\AuthenticationException;
 
 class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 {
-	public function retrieveById($id)
-	{
-		if ($user = parent::retrieveById($id)) {
-			return $user;
-		}
-		
-		throw new AuthenticationException("No user with identifier [$id] found");
-	}
-
 	public function retrieveByCredentials(array $credentials)
 	{
 		if ($user = parent::retrieveByCredentials($credentials)) {
