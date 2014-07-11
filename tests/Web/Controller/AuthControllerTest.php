@@ -18,6 +18,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->getAction('login');
 
 		$this->assertResponseOk();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testLoginSuccess()
@@ -29,6 +30,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedTo('/');
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testLoginFailure()
@@ -40,6 +42,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testLogout()
@@ -49,6 +52,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->getAction('logout');
 
 		$this->assertRedirectedToAction('login');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testRegisterView()
@@ -61,6 +65,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->getAction('register');
 
 		$this->assertResponseOk();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testRegisterSubmit()
@@ -70,6 +75,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->postAction('attemptRegistration', [], $input);
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	/** @test */
@@ -80,6 +86,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->postAction('attemptRegistration', [], $input);
 		$this->assertRedirectedToAction('register');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	/** @test */
@@ -90,6 +97,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->postAction('attemptRegistration', [], $input);
 		$this->assertRedirectedToAction('register');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testActivationSuccess()
@@ -100,6 +108,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedToAction('anlutro\Core\Web\AuthController@login');
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testActivationFailure()
@@ -110,6 +119,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedToAction('anlutro\Core\Web\AuthController@login');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testResetStepOneForm()
@@ -120,6 +130,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->getAction('reminder');
 
 		$this->assertResponseOk();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testResetStepOneFailure()
@@ -131,6 +142,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedToAction('reminder');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testResetStepOneSuccess()
@@ -142,6 +154,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHas('info');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testResetStepTwoForm()
@@ -152,6 +165,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->getAction('reset', [], ['token' => 'foobar']);
 
 		$this->assertResponseOk();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testResetStepTwoFormWithoutToken()
@@ -162,6 +176,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->getAction('reset', []);
 
 		$this->assertRedirectedToAction('login');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testResetFailure()
@@ -179,6 +194,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testResetSuccess()
@@ -196,6 +212,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->assertRedirectedToAction('login');
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	protected function getMockUser()

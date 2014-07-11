@@ -37,6 +37,7 @@ return [
 	// password reset
 	'reset-success' => 'Passordet ditt ble tilbakestilt. Du kan nå logge inn med det nye passordet ditt.',
 	'reset-token-invalid' => 'Ugyldig tilbakestillingskode.',
+	'resetpass-failure' => 'Kunne ikke sende tilbakestillingsinstrukser. Vennligst dobbeltsjekk e-post adressen eller prøv igjen senere.',
 	'resetpass-instructions' => 'Hvis du har glemt passordet ditt, kan vi sende instrukser for hvordan du tilbakestiller passordet ditt til e-posten din.',
 	'resetpass-link' => 'Glemt passord?',
 	'resetpass-send' => 'Send instrukser',

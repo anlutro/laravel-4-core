@@ -305,7 +305,7 @@ class UserController extends Controller
 	protected function notFound()
 	{
 		return $this->redirect('index')
-			->withErrors(Lang::get('c::user.not-found'));
+			->withErrors(Lang::get('c::std.not-found', ['model' => Lang::get('c::user.model-user')]));
 	}
 
 	/**

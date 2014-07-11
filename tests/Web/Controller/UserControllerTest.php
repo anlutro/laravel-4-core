@@ -14,6 +14,7 @@ class UserControllerTest extends UserControllerTestCase
 		$this->assertResponseOk();
 		$this->assertRouteHasFilter('auth');
 		$this->assertViewHas('user', $this->currentUser);
+		$this->checkForMissingTranslations();
 	}
 
 	public function testUpdateProfileSuccess()
@@ -26,6 +27,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('profile');
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testUpdateProfileFailure()
@@ -36,6 +38,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('profile');
 		$this->assertSessionHasErrors('baz');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testIndex()
@@ -48,6 +51,7 @@ class UserControllerTest extends UserControllerTestCase
 		$this->assertRouteHasFilter('auth');
 		$this->assertRouteHasFilter('access:admin');
 		$this->assertViewHas('users');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testIndexWithSearch()
@@ -59,6 +63,7 @@ class UserControllerTest extends UserControllerTestCase
 		$this->getAction('index', ['search' => 'foo']);
 
 		$this->assertResponseOk();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testIndexWithFilter()
@@ -70,6 +75,7 @@ class UserControllerTest extends UserControllerTestCase
 		$this->getAction('index', ['usertype' => 'bar']);
 
 		$this->assertResponseOk();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testBulkAction()
@@ -82,6 +88,7 @@ class UserControllerTest extends UserControllerTestCase
 		$this->postAction('bulk', [], $input);
 
 		$this->assertRedirectedToAction('index');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testNotFound()
@@ -92,6 +99,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('index');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testShow()
@@ -102,6 +110,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertResponseOk();
 		$this->assertViewHas('user', $user);
+		$this->checkForMissingTranslations();
 	}
 
 	public function testEdit()
@@ -114,6 +123,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertResponseOk();
 		$this->assertViewHas('user', $user);
+		$this->checkForMissingTranslations();
 	}
 
 	public function testUpdateSuccess()
@@ -125,6 +135,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('edit', [$id]);
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testUpdateFailure()
@@ -136,6 +147,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('edit', [$id]);
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testCreate()
@@ -149,6 +161,7 @@ class UserControllerTest extends UserControllerTestCase
 		$this->getAction('create');
 
 		$this->assertResponseOk();
+		$this->checkForMissingTranslations();
 	}
 
 	public function testStoreSuccess()
@@ -162,6 +175,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('edit', [$user->id]);
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testStoreActivateSuccess()
@@ -175,6 +189,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('edit', [$user->id]);
 		$this->assertSessionHas('success');
+		$this->checkForMissingTranslations();
 	}
 
 	public function testStoreFailure()
@@ -186,6 +201,7 @@ class UserControllerTest extends UserControllerTestCase
 
 		$this->assertRedirectedToAction('create');
 		$this->assertSessionHasErrors();
+		$this->checkForMissingTranslations();
 	}
 
 	protected function setupIndexExpectations($results = array())

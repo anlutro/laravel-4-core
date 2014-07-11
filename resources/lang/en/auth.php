@@ -27,7 +27,6 @@ return [
 	'register-failure' => 'We failed to complete the registration process. Please try again later.',
 	'register-success' => 'Your account was successfully registered, but needs to be activated before you may log in. Check your e-mail for instructions on how to activate your account.',
 	'register-title' => 'Register user',
-	'reset-success' => 'The password was reset. You may now log in with your new password.',
 
 	// account activation
 	'activate-text' => 'Your account needs to be activated before you can log in. Click the link below to activate your account now.',
@@ -36,7 +35,9 @@ return [
 	'activation-success' => 'Your account was successfully activated. You may now log in.',
 
 	// password reset
+	'reset-success' => 'The password was reset. You may now log in with your new password.',
 	'reset-token-invalid' => 'Invalid password token.',
+	'resetpass-failure' => 'Could not send reset instructions. Please double-check the e-mail address or try again later.',
 	'resetpass-instructions' => 'If you\'ve forgotten your password, we can send you an e-mail with instructions on how to reset your password.',
 	'resetpass-link' => 'Forgot password?',
 	'resetpass-send' => 'Send reset instructions',

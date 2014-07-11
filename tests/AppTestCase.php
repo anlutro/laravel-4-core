@@ -49,4 +49,27 @@ class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 
 		$this->app['view']->alias('c::layout.main-nosidebar', 'c::layout.main');
 	}
+
+	protected function checkForMissingTranslations()
+	{
+		$str = 'c::';
+		$response = $this->client->getResponse();
+
+		if ($response->isRedirection()) {
+			$sessionData = $this->app['session']->all();
+			$sessionData = array_map(function($data) {
+				if ($data instanceof \Illuminate\Support\ViewErrorBag) {
+					$data = $data->getBag('default')->all();
+				}
+				return $data;
+			}, $sessionData);
+			array_walk_recursive($sessionData, function($data) use($str) {
+				if ($data) {
+					$this->assertNotContains($str, $data);
+				}
+			});
+		} else {
+			$this->assertNotContains($str, $response->getContent());
+		}
+	}
 }

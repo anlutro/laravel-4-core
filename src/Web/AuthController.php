@@ -195,7 +195,7 @@ class AuthController extends Controller
 		} catch (ReminderException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('reminder')
-				->withErrors(Lang::get('c::std.failure'));
+				->withErrors(Lang::get('c::auth.resetpass-failure'));
 		}
 	}
 
