@@ -3,6 +3,7 @@ namespace anlutro\Core\Tests\Web\Composers;
 
 use PHPUnit_Framework_TestCase;
 use Mockery as m;
+use anlutro\Core\Html\ScriptManager;
 use anlutro\Core\Web\Composers\GenericLayoutCreator;
 
 /** @small */
@@ -24,7 +25,8 @@ class GenericLayoutCreatorTest extends PHPUnit_Framework_TestCase
 		$translator->shouldReceive('get')->andReturnUsing(function($key) use($translations) {
 			return array_get($translations, $key);
 		});
-		return new GenericLayoutCreator($config, $translator);
+		$scripts = new ScriptManager;
+		return new GenericLayoutCreator($config, $translator, $scripts);
 	}
 
 	public function callCreator(array $config, array $translations)

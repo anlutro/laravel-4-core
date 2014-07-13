@@ -14,16 +14,21 @@ use Illuminate\Translation\Translator;
 use Illuminate\View\View;
 
 use anlutro\Core\Html\ScriptCollection;
+use anlutro\Core\Html\ScriptManager;
 
 class GenericLayoutCreator
 {
 	protected $config;
 	protected $translator;
 
-	public function __construct(Repository $config, Translator $translator)
-	{
+	public function __construct(
+		Repository $config,
+		Translator $translator,
+		ScriptManager $scripts
+	) {
 		$this->config = $config;
 		$this->translator = $translator;
+		$this->scripts = $scripts;
 	}
 
 	public function create(View $view)
@@ -32,9 +37,9 @@ class GenericLayoutCreator
 
 		$view->lang = $this->translator->getLocale();
 
-		$view->styles = new ScriptCollection;
-		$view->headScripts = new ScriptCollection;
-		$view->bodyScripts = new ScriptCollection;
+		$view->styles = $this->scripts->get('style');
+		$view->headScripts = $this->scripts->get('head');
+		$view->bodyScripts = $this->scripts->get('body');
 
 		$view->conditionals = [];
 
