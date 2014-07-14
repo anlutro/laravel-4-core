@@ -4,29 +4,29 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ $lang }}"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="{{ $lang }}"> <!--<![endif]-->
 	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>@yield('title') | {{ $title }}</title>
-		<meta name="description" content="{{ $description }}">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>@yield('title') | {{ $title }}</title>
+<meta name="description" content="{{ $description }}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		@foreach($styles as $style)
-		<link media="all" type="text/css" rel="stylesheet" href="{{ asset($style) }}">
-		@endforeach
+@foreach($styles as $style)
+<link media="all" type="text/css" rel="stylesheet" href="{{ asset($style) }}">
+@endforeach
 
-		@yield('head')
+@yield('head')
 
-		@foreach($headScripts as $script)
-		<script type="text/javascript" src="{{ asset($script) }}"></script>
-		@endforeach
+@foreach($headScripts as $script)
+<script type="text/javascript" src="{{ asset($script) }}"></script>
+@endforeach
 
-		@foreach ($conditionals as $condition => $scripts)
-		<!--[if {{ $condition }}]>
-		@foreach ($scripts as $script)
-		{{ $script }}
-		@endforeach
-		-->
-		@endforeach
+@foreach ($conditionals as $condition => $scripts)
+<!--[if {{ $condition }}]>
+@foreach ($scripts as $script)
+{{ $script }}
+@endforeach
+<![endif]-->
+@endforeach
 	</head>
 	<body>
 
