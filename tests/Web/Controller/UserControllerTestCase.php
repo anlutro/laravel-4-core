@@ -4,7 +4,7 @@ namespace anlutro\Core\Tests\Web\Controller;
 use Mockery as m;
 use anlutro\Core\Tests\AppTestCase;
 
-class UserControllerTestCase extends AppTestCase
+abstract class UserControllerTestCase extends AppTestCase
 {
 	protected $users;
 

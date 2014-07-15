@@ -4,6 +4,7 @@ namespace anlutro\Core\Tests\Web;
 use Mockery as m;
 use anlutro\Core\Tests\AppTestCase;
 
+/** @medium */
 class LocalizedRoutesTest extends AppTestCase
 {
 	/**

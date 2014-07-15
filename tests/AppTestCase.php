@@ -4,7 +4,7 @@ namespace anlutro\Core\Tests;
 /**
  * Test case that boots the whole application.
  */
-class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
+abstract class AppTestCase extends \anlutro\LaravelTesting\PkgAppTestCase
 {
 	/**
 	 * {@inheritdoc}

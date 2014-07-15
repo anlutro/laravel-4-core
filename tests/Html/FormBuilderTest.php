@@ -8,6 +8,7 @@ use Illuminate\Routing\RouteCollection;
 use Illuminate\Html\HtmlBuilder;
 use anlutro\Core\Html\FormBuilder;
 
+/** @small */
 class FormBuilderTest extends PHPUnit_Framework_TestCase
 {
 	protected function makeFormBuilder($model = null)
