@@ -29,4 +29,6 @@ return [
 	'activation.register' => '/bruker/registrer',
 	'activation.register_post' => '/bruker/registrer',
 	'activation.activate' => '/bruker/aktiver',
+	'support' => '/support',
+	'support_post' => '/support',
 ];

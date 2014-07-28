@@ -23,4 +23,7 @@ return [
 	// Where to redirect after login if no "intended" URL is in session. This
 	// will be passed to URL::to(), so a relative URI is good enough.
 	'redirect-login' => '/',
+
+	// set this value to enable support email form
+	'support-email' => null,
 ];

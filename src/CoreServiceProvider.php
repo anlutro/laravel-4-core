@@ -100,6 +100,9 @@ class CoreServiceProvider extends ServiceProvider
 		$this->registerAuthDriver();
 		$this->registerRouteFilters();
 		$this->registerRoutes('core');
+		if ($this->app['config']->get('c::support-email')) {
+			$this->registerRoutes('support');
+		}
 		$this->registerViewEvents();
 		$this->registerUserEvents($this->userModel);
 
@@ -271,6 +274,15 @@ class CoreServiceProvider extends ServiceProvider
 				$url->route('c::logout'),
 				['id' => 'log-out']
 			);
+
+			if ($this->app['config']->get('c::support-email')) {
+				$subMenu->addDivider();
+				$subMenu->addItem(
+					$lang->get('c::support.short-title'),
+					$url->route('c::support'),
+					['id' => 'support']
+				);
+			}
 		} else {
 			$menu->getMenu('right')->addItem(
 				$lang->get('c::auth.login-title'),

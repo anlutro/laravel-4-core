@@ -96,20 +96,27 @@ class ErrorHandler
 			return null;
 		}
 
-		$view = $this->app['view'];
+		$viewFactory = $this->app['view'];
 		$translator = $this->app['translator'];
-		$url = $this->app['url'];
+		$urlGenerator = $this->app['url'];
 
-		$contents = $view->make('c::error', [
+		$view = $viewFactory->make('c::error', [
 			'title' => $translator->get('smarterror::error.genericErrorTitle'),
 			'text' => [
 				$translator->get('smarterror::error.genericErrorParagraph1'),
 				$translator->get('smarterror::error.genericErrorParagraph2'),
 			],
-			'homeUrl' => $url->to('/'),
+			'homeUrl' => $urlGenerator->to('/'),
 		]);
 
-		return new Response($contents, 500);
+		if ($this->app['config']->get('c::support-email')) {
+			$url = $urlGenerator->route('c::support');
+			$view->text[] = $translator->get('c::support.send-text', [
+				'link' => '<a href="'.$url.'">'.$url.'</a>',
+			]);
+		}
+
+		return new Response($view->render(), 500);
 	}
 
 	protected function handleMaintenance()
