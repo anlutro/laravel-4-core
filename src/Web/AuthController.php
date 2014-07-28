@@ -89,9 +89,16 @@ class AuthController extends Controller
 
 		try {
 			$this->users->login($credentials, $remember);
+
 			$url = Config::get('c::redirect-login', '/');
-			return Redirect::intended($url)
+			$redirect = Redirect::intended($url)
 				->with('success', Lang::get('c::auth.login-success'));
+
+			if ($message = Config::get('c::login-message')) {
+				$redirect->with('message', $message);
+			}
+
+			return $redirect;
 		} catch (AuthenticationException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('login')

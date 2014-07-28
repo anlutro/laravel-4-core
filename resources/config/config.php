@@ -17,13 +17,17 @@ return [
 	// Whether to queue password reminder emails.
 	'queue-reminder-mail' => false,
 
-	// allow "remember me" option when logging in
+	// Allow "remember me" option when logging in.
 	'login-remember' => false,
 
 	// Where to redirect after login if no "intended" URL is in session. This
 	// will be passed to URL::to(), so a relative URI is good enough.
 	'redirect-login' => '/',
 
-	// set this value to enable support email form
+	// An optional message to display as a session flash message on login.
+	'login-message' => null,
+
+	// Where to send support message emails. If null/false/empty string, the
+	// support message routes will be disabled.
 	'support-email' => null,
 ];
