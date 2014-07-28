@@ -95,7 +95,7 @@ class AuthController extends Controller
 				->with('success', Lang::get('c::auth.login-success'));
 
 			if ($message = Config::get('c::login-message')) {
-				$redirect->with('message', $message);
+				$redirect->with('info', $message);
 			}
 
 			return $redirect;

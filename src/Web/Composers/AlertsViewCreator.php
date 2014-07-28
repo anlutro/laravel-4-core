@@ -43,7 +43,7 @@ class AlertsViewCreator
 			}
 		}
 
-		foreach (['warning', 'info', 'success'] as $key) {
+		foreach (['success', 'warning', 'info'] as $key) {
 			if ($this->session->has($key)) {
 				$alerts[] = $this->makeAlert($key, $this->session->get($key));
 			}
