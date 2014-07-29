@@ -30,7 +30,7 @@
 	</head>
 	<body>
 
-		<a class="sr-only sr-only-focusable" href="#site-main-content">@lang('c::std.skip-to-content')</a>
+		<a class="sr-only sr-only-focusable sr-skip-to-content" href="#site-main-content">@lang('c::std.skip-to-content')</a>
 
 		@yield('body')
 
