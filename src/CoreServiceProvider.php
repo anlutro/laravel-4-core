@@ -80,7 +80,9 @@ class CoreServiceProvider extends ServiceProvider
 		$this->userModel = $this->app['config']->get('auth.model') ?: 'anlutro\Core\Auth\Users\UserModel';
 		$this->app->bind('anlutro\Core\Auth\Users\UserModel', $this->userModel);
 
-		$this->app->singleton('anlutro\Core\Html\ScriptManager');
+		$this->app->bindShared('anlutro\Core\Html\ScriptManager', function($app) {
+			return new Html\ScriptManager($app['config']->get('app.debug'));
+		});
 	}
 
 	/**

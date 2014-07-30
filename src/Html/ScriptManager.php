@@ -13,12 +13,12 @@ class ScriptManager
 {
 	protected $scripts;
 
-	public function __construct()
+	public function __construct($debug = false)
 	{
 		$this->scripts = [
-			'style' => new ScriptCollection,
-			'head'  => new ScriptCollection,
-			'body'  => new ScriptCollection,
+			'style' => new ScriptCollection($debug),
+			'head'  => new ScriptCollection($debug),
+			'body'  => new ScriptCollection($debug),
 		];
 	}
 
