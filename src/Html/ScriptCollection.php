@@ -55,31 +55,31 @@ class ScriptCollection implements IteratorAggregate
 	/**
 	 * Add a script to the collection.
 	 *
-	 * @param array|string  $url      Array of [url, devUrl] or just a single url that counts as both
+	 * @param array|string  $script   Relative URI to the script or array of [devUrl, prodUrl, version] where version is optional
 	 * @param integer       $priority Larger number = higher priority = comes before other scripts
 	 */
-	public function add($url, $priority = 0)
+	public function add($script, $priority = 0)
 	{
-		$url = $this->getScriptArray($url, 'Argument 1 passed to '.__METHOD__);
+		$script = $this->getScriptArray($script, 'Argument 1 passed to '.__METHOD__);
 
 		if (!is_integer($priority)) {
 			$message = 'Argument 2 passed to '.__METHOD__.' must be of the type integer, '.gettype($priority).' given';
 			throw new \InvalidArgumentException($message);
 		}
 
-		$this->scripts[$priority][] = $url;
+		$this->scripts[$priority][] = $script;
 	}
 
-	protected function getScriptArray($url, $message)
+	protected function getScriptArray($script, $message)
 	{
-		if (is_string($url)) {
-			$url = [$url, $url];
-		} else if (!is_array($url)) {
-			$message .= ' must be of the type string or array, '.gettype($url).' given';
+		if (is_string($script)) {
+			$script = [$script, $script];
+		} else if (!is_array($script)) {
+			$message .= ' must be of the type string or array, '.gettype($script).' given';
 			throw new \InvalidArgumentException($message);
 		}
 
-		return $url;
+		return $script;
 	}
 
 	/**
@@ -169,8 +169,8 @@ class ScriptCollection implements IteratorAggregate
 	{
 		$url = $this->debug ? $scripts[1] : $scripts[0];
 
-		if ($this->cacheBuster) {
-			$url .= '?'.$this->cacheBuster;
+		if ((isset($scripts[2]) && $qs = $scripts[2]) || $qs = $this->cacheBuster) {
+			$url .= '?'.$qs;
 		}
 
 		return $url;

@@ -106,4 +106,13 @@ class ScriptCollectionTest extends PHPUnit_Framework_TestCase
 		$collection->add('foo.css');
 		$this->assertEquals(['foo.css?bar'], $collection->all());
 	}
+
+	/** @test */
+	public function cacheBusterStringCanBeAddedToIndivicualScripts()
+	{
+		$collection = new ScriptCollection(false);
+		$collection->add(['foo.css', 'foo.min.css', 'bar']);
+		$collection->add(['bar.css', 'bar.min.css', 'baz']);
+		$this->assertEquals(['foo.css?bar', 'bar.css?baz'], $collection->all());
+	}
 }
