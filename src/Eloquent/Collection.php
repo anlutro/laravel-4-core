@@ -21,7 +21,7 @@ class Collection extends BaseCollection implements JsonSerializable, StdClassabl
 	 * @return array
 	 */
 	public function toStdClass()
-	{	
+	{
 		return array_map(function($value) {
 			$array = null;
 
@@ -48,12 +48,27 @@ class Collection extends BaseCollection implements JsonSerializable, StdClassabl
 	}
 
 	/**
-	 * Is used when json_encode is called on the collection.
-	 *
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function jsonSerialize()
 	{
-		return $this->flatten()->toArray();
+		return array_map(function($value)
+		{
+			if ($value instanceof JsonSerializable) {
+				return $value->jsonSerialize();
+			} else if ($value instanceof ArrayableInterface) {
+				return $value->toArray();
+			} else {
+				return $value;
+			}
+		}, array_values($this->items));
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->jsonSerialize(), $options);
 	}
 }

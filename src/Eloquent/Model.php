@@ -23,12 +23,7 @@ class Model extends BaseModel implements JsonSerializable, StdClassableInterface
 	public function toStdClass()
 	{
 		$attributes = $this->getArrayableAttributes();
-
-		foreach ($this->getDates() as $key) {
-			if (!isset($attributes[$key])) continue;
-
-			$attributes[$key] = $this->asDateTime($attributes[$key]);
-		}
+		$append = [];
 
 		foreach ($this->getMutatedAttributes() as $key) {
 			if (!array_key_exists($key, $attributes)) continue;
@@ -44,7 +39,7 @@ class Model extends BaseModel implements JsonSerializable, StdClassableInterface
 			if (in_array($key, $this->hidden)) continue;
 
 			if ($value instanceof StdClassableInterface) {
-				$attributes[$key] = $value->toStdClass();
+				$append[$key] = $value->toStdClass();
 			} else if ($value instanceof ArrayableInterface) {
 				$attributes[$key] = $value->toArray();
 			} else {
@@ -52,13 +47,23 @@ class Model extends BaseModel implements JsonSerializable, StdClassableInterface
 			}
 		}
 
-		return empty($attributes) ? (new \StdClass) : json_decode(json_encode($attributes));
+		$object = empty($attributes) ? (new \StdClass) : json_decode(json_encode($attributes));
+
+		foreach ($this->getDates() as $key) {
+			if (isset($attributes[$key])) {
+				$object->$key = $this->asDateTime($attributes[$key]);
+			}
+		}
+
+		foreach ($append as $key => $value) {
+			$object->$key = $value;
+		}
+
+		return $object;
 	}
 
 	/**
-	 * Is used when json_encode is called on the model.
-	 *
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function jsonSerialize()
 	{
@@ -66,10 +71,15 @@ class Model extends BaseModel implements JsonSerializable, StdClassableInterface
 	}
 
 	/**
-	 * Override the default collection class.
-	 *
-	 * @param  array  $models
-	 *
+	 * {@inheritdoc}
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->jsonSerialize(), $options);
+	}
+
+	/**
+	 * {@inheritdoc}
 	 * @return \anlutro\Core\Eloquent\Collection
 	 */
 	public function newCollection(array $models = array())
