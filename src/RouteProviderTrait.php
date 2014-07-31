@@ -55,13 +55,11 @@ trait RouteProviderTrait
 			return;
 		}
 
-		$translator = $this->app['translator'];
+		$localUrls = $this->app['translator']->get('c::routes');
 		$router = $this->app['router'];
-		$locale = $translator->getLocale();
 
 		foreach ($data as $name => $route) {
-			$key = "c::routes.{$name}";
-			$url = $translator->has($key) ? $translator->trans($key) : $route['url'];
+			$url = isset($localUrls[$name]) ? $localUrls[$name] : $route['url'];
 
 			$method = $route['method'];
 			unset($route['url'], $route['method']);
