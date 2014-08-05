@@ -38,7 +38,7 @@ class UserValidator extends Validator
 	public function getPasswordResetRules()
 	{
 		return [
-			'password' => ['required', 'confirmed', 'min:6']
+			'password' => ['required', 'confirmed', 'min:6'],
 		];
 	}
 
@@ -49,6 +49,7 @@ class UserValidator extends Validator
 
 	protected function unique($column, $softDelete = true)
 	{
-		return 'unique:<table>,'.$column.',<key>'.($softDelete ? ',id,deleted_at,NULL':'');
+		return 'unique:<table>,' . $column . ',<key>'
+			. ($softDelete ? ',id,deleted_at,NULL' : '');
 	}
 }
