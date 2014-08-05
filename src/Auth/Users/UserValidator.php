@@ -19,10 +19,10 @@ class UserValidator extends Validator
 	protected function getCommonRules()
 	{
 		return [
-			'username' => ['min:4', 'alpha_dash', $this->unique('username')],
-			'email' => ['required', 'email', $this->unique('email')],
-			'name' => ['required'],
-			'phone' => ['regex:/^[\d ]+$/'],
+			'username' => ['min:4', 'max:32', 'alpha_dash', $this->unique('username')],
+			'email' => ['required', 'max:128', 'email', $this->unique('email')],
+			'name' => ['required', 'max:128'],
+			'phone' => ['regex:/^[\d ]+$/', 'max:16'],
 			'password' => ['confirmed', 'min:6'],
 		];
 	}
