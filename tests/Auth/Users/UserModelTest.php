@@ -15,7 +15,6 @@ class UserModelTest extends PHPUnit_Framework_TestCase
 		$user = $this->makeUserModel();
 		$user->user_level = $level;
 		$this->assertEquals($type, $user->user_type);
-		$this->assertTrue($user->hasAccess($type));
 
 		foreach ($allowed as $type) {
 			$this->assertTrue($user->hasAccess($type));
