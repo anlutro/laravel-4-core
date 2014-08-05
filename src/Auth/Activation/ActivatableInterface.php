@@ -17,14 +17,14 @@ interface ActivatableInterface
 	/**
 	 * Activate a user.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function activate();
 
 	/**
 	 * Deactivate a user.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function deactivate();
 
