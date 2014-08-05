@@ -20,7 +20,8 @@ class UsersCreateTable extends Migration
 			$t->string('password', 512);
 			$t->string('name', 128);
 			$t->string('email', 128);
-			$t->string('phone', 16);
+			$t->string('phone', 16)
+				->default('');
 			$t->tinyInteger('user_level')
 				->unsigned();
 			$t->boolean('is_active')
