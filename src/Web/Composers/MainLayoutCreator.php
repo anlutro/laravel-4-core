@@ -10,15 +10,22 @@
 namespace anlutro\Core\Web\Composers;
 
 use Illuminate\Config\Repository;
+use Illuminate\Foundation\Application;
 use Illuminate\Translation\Translator;
 use Illuminate\View\View;
 
 class MainLayoutCreator
 {
+	protected $app;
+	protected $config;
+	protected $translator;
+
 	public function __construct(
+		Application $app,
 		Repository $config,
 		Translator $translator
 	) {
+		$this->app = $app;
 		$this->config = $config;
 		$this->translator = $translator;
 	}
@@ -31,6 +38,12 @@ class MainLayoutCreator
 
 		if ($this->translator->has('c::site.made-by')) {
 			$view->footer[] = $this->translator->get('c::site.made-by');
+		}
+
+		$env = $this->app->environment();
+
+		if ($env !== 'production') {
+			$view->footer[] = 'Application environment: ' . $env;
 		}
 	}
 }

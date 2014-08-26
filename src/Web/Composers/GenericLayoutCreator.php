@@ -10,6 +10,7 @@
 namespace anlutro\Core\Web\Composers;
 
 use Illuminate\Config\Repository;
+use Illuminate\Foundation\Application;
 use Illuminate\Translation\Translator;
 use Illuminate\View\View;
 
@@ -18,14 +19,18 @@ use anlutro\Core\Html\ScriptManager;
 
 class GenericLayoutCreator
 {
+	protected $app;
 	protected $config;
 	protected $translator;
+	protected $scripts;
 
 	public function __construct(
+		Application $app,
 		Repository $config,
 		Translator $translator,
 		ScriptManager $scripts
 	) {
+		$this->app = $app;
 		$this->config = $config;
 		$this->translator = $translator;
 		$this->scripts = $scripts;
@@ -50,7 +55,15 @@ class GenericLayoutCreator
 
 	protected function getTitle()
 	{
-		return $this->config->get('c::site.name') ?: $this->config->get('app.url');
+		$title = $this->config->get('c::site.name') ?: $this->config->get('app.url');
+
+		$env = $this->app->environment();
+
+		if ($env !== 'production') {
+			$title .= ' ('.strtoupper($env).')';
+		}
+
+		return $title;
 	}
 
 	protected function getDescription()

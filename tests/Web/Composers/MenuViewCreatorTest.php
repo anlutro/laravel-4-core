@@ -16,6 +16,8 @@ class MenuViewCreatorTest extends PHPUnit_Framework_TestCase
 
 	public function makeCreator(array $configData = array())
 	{
+		$this->app = new \Illuminate\Foundation\Application;
+		$this->app['env'] = 'production';
 		$this->builder = new Builder;
 		$this->auth = m::mock('Illuminate\Auth\AuthManager');
 		$this->auth->shouldReceive('check')->once()->andReturn(false)->byDefault();
@@ -24,7 +26,7 @@ class MenuViewCreatorTest extends PHPUnit_Framework_TestCase
 		$this->config->shouldReceive('get')->andReturnUsing(function($key, $default = null) use($configData) {
 			return array_get($configData, $key, $default);
 		});
-		return new MenuViewCreator($this->builder, $this->auth, $this->url, $this->config);
+		return new MenuViewCreator($this->app, $this->builder, $this->auth, $this->url, $this->config);
 	}
 
 	public function mockView()
@@ -97,5 +99,14 @@ class MenuViewCreatorTest extends PHPUnit_Framework_TestCase
 		$creator = $this->makeCreator(['app.url' => 'baz']);
 		$creator->create($view = $this->mockView());
 		$this->assertEquals('baz', $view->siteName);
+	}
+
+	/** @test */
+	public function siteNameGetsEnvAppended()
+	{
+		$creator = $this->makeCreator(['app.url' => 'baz']);
+		$this->app['env'] = 'dev';
+		$creator->create($view = $this->mockView());
+		$this->assertEquals('baz <strong>DEV</strong>', $view->siteName);
 	}
 }

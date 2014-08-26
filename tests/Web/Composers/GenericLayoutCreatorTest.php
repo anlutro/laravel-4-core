@@ -16,17 +16,19 @@ class GenericLayoutCreatorTest extends PHPUnit_Framework_TestCase
 
 	public function makeCreator(array $configData, array $translations)
 	{
-		$config = m::mock('Illuminate\Config\Repository');
-		$config->shouldReceive('get')->andReturnUsing(function($key, $default = null) use($configData) {
+		$this->app = new \Illuminate\Foundation\Application;
+		$this->app['env'] = 'production';
+		$this->config = m::mock('Illuminate\Config\Repository');
+		$this->config->shouldReceive('get')->andReturnUsing(function($key, $default = null) use($configData) {
 			return array_get($configData, $key, $default);
 		});
-		$translator = m::mock('Illuminate\Translation\Translator');
-		$translator->shouldReceive('getLocale')->andReturn('en');
-		$translator->shouldReceive('get')->andReturnUsing(function($key) use($translations) {
+		$this->translator = m::mock('Illuminate\Translation\Translator');
+		$this->translator->shouldReceive('getLocale')->andReturn('en');
+		$this->translator->shouldReceive('get')->andReturnUsing(function($key) use($translations) {
 			return array_get($translations, $key);
 		});
-		$scripts = new ScriptManager;
-		return new GenericLayoutCreator($config, $translator, $scripts);
+		$this->scripts = new ScriptManager;
+		return new GenericLayoutCreator($this->app, $this->config, $this->translator, $this->scripts);
 	}
 
 	public function callCreator(array $config, array $translations)
@@ -46,5 +48,15 @@ class GenericLayoutCreatorTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('title', $view->title);
 		$this->assertEquals('description', $view->description);
 		$this->assertEquals('code', $view->gaCode);
+	}
+
+	/** @test */
+	public function envIsAppendedToTitle()
+	{
+		$config = ['c::site.name' => 'title'];
+		$creator = $this->makeCreator($config, []);
+		$this->app['env'] = 'dev';
+		$creator->create($view = m::mock('Illuminate\View\View')->makePartial());
+		$this->assertEquals('title (DEV)', $view->title);
 	}
 }

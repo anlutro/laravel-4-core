@@ -12,11 +12,17 @@ namespace anlutro\Core\Web\Composers;
 use anlutro\Menu\Builder;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository;
+use Illuminate\Foundation\Application;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\View\View;
 
 class MenuViewCreator
 {
+	/**
+	 * @var Application
+	 */
+	protected $app;
+
 	/**
 	 * @var Builder
 	 */
@@ -38,11 +44,13 @@ class MenuViewCreator
 	protected $config;
 
 	public function __construct(
+		Application $app,
 		Builder $menu,
 		AuthManager $auth,
 		UrlGenerator $url,
 		Repository $config
 	) {
+		$this->app = $app;
 		$this->menu = $menu;
 		$this->auth = $auth;
 		$this->url = $url;
@@ -80,8 +88,16 @@ class MenuViewCreator
 
 	protected function getSiteName()
 	{
-		return $this->config->get('c::site.html-name') ?:
+		$title = $this->config->get('c::site.html-name') ?:
 			($this->config->get('c::site.name') ?:
 			$this->config->get('app.url'));
+
+		$env = $this->app->environment();
+
+		if ($env !== 'production') {
+			$title .= ' <strong>'.strtoupper($env).'</strong>';
+		}
+
+		return $title;
 	}
 }
