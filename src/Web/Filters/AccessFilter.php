@@ -81,7 +81,7 @@ class AccessFilter
 
 	protected function getErrorTitle()
 	{
-		return $this->translator->get('c::std.error');
+		return $this->translator->get('c::auth.permissions-title');
 	}
 
 	protected function getErrorMessage()

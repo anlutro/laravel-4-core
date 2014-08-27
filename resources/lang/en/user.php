@@ -37,7 +37,6 @@ return [
 	'username-field' => 'Username',
 
 	// messages
-	'access-denied' => 'You do not have permissions to modify this user.',
 	'create-success' => 'User successfully created!',
 	'delete-confirm' => 'Are you sure you want to delete this user?',
 	'delete-success' => 'User successfully deleted!',

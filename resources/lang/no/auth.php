@@ -22,6 +22,7 @@ return [
 
 	// authentication and authorization
 	'access-denied' => 'Du har ikke tilgang til denne delen av siden.',
+	'permissions-title' => 'Ingen tillatelse',
 
 	// account registration
 	'register-failure' => 'Vi kunne ikke registrere brukeren din for øyeblikket. Vennligst prøv igjen senere.',

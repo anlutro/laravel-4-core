@@ -167,7 +167,7 @@ class UserController extends Controller
 		try {
 			$this->users->checkPermissions($user);
 		} catch (AccessDeniedException $e) {
-			$this->addWarningMessage(Lang::get('c::user.access-denied'));
+			$this->addWarningMessage(Lang::get('c::auth.access-denied'));
 		}
 
 		$viewData = [
@@ -211,7 +211,7 @@ class UserController extends Controller
 			$this->users->updateAsAdmin($user, $this->input());
 			return $redirect->with('success', Lang::get('c::user.update-success'));
 		} catch (AccessDeniedException $e) {
-			return $redirect->withErrors(Lang::get('c::user.access-denied'));
+			return $redirect->withErrors(Lang::get('c::auth.access-denied'));
 		} catch (ValidationException $e) {
 			return $redirect->withErrors($e);
 		}
@@ -237,7 +237,7 @@ class UserController extends Controller
 				->with('success', Lang::get('c::user.delete-success'));
 		} catch (AccessDeniedException $e) {
 			return $this->redirect('edit', [$user->id])
-				->withErrors(Lang::get('c::user.access-denied'));
+				->withErrors(Lang::get('c::auth.access-denied'));
 		}
 	}
 

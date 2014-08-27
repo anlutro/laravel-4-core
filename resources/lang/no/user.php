@@ -37,7 +37,6 @@ return [
 	'username-field' => 'Brukernavn',
 
 	// messages
-	'access-denied' => 'Du har ikke tilgang til å redigere denne brukeren.',
 	'create-success' => 'Brukeren ble laget!',
 	'delete-confirm' => 'Er du sikker på at du vil slette denne brukeren?',
 	'delete-success' => 'Brukeren ble slettet!',

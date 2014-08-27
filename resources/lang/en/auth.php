@@ -22,6 +22,7 @@ return [
 
 	// authentication and authorization
 	'access-denied' => 'You do not have access to this part of the site.',
+	'permissions-title' => 'Insufficient permissions',
 
 	// account registration
 	'register-failure' => 'We failed to complete the registration process. Please try again later.',
