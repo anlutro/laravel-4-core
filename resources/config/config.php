@@ -30,4 +30,9 @@ return [
 	// Where to send support message emails. If null/false/empty string, the
 	// support message routes will be disabled.
 	'support-email' => null,
+
+	// Whether to enable the link to the home URL (as defined in this config
+	// file's `redirect-login`) in the top menu. Can be a closure that is
+	// lazily invoked.
+	'enable-home-link' => function() { return Illuminate\Support\Facades\Auth::check(); },
 ];

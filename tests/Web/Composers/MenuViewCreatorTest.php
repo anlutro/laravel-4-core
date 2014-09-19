@@ -19,14 +19,12 @@ class MenuViewCreatorTest extends PHPUnit_Framework_TestCase
 		$this->app = new \Illuminate\Foundation\Application;
 		$this->app['env'] = 'production';
 		$this->builder = new Builder;
-		$this->auth = m::mock('Illuminate\Auth\AuthManager');
-		$this->auth->shouldReceive('check')->once()->andReturn(false)->byDefault();
 		$this->url = m::mock('Illuminate\Routing\UrlGenerator');
 		$this->config = m::mock('Illuminate\Config\Repository');
 		$this->config->shouldReceive('get')->andReturnUsing(function($key, $default = null) use($configData) {
 			return array_get($configData, $key, $default);
 		});
-		return new MenuViewCreator($this->app, $this->builder, $this->auth, $this->url, $this->config);
+		return new MenuViewCreator($this->app, $this->builder, $this->url, $this->config);
 	}
 
 	public function mockView()
@@ -52,19 +50,9 @@ class MenuViewCreatorTest extends PHPUnit_Framework_TestCase
 	}
 
 	/** @test */
-	public function homeUrlIsNotSetForGuests()
+	public function homeUrlIsSetAccordingToConfig()
 	{
-		$creator = $this->makeCreator();
-		$this->auth->shouldReceive('check')->once()->andReturn(false);
-		$creator->create($view = $this->mockView());
-		$this->assertEquals(null, $view->homeUrl);
-	}
-
-	/** @test */
-	public function homeUrlIsSetForLoggedInUsers()
-	{
-		$creator = $this->makeCreator(['c::redirect-login' => '/foo']);
-		$this->auth->shouldReceive('check')->once()->andReturn(true);
+		$creator = $this->makeCreator(['c::enable-home-link' => true, 'c::redirect-login' => '/foo']);
 		$this->url->shouldReceive('to')->once()->with('/foo')->andReturn('localhost/foo');
 		$creator->create($view = $this->mockView());
 		$this->assertEquals('localhost/foo', $view->homeUrl);

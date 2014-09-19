@@ -10,7 +10,6 @@
 namespace anlutro\Core\Web\Composers;
 
 use anlutro\Menu\Builder;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Config\Repository;
 use Illuminate\Foundation\Application;
 use Illuminate\Routing\UrlGenerator;
@@ -29,11 +28,6 @@ class MenuViewCreator
 	protected $menu;
 
 	/**
-	 * @var AuthManager|\Illuminate\Auth\Guard
-	 */
-	protected $auth;
-
-	/**
 	 * @var UrlGenerator
 	 */
 	protected $url;
@@ -46,13 +40,11 @@ class MenuViewCreator
 	public function __construct(
 		Application $app,
 		Builder $menu,
-		AuthManager $auth,
 		UrlGenerator $url,
 		Repository $config
 	) {
 		$this->app = $app;
 		$this->menu = $menu;
-		$this->auth = $auth;
 		$this->url = $url;
 		$this->config = $config;
 	}
@@ -78,7 +70,10 @@ class MenuViewCreator
 
 	protected function getHomeUrl()
 	{
-		if ($this->auth->check()) {
+		// wrap in value() to allow closures
+		$enableHomeLink = value($this->config->get('c::enable-home-link', false));
+
+		if ($enableHomeLink) {
 			$url = $this->config->get('c::redirect-login', '/');
 			return $this->url->to($url);
 		}
