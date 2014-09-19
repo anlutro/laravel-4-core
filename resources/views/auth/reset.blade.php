@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="page-header">
-	<h1>@lang('c::auth.resetpass-title')</h1>
+	<h1 class="col-sm-offset-3">@lang('c::auth.resetpass-title')</h1>
 </div>
 
 {{ Form::open(['url' => $formAction, 'class' => 'form-horizontal', 'role' => 'form']) }}

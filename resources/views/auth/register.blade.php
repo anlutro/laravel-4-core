@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="page-header">
-	<h1>@lang('c::auth.register-title')</h1>
+	<h1 class="col-sm-offset-2">@lang('c::auth.register-title')</h1>
 </div>
 
 {{ Form::model($user, ['url' => $formAction, 'class' => 'form-horizontal', 'role' => 'form']) }}

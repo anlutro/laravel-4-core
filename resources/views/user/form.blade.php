@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="page-header">
-	<h1>{{ $pageTitle }}</h1>
+	<h1 class="col-sm-offset-3 col-md-offset-2">{{ $pageTitle }}</h1>
 </div>
 
 {{ Form::model($user, ['url' => $formAction, 'class' => 'form-horizontal', 'role' => 'form']) }}

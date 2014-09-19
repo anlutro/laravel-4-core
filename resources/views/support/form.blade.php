@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="page-header">
-	<h1>@lang('c::support.title')</h1>
+	<h1 class="col-sm-offset-2">@lang('c::support.title')</h1>
 </div>
 
 {{ Form::open(['url' => $formAction, 'class' => 'form-horizontal', 'role' => 'form']) }}
