@@ -47,6 +47,11 @@ return [
 	'view' => 'Vis',
 	'with-selected' => 'Med valgte:',
 
+	// generic labels
+	'created' => 'Opprettet',
+	'deleted' => 'Slettet',
+	'updated' => 'Oppdatert',
+
 	// other misc stuff
 	'browsehappy' => 'Du bruker en <strong>utdatert</strong> nettleser. Vennligst <a href=":url">oppgrader nettleseren din</a> for å få mest ut av denne nettsiden!',
 	'from' => 'Fra',

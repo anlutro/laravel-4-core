@@ -48,6 +48,13 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 	 */
 	protected $hidden = ['password', 'login_token', 'remember_token'];
 
+	/**
+	 * Attributes that should be represented as Carbon objects.
+	 *
+	 * @var array
+	 */
+	protected $dates = ['deleted_at', 'last_login'];
+
 	/********************
 	 *  Authentication  *
 	 ********************/

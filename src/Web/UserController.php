@@ -145,10 +145,21 @@ class UserController extends Controller
 			return $this->notFound();
 		}
 
-		return $this->view('c::user.show', [
+		$canEdit = $this->users->hasPermission($user);
+
+		$view = $this->view('c::user.show', [
 			'user'    => $user,
 			'backUrl' => URL::to('/'),
+			'canEdit' => $canEdit,
 		]);
+
+		if ($canEdit) {
+			$view->with([
+				'editUrl' => $this->url('@edit', [$userId]),
+			]);
+		}
+
+		return $view;
 	}
 
 	/**

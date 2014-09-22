@@ -28,6 +28,7 @@ return [
 	'active-field' => 'Aktiv',
 	'email-field' => 'E-post',
 	'name-field' => 'Navn',
+	'last-login' => 'Siste innlogging',
 	'new-password' => 'Nytt passord',
 	'old-password' => 'Gammelt passord',
 	'password-field' => 'Passord',

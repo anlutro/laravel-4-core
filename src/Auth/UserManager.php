@@ -264,6 +264,23 @@ class UserManager
 	}
 
 	/**
+	 * Determine if the current user has permission to modify a user.
+	 *
+	 * @param  UserModel|int $level
+	 *
+	 * @return boolean
+	 */
+	public function hasPermission($level)
+	{
+		try {
+			$this->checkPermissions($level);
+			return true;
+		} catch (AccessDeniedException $e) {
+			return false;
+		}
+	}
+
+	/**
 	 * Given correct credentials, log a user in.
 	 *
 	 * @param  array   $credentials

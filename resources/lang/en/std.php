@@ -47,6 +47,11 @@ return [
 	'view' => 'View',
 	'with-selected' => 'With selected:',
 
+	// generic labels
+	'created' => 'Created',
+	'deleted' => 'Deleted',
+	'updated' => 'Updated',
+
 	// other misc stuff
 	'browsehappy' => 'You are using an <strong>outdated</strong> browser. Please <a href=":url">upgrade your browser</a> to improve your experience.',
 	'from' => 'From',

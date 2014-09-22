@@ -105,6 +105,7 @@ class UserControllerTest extends UserControllerTestCase
 	public function testShow()
 	{
 		$id = 1; $user = $this->setupFindExpectations($id);
+		$this->users->shouldReceive('hasPermission')->once()->with($user)->andReturn(false);
 
 		$this->getAction('show', [$id]);
 

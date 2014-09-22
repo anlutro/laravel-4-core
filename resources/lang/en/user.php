@@ -27,6 +27,7 @@ return [
 	'activation-field' => 'Send activation instructions',
 	'active-field' => 'Active',
 	'email-field' => 'E-mail',
+	'last-login' => 'Last login',
 	'name-field' => 'Name',
 	'new-password' => 'New password',
 	'old-password' => 'Old password',
