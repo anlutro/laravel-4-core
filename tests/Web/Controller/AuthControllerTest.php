@@ -41,7 +41,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->postAction('login', [], $input);
 
 		$this->assertRedirectedToAction('login');
-		$this->assertSessionHasErrors();
+		$this->assertSessionHas('error');
 		$this->checkForMissingTranslations();
 	}
 
@@ -96,7 +96,7 @@ class AuthControllerTest extends AuthControllerTestCase
 
 		$this->postAction('attemptRegistration', [], $input);
 		$this->assertRedirectedToAction('register');
-		$this->assertSessionHasErrors();
+		$this->assertSessionHas('error');
 		$this->checkForMissingTranslations();
 	}
 
@@ -118,7 +118,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->getAction('activate', ['activation_code' => 'foo']);
 
 		$this->assertRedirectedToAction('anlutro\Core\Web\AuthController@login');
-		$this->assertSessionHasErrors();
+		$this->assertSessionHas('error');
 		$this->checkForMissingTranslations();
 	}
 
@@ -141,7 +141,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->postAction('sendReminder', [], $input);
 
 		$this->assertRedirectedToAction('reminder');
-		$this->assertSessionHasErrors();
+		$this->assertSessionHas('error');
 		$this->checkForMissingTranslations();
 	}
 
@@ -193,7 +193,7 @@ class AuthControllerTest extends AuthControllerTestCase
 		$this->postAction('attemptReset', [], $input);
 
 		$this->assertRedirectedToAction('login');
-		$this->assertSessionHasErrors();
+		$this->assertSessionHas('error');
 		$this->checkForMissingTranslations();
 	}
 

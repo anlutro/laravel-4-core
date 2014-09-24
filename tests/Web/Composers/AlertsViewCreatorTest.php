@@ -65,7 +65,7 @@ class AlertsViewCreatorTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('Foow', $alerts[1]->message);
 		$this->assertEquals('info', $alerts[2]->type);
 		$this->assertEquals('Fooi', $alerts[2]->message);
-		$this->assertEquals('error', $alerts[3]->type);
+		$this->assertEquals('danger', $alerts[3]->type);
 		$this->assertEquals('Fooe', $alerts[3]->message);
 	}
 }

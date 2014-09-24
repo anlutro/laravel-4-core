@@ -37,7 +37,7 @@ class SupportController extends Controller
 
 		if (!$this->sendMail($input)) {
 			return $this->redirect('@displayForm')->withInput()
-				->withErrors(Lang::get('c::support.mail-failure'));
+				->with('error', Lang::get('c::support.mail-failure'));
 		}
 
 		return Redirect::to(Config::get('c::redirect-login'))

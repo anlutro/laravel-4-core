@@ -102,7 +102,7 @@ class AuthController extends Controller
 		} catch (AuthenticationException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('login')
-				->withErrors(Lang::get('c::auth.login-failure'));
+				->with('error', Lang::get('c::auth.login-failure'));
 		}
 	}
 
@@ -151,7 +151,7 @@ class AuthController extends Controller
 		} catch (ActivationException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('register')
-				->withErrors(Lang::get('c::auth.activation-failed'));
+				->with('error', Lang::get('c::auth.activation-failed'));
 		}
 	}
 
@@ -171,7 +171,7 @@ class AuthController extends Controller
 		} catch (ActivationException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('login')
-				->withErrors(Lang::get('c::auth.activation-failed'));
+				->with('error', Lang::get('c::auth.activation-failed'));
 		}
 	}
 
@@ -202,7 +202,7 @@ class AuthController extends Controller
 		} catch (ReminderException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('reminder')
-				->withErrors(Lang::get('c::auth.resetpass-failure'));
+				->with('error', Lang::get('c::auth.resetpass-failure'));
 		}
 	}
 
@@ -241,7 +241,7 @@ class AuthController extends Controller
 		} catch (ReminderException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('login')
-				->withErrors(Lang::get('reminders.token'));
+				->with('error', Lang::get('reminders.token'));
 		}
 	}
 

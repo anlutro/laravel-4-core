@@ -64,7 +64,6 @@ return [
 	'under-construction' => 'Under konstruksjon',
 	'under-construction-text' => 'Denen delen av nettsiden er for øyeblikket under konstruksjon. Vennligst prøv igjen senere!',
 	'until' => 'Til',
-	'validation-errors' => 'There were errors validating your request data. Please correct the following errors and try again.',
 	'validation-errors' => 'Det oppsto feil under validering av forespørselen din. Vennligst korriger følgende feil og prøv igjen.',
 
 ];

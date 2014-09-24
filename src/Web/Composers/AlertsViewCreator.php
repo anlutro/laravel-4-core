@@ -57,6 +57,8 @@ class AlertsViewCreator
 
 	protected function makeAlert($type, $message)
 	{
+		if ($type == 'error') $type = 'danger';
+
 		return (object) [
 			'type'    => $type,
 			'message' => ucfirst($message),

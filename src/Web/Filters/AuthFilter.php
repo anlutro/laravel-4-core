@@ -80,7 +80,7 @@ class AuthFilter
 			$this->session->put('url.intended', $intended);
 
 			return $this->redirect->to($url)
-				->withErrors($message);
+				->with('error', $message);
 		}
 	}
 

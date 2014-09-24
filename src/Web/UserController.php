@@ -119,12 +119,12 @@ class UserController extends Controller
 
 		if (empty($input)) {
 			return $redirect->withInput()
-				->withErrors(Lang::get('c::std.none-selected', ['model' => Lang::get('c::user.model-user')]));
+				->with('error', Lang::get('c::std.none-selected', ['model' => Lang::get('c::user.model-user')]));
 		}
 
 		if (empty($action)) {
 			return $redirect->withInput()
-				->withErrors(Lang::get('c::std.invalid-action'));
+				->with('error', Lang::get('c::std.invalid-action'));
 		}
 
 		$this->users->processBulkAction($action, array_keys($input));
@@ -222,7 +222,7 @@ class UserController extends Controller
 			$this->users->updateAsAdmin($user, $this->input());
 			return $redirect->with('success', Lang::get('c::user.update-success'));
 		} catch (AccessDeniedException $e) {
-			return $redirect->withErrors(Lang::get('c::auth.access-denied'));
+			return $redirect->with('error', Lang::get('c::auth.access-denied'));
 		} catch (ValidationException $e) {
 			return $redirect->withErrors($e);
 		}
@@ -248,7 +248,7 @@ class UserController extends Controller
 				->with('success', Lang::get('c::user.delete-success'));
 		} catch (AccessDeniedException $e) {
 			return $this->redirect('edit', [$user->id])
-				->withErrors(Lang::get('c::auth.access-denied'));
+				->with('error', Lang::get('c::auth.access-denied'));
 		}
 	}
 
@@ -316,7 +316,7 @@ class UserController extends Controller
 	protected function notFound()
 	{
 		return $this->redirect('index')
-			->withErrors(Lang::get('c::std.not-found', ['model' => Lang::get('c::user.model-user')]));
+			->with('error', Lang::get('c::std.not-found', ['model' => Lang::get('c::user.model-user')]));
 	}
 
 	/**

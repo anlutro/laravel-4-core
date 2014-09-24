@@ -98,7 +98,7 @@ class UserControllerTest extends UserControllerTestCase
 		$this->getAction('show', [1]);
 
 		$this->assertRedirectedToAction('index');
-		$this->assertSessionHasErrors();
+		$this->assertSessionHas('error');
 		$this->checkForMissingTranslations();
 	}
 
