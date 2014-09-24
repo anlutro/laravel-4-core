@@ -12,6 +12,7 @@ namespace anlutro\Core\Web\Composers;
 use Illuminate\Session\Store;
 use Illuminate\Translation\Translator;
 use Illuminate\View\View;
+use Illuminate\Support\ViewErrorBag;
 
 /**
  * View composer for resources/views/alerts.php
@@ -30,6 +31,7 @@ class AlertsViewCreator
 	public function create(View $view)
 	{
 		$view->close = $this->translator->get('c::std.close');
+		$view->validationErrors = $this->getValidationErrors();
 		$view->alerts = $this->getAlerts();
 	}
 
@@ -37,19 +39,20 @@ class AlertsViewCreator
 	{
 		$alerts = [];
 
-		if ($this->session->has('errors')) {
-			foreach ($this->session->get('errors')->all() as $error) {
-				$alerts[] = $this->makeAlert('danger', $error);
-			}
-		}
-
-		foreach (['success', 'warning', 'info'] as $key) {
+		foreach (['success', 'warning', 'info', 'error'] as $key) {
 			if ($this->session->has($key)) {
 				$alerts[] = $this->makeAlert($key, $this->session->get($key));
 			}
 		}
 
 		return $alerts;
+	}
+
+	protected function getValidationErrors()
+	{
+		if ($this->session->has('errors')) {
+			return $this->session->get('errors')->all();
+		}
 	}
 
 	protected function makeAlert($type, $message)

@@ -64,5 +64,6 @@ return [
 	'under-construction' => 'Under construction',
 	'under-construction-text' => 'This part of the website is currently under construction. Please check again later!',
 	'until' => 'Until',
+	'validation-errors' => 'There were errors validating your request data. Please correct the following errors and try again.',
 
 ];

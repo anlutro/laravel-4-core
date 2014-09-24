@@ -43,12 +43,29 @@ class AlertsViewCreatorTest extends PHPUnit_Framework_TestCase
 	public function errorsAreAdded()
 	{
 		$session = $this->makeSession();
-		$session->put('errors', new MessageBag(['foo', 'bar']));
+		$session->put('errors', $bag = new MessageBag(['foo', 'bar']));
+		$view = $this->callCreator($session);
+		$errors = $view->validationErrors;
+		$this->assertEquals($bag->all(), $errors);
+	}
+
+	/** @test */
+	public function alertsAreAdded()
+	{
+		$session = $this->makeSession();
+		$session->put('success', 'foos');
+		$session->put('warning', 'foow');
+		$session->put('info', 'fooi');
+		$session->put('error', 'fooe');
 		$view = $this->callCreator($session);
 		$alerts = $view->alerts;
-		$this->assertEquals('danger', $alerts[0]->type);
-		$this->assertEquals('Foo', $alerts[0]->message);
-		$this->assertEquals('danger', $alerts[1]->type);
-		$this->assertEquals('Bar', $alerts[1]->message);
+		$this->assertEquals('success', $alerts[0]->type);
+		$this->assertEquals('Foos', $alerts[0]->message);
+		$this->assertEquals('warning', $alerts[1]->type);
+		$this->assertEquals('Foow', $alerts[1]->message);
+		$this->assertEquals('info', $alerts[2]->type);
+		$this->assertEquals('Fooi', $alerts[2]->message);
+		$this->assertEquals('error', $alerts[3]->type);
+		$this->assertEquals('Fooe', $alerts[3]->message);
 	}
 }
