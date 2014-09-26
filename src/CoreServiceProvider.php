@@ -10,7 +10,6 @@
 namespace anlutro\Core;
 
 use anlutro\Core\Auth\Users\UserModel;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;

@@ -46,4 +46,9 @@ class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 
 		throw new AuthenticationException("Incorrect password");
 	}
+
+	public function updateRememberToken(UserInterface $user, $token)
+	{
+		$user->setRememberToken($token);
+	}
 }

@@ -95,9 +95,11 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 			$time = new DateTime;
 		}
 
+		$this->setAttribute('last_login', $time);
+
 		// prevent updated_at from updating
 		$this->timestamps = false;
-		$this->fill(['last_login' => $time])->save();
+		$this->save();
 		$this->timestamps = true;
 	}
 
@@ -123,6 +125,11 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 	public function setRememberToken($value)
 	{
 		$this->setAttribute('remember_token', $value);
+
+		// prevent updated_at from updating
+		$this->timestamps = false;
+		$this->save();
+		$this->timestamps = true;
 	}
 
 	public function getRememberTokenName()
