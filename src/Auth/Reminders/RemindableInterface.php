@@ -19,4 +19,4 @@ interface RemindableInterface extends \Illuminate\Auth\Reminders\RemindableInter
 	 * @return void
 	 */
 	public function setPassword($newPassword);
-} 
+}
