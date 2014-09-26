@@ -9,11 +9,10 @@
 
 namespace anlutro\Core;
 
+use anlutro\Core\Auth\Users\UserModel;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CoreServiceProvider extends ServiceProvider
@@ -192,16 +191,13 @@ class CoreServiceProvider extends ServiceProvider
 	protected function registerUserEvents($userModel)
 	{
 		// set a random login token on creation.
-		$userModel::creating(function(Model $user) {
-			if (!isset($user->login_token)) {
-				$user->setAttribute('login_token', Str::random(32));
-			}
+		$userModel::creating(function(UserModel $user) {
+			$user->generateLoginToken();
 		});
 
 		// set last_login on every successful login.
-		$this->app['events']->listen('auth.login', function(Model $user) {
-			$user->setAttribute('last_login', Carbon::now());
-			$user->save();
+		$this->app['events']->listen('auth.login', function(UserModel $user) {
+			$user->updateLastLogin();
 		});
 	}
 

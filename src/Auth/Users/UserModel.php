@@ -9,9 +9,10 @@
 
 namespace anlutro\Core\Auth\Users;
 
+use DateTime;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use anlutro\Core\Auth\Activation\ActivatableInterface;
 use anlutro\Core\Auth\Reminders\RemindableInterface;
@@ -54,6 +55,51 @@ class UserModel extends Model implements UserInterface, RemindableInterface, Act
 	 * @var array
 	 */
 	protected $dates = ['deleted_at', 'last_login'];
+
+	/**
+	 * Generate a login token if one is not already generated.
+	 *
+	 * @return string|false
+	 */
+	public function generateLoginToken()
+	{
+		if (!$this->getAttribute('login_token')) {
+			return $this->regenerateLoginToken();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Regenerate the user's login token.
+	 *
+	 * @return string
+	 */
+	public function regenerateLoginToken()
+	{
+		$this->setAttribute('login_token', $str = Str::random(32));
+
+		return $str;
+	}
+
+	/**
+	 * Update the time for the last login.
+	 *
+	 * @param  DateTime|null $time
+	 *
+	 * @return void
+	 */
+	public function updateLastLogin(DateTime $time = null)
+	{
+		if ($time === null) {
+			$time = new DateTime;
+		}
+
+		// prevent updated_at from updating
+		$this->timestamps = false;
+		$this->fill(['last_login' => $time])->save();
+		$this->timestamps = true;
+	}
 
 	/********************
 	 *  Authentication  *
