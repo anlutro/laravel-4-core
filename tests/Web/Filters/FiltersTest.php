@@ -78,11 +78,33 @@ class FiltersTest extends AppTestCase
 	public function accessFilterChecksForAllArgs()
 	{
 		$mockUser = $this->mockUser();
-		$mockUser->shouldReceive('hasAccess')->once()->with('test1')->andReturn(true);
-		$mockUser->shouldReceive('hasAccess')->once()->with('test2')->andReturn(false);
+		$mockUser->shouldReceive('hasAccess')->with('test1')->once()->andReturn(true);
+		$mockUser->shouldReceive('hasAccess')->with('test2')->once()->andReturn(false);
 		$this->be($mockUser);
 		$this->call('get', '/more-access-test');
 		$this->assertResponseStatus(403);
+	}
+
+	/** @test */
+	public function accessFilterStopsAfterFirstFalse()
+	{
+		$mockUser = $this->mockUser();
+		$mockUser->shouldReceive('hasAccess')->with('test1')->once()->andReturn(false);
+		$mockUser->shouldReceive('hasAccess')->with('test2')->never();
+		$this->be($mockUser);
+		$this->call('get', '/more-access-test');
+		$this->assertResponseStatus(403);
+	}
+
+	/** @test */
+	public function accessFilterReturnsNullWhenAllAccessAllowed()
+	{
+		$mockUser = $this->mockUser();
+		$mockUser->shouldReceive('hasAccess')->with('test1')->once()->andReturn(true);
+		$mockUser->shouldReceive('hasAccess')->with('test2')->once()->andReturn(true);
+		$this->be($mockUser);
+		$this->call('get', '/more-access-test');
+		$this->assertResponseOk();
 	}
 
 	protected function mockUser()
