@@ -213,13 +213,15 @@ class AuthController extends Controller
 	 */
 	public function reset()
 	{
-		if (!$this->input('token')) {
+		$token = Request::query('token') ?: Request::old('token');
+
+		if (!$token) {
 			return $this->redirect('login');
 		}
 
 		return $this->view('c::auth.reset', [
 			'formAction' => $this->url('attemptReset'),
-			'token'      => Request::query('token'),
+			'token'      => $token,
 		]);
 	}
 
@@ -238,10 +240,13 @@ class AuthController extends Controller
 			$this->users->resetPasswordForCredentials($credentials, $input, $token);
 			return $this->redirect('login')
 				->with('success', Lang::get('c::auth.reset-success'));
+		} catch (ValidationException $e) {
+			return $this->redirect('@reset')
+				->withInput()->withErrors($e);
 		} catch (ReminderException $e) {
 			if ($this->debug) throw $e;
 			return $this->redirect('login')
-				->with('error', Lang::get('reminders.token'));
+				->with('error', Lang::get('c::auth.reset-token-invalid'));
 		}
 	}
 
