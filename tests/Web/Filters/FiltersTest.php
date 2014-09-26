@@ -14,6 +14,7 @@ class FiltersTest extends AppTestCase
 		$this->app['router']->get('/auth-test', ['before' => 'auth', function() { return 'OK'; }]);
 		$this->app['router']->get('/guest-test', ['before' => 'guest', function() { return 'OK'; }]);
 		$this->app['router']->get('/access-test', ['before' => 'auth|access:test', function() { return 'OK'; }]);
+		$this->app['router']->get('/more-access-test', ['before' => 'auth|access:test1,test2', function() { return 'OK'; }]);
 	}
 
 	public function tearDown()
@@ -70,6 +71,17 @@ class FiltersTest extends AppTestCase
 		$mockUser->shouldReceive('hasAccess')->once()->with('test')->andReturn(false);
 		$this->be($mockUser);
 		$this->call('get', '/access-test');
+		$this->assertResponseStatus(403);
+	}
+
+	/** @test */
+	public function accessFilterChecksForAllArgs()
+	{
+		$mockUser = $this->mockUser();
+		$mockUser->shouldReceive('hasAccess')->once()->with('test1')->andReturn(true);
+		$mockUser->shouldReceive('hasAccess')->once()->with('test2')->andReturn(false);
+		$this->be($mockUser);
+		$this->call('get', '/more-access-test');
 		$this->assertResponseStatus(403);
 	}
 

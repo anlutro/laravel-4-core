@@ -51,14 +51,17 @@ class AccessFilter
 		$this->url = $url;
 	}
 
-	public function filter(Route $route, Request $request, $params)
+	public function filter(Route $route, Request $request /* , $params */)
 	{
 		/** @var \anlutro\Core\Auth\Users\UserModel $user */
 		if (!$user = $this->auth->user()) {
 			throw new \RuntimeException('auth filter must precede access filter');
 		}
 
-		foreach ((array) $params as $access) {
+		// get an array of function arguments #3 and up
+		$params = array_slice(func_get_args(), 2);
+
+		foreach ($params as $access) {
 			if (!$user->hasAccess($access)) {
 				return $this->makeResponse($request);
 			}
