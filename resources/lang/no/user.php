@@ -41,6 +41,7 @@ return [
 	'create-success' => 'Brukeren ble laget!',
 	'delete-confirm' => 'Er du sikker på at du vil slette denne brukeren?',
 	'delete-success' => 'Brukeren ble slettet!',
+	'no-users-found' => 'Ingen brukere funnet!',
 	'profile-update-success' => 'Profil oppdatert!',
 	'restore-success' => 'Brukeren ble gjenopprettet!',
 	'update-success' => 'Brukeren ble oppdatert!',

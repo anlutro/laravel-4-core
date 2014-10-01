@@ -47,6 +47,9 @@ abstract class UserControllerTestCase extends AppTestCase
 
 	protected function setupIndexExpectations($results = array())
 	{
+		if (!$results instanceof \Illuminate\Support\Collection) {
+			$results = new \Illuminate\Support\Collection($results);
+		}
 		$this->users->shouldReceive('paginate->getAll')->once()
 			->andReturn($results);
 	}

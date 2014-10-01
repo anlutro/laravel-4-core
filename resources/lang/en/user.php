@@ -41,6 +41,7 @@ return [
 	'create-success' => 'User successfully created!',
 	'delete-confirm' => 'Are you sure you want to delete this user?',
 	'delete-success' => 'User successfully deleted!',
+	'no-users-found' => 'No users found!',
 	'profile-update-success' => 'Profile updated!',
 	'restore-success' => 'User successfully restored!',
 	'update-success' => 'User successfully updated!',

@@ -45,6 +45,7 @@
 			</tr>
 		</thead>
 		<tbody>
+		@if ($users->count() > 0)
 		@foreach ($users as $user)
 			<tr>
 				<td>
@@ -77,6 +78,13 @@
 				</td>
 			</tr>
 		@endforeach
+		@else
+			<tr>
+				<td colspan="6">
+					@lang('c::user.no-users-found')
+				</td>
+			</tr>
+		@endif
 		</tbody>
 	</table>
 	</div>

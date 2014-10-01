@@ -67,7 +67,7 @@ class ApiUserControllerTest extends UserControllerTestCase
 
 	public function testIndex()
 	{
-		$this->setUpIndexExpectations('foo');
+		$this->setUpIndexExpectations(['foo']);
 
 		$response = $this->getAction('index');
 
@@ -75,12 +75,12 @@ class ApiUserControllerTest extends UserControllerTestCase
 		$this->assertRouteHasFilter('access:admin');
 		$data = $this->assertResponseJson($response);
 		$this->assertResponse200($response);
-		$this->assertEquals('foo', $data->users);
+		$this->assertEquals(['foo'], $data->users);
 	}
 
 	public function testIndexWithSearch()
 	{
-		$this->setUpIndexExpectations('foo');
+		$this->setUpIndexExpectations(['foo']);
 		$this->users->shouldReceive('search')
 			->with('foo');
 
@@ -90,12 +90,12 @@ class ApiUserControllerTest extends UserControllerTestCase
 		$this->assertRouteHasFilter('access:admin');
 		$data = $this->assertResponseJson($response);
 		$this->assertResponse200($response);
-		$this->assertEquals('foo', $data->users);
+		$this->assertEquals(['foo'], $data->users);
 	}
 
 	public function testIndexWithFilter()
 	{
-		$this->setUpIndexExpectations('foo');
+		$this->setUpIndexExpectations(['foo']);
 		$this->users->shouldReceive('filter')
 			->with('bar');
 
@@ -105,7 +105,7 @@ class ApiUserControllerTest extends UserControllerTestCase
 		$this->assertRouteHasFilter('access:admin');
 		$data = $this->assertResponseJson($response);
 		$this->assertResponse200($response);
-		$this->assertEquals('foo', $data->users);
+		$this->assertEquals(['foo'], $data->users);
 	}
 
 	public function testBulkAction()
