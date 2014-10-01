@@ -127,7 +127,7 @@ class UserController extends Controller
 				->with('error', Lang::get('c::std.invalid-action'));
 		}
 
-		$this->users->processBulkAction($action, array_keys($input));
+		$this->users->processBulkAction($action, $input);
 
 		return $redirect;
 	}

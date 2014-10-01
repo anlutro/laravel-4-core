@@ -16,11 +16,11 @@
 	<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-search"></span> @lang('c::std.search')</button>
 
 	<span class="pull-right">
-		<a href="{{ $backUrl }}" class="btn btn-default btn-sm">
+		<a href="<?= $backUrl ?>" class="btn btn-default btn-sm">
 			<span class="glyphicon glyphicon-backward"></span>
 			@lang('c::std.back')
 		</a>
-		<a href="{{ $newUrl }}" class="btn btn-default btn-sm">
+		<a href="<?= $newUrl ?>" class="btn btn-default btn-sm">
 			<span class="glyphicon glyphicon-plus"></span>
 			@lang('c::std.new')
 		</a> 
@@ -49,7 +49,7 @@
 		@foreach ($users as $user)
 			<tr>
 				<td>
-					<input type="checkbox" name="bulk[{{ $user->id }}]">
+					<input type="checkbox" name="bulk[<?= $user->id ?>]" value="<?= $user->id; ?>">
 				</td>
 				<td>{{{ $user->id }}}</td>
 				<td>

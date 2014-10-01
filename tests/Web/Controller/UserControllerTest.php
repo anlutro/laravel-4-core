@@ -80,10 +80,10 @@ class UserControllerTest extends UserControllerTestCase
 
 	public function testBulkAction()
 	{
-		$ids = [1 => 'checked', 2 => 'checked', 3 => 'checked'];
+		$ids = [2 => 2, 4 => 4, 6 => 6];
 		$input = ['bulkAction' => 'delete', 'bulk' => $ids];
 		$this->users->shouldReceive('processBulkAction')->once()
-			->with($input['bulkAction'], array_keys($ids));
+			->with($input['bulkAction'], $ids);
 
 		$this->postAction('bulk', [], $input);
 
