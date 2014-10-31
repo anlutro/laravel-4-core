@@ -253,33 +253,11 @@ class CoreServiceProvider extends ServiceProvider
 				['id' => 'profile']
 			);
 
-			if ($user->hasAccess('admin')) {
-				$subMenu->addItem(
-					$lang->get('c::user.admin-userlist'),
-					$url->route('c::user.index'),
-					['id' => 'userlist']
-				);
-				$subMenu->addItem(
-					$lang->get('c::user.admin-newuser'),
-					$url->route('c::user.create'),
-					['id' => 'add-user']
-				);
-			}
-
 			$subMenu->addItem(
 				$lang->get('c::auth.logout'),
 				$url->route('c::logout'),
 				['id' => 'log-out']
 			);
-
-			if ($this->app['config']->get('c::support-email')) {
-				$subMenu->addDivider();
-				$subMenu->addItem(
-					$lang->get('c::support.short-title'),
-					$url->route('c::support'),
-					['id' => 'support']
-				);
-			}
 		} else {
 			$menu->getMenu('right')->addItem(
 				$lang->get('c::auth.login-title'),

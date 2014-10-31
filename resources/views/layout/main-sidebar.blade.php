@@ -21,7 +21,7 @@
 
 	<aside class="site-sidebar">
 		<nav class="sidebar sidebar-default">
-			{{ $sidebar->render() }}
+			{{ $renderer->render($sidebar) }}
 		</nav>
 	</aside>
 
@@ -29,7 +29,7 @@
 		<div class="container-fluid">
 			{{ is_array($footer) ? implode('<br>', $footer) : $footer }}
 		</div>
-</footer>
+	</footer>
 
 </div>
 

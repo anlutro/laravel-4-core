@@ -23,6 +23,7 @@ class SidebarLayoutCreator
 
 	public function create(View $view)
 	{
+		$view->renderer = new \anlutro\Core\Html\SidebarMenuRenderer();
 		$view->sidebar = $this->getSidebarMenu();
 	}
 
