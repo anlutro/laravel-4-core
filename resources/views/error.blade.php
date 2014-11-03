@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="jumbotron text-center">
+<div class="jumbotron text-center error-message-section">
 	<h1>{{ $title }}</h1>
 
 	@foreach ((array) $text as $paragraph)

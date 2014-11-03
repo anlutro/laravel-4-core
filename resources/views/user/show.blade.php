@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="page-header">
-	<h1>
+	<h1 class="dl-header">
 		{{{ $user->name ?: $user->username }}}
 		@if ($canEdit && isset($editUrl))
 			<small><a href="{{ $editUrl }}">@lang('c::std.edit')</a></small>
