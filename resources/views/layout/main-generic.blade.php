@@ -28,7 +28,7 @@
 <![endif]-->
 @endforeach
 	</head>
-	<body>
+	<body class="@yield('bodyclasses')">
 
 		<a class="sr-only sr-only-focusable sr-skip-to-content" href="#site-main-content">@lang('c::std.skip-to-content')</a>
 

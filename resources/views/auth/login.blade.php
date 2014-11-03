@@ -1,5 +1,7 @@
 @extends('c::layout.main')
 
+@section('bodyclasses', 'login-page')
+
 @section('title', Lang::get('c::auth.login-title'))
 
 @section('content')
