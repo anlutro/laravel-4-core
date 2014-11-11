@@ -68,7 +68,7 @@ class AuthFilter
 
 	protected function makeResponse(Request $request)
 	{
-		$message = $this->getErrorMessage();
+		$message = $this->translator->get('c::auth.login-required');
 
 		if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
 			return Response::json(['error' => $message], 403);
@@ -82,10 +82,5 @@ class AuthFilter
 			return $this->redirect->to($url)
 				->with('error', $message);
 		}
-	}
-
-	protected function getErrorMessage()
-	{
-		return $this->translator->get('c::auth.login-required');
 	}
 }

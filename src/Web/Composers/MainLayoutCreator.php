@@ -34,7 +34,8 @@ class MainLayoutCreator
 	{
 		$view->footer = [];
 
-		$view->footer[] = $this->config->get('c::site.copyright-date').' &copy; '.$this->config->get('c::site.copyright-holder');
+		$view->footer[] = $this->config->get('c::site.copyright-date') . ' &copy; '
+			. $this->config->get('c::site.copyright-holder');
 
 		if ($this->translator->has('c::site.made-by')) {
 			$view->footer[] = $this->translator->get('c::site.made-by');

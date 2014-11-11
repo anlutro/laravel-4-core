@@ -74,8 +74,7 @@ abstract class AbstractUserManagementCommand extends Command
 	 */
 	protected function getArguments()
 	{
-		return array(
-		);
+		return [];
 	}
 
 	/**
@@ -85,10 +84,10 @@ abstract class AbstractUserManagementCommand extends Command
 	 */
 	protected function getOptions()
 	{
-		return array(
-			array('username', null, InputOption::VALUE_OPTIONAL, 'Username to look for.', null),
-			array('email', null, InputOption::VALUE_OPTIONAL, 'E-mail address to look for.', null),
-			array('id', null, InputOption::VALUE_OPTIONAL, 'Database ID to look for.', null),
-		);
+		return [
+			['username', null, InputOption::VALUE_OPTIONAL, 'Username to look for.', null],
+			['email', null, InputOption::VALUE_OPTIONAL, 'E-mail address to look for.', null],
+			['id', null, InputOption::VALUE_OPTIONAL, 'Database ID to look for.', null],
+		];
 	}
 }

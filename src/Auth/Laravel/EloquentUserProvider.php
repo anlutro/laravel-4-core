@@ -13,8 +13,15 @@ use Illuminate\Auth\UserInterface;
 
 use anlutro\Core\Auth\AuthenticationException;
 
+/**
+ * Override the default Eloquent userprovider to throw exceptions which are
+ * more helpful during development/debugging.
+ */
 class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 {
+	/**
+	 * {@inheritdoc}
+	 */
 	public function retrieveByCredentials(array $credentials)
 	{
 		if ($user = parent::retrieveByCredentials($credentials)) {
@@ -26,6 +33,9 @@ class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 		throw new AuthenticationException("No user with these credentials found - $credStr");
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	protected function getCredentialsString(array $credentials)
 	{
 		$credStr = '';
@@ -38,6 +48,9 @@ class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 		return rtrim($credStr, ' -');
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function validateCredentials(UserInterface $user, array $credentials)
 	{
 		if (parent::validateCredentials($user, $credentials)) {
@@ -47,8 +60,12 @@ class EloquentUserProvider extends \Illuminate\Auth\EloquentUserProvider
 		throw new AuthenticationException("Incorrect password");
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function updateRememberToken(UserInterface $user, $token)
 	{
 		$user->setRememberToken($token);
+		// the original class has a save() call here
 	}
 }

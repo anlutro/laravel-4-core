@@ -17,7 +17,33 @@ use Illuminate\View\View;
  */
 abstract class AbstractLayoutComposer
 {
-	public abstract function compose(View $view);
+	/**
+	 * The view instance.
+	 *
+	 * @var View
+	 */
+	private $view;
+
+	/**
+	 * Compose the view.
+	 *
+	 * @param  View   $view
+	 *
+	 * @return void
+	 */
+	public final function compose(View $view)
+	{
+		$this->view = $view;
+		$this->addScripts();
+	}
+
+	/**
+	 * Inheriting classes should call this method and call various protected
+	 * methods to add scripts and styles.
+	 *
+	 * @return void
+	 */
+	protected abstract function addScripts();
 
 	protected function addHeadScript(View $view, $url, $priority = 0)
 	{

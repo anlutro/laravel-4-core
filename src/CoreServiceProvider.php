@@ -19,18 +19,11 @@ class CoreServiceProvider extends ServiceProvider
 	use \anlutro\Core\RouteProviderTrait;
 
 	/**
-	 * Whether or not the service provider should be deferred/lazy loaded.
-	 *
-	 * @var boolean
-	 */
-	protected $defer = false;
-
-	/**
 	 * The name of the package.
 	 *
 	 * @var string
 	 */
-	protected $package;
+	const PACKAGE = 'anlutro/l4-core';
 
 	/**
 	 * The namespace that should be registered with the config, translator,
@@ -38,7 +31,14 @@ class CoreServiceProvider extends ServiceProvider
 	 *
 	 * @var string
 	 */
-	protected $namespace;
+	const DOMAIN = 'c';
+
+	/**
+	 * Whether or not the service provider should be deferred/lazy loaded.
+	 *
+	 * @var boolean
+	 */
+	protected $defer = false;
 
 	/**
 	 * The name of the user model class.
@@ -90,9 +90,6 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->package = 'anlutro/l4-core';
-		$this->namespace = 'c';
-
 		$this->registerConfigFiles();
 		$this->registerLangFiles();
 		$this->registerViewFiles();
@@ -118,7 +115,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerConfigFiles()
 	{
-		$this->app['config']->package($this->package, static::$resPath . '/config', $this->namespace);
+		$this->app['config']->package(static::PACKAGE, static::$resPath . '/config', static::DOMAIN);
 	}
 
 	/**
@@ -128,7 +125,7 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerLangFiles()
 	{
-		$this->app['translator']->addNamespace($this->namespace, static::$resPath . '/lang');
+		$this->app['translator']->addNamespace(static::DOMAIN, static::$resPath . '/lang');
 	}
 
 	/**
@@ -138,13 +135,13 @@ class CoreServiceProvider extends ServiceProvider
 	 */
 	protected function registerViewFiles()
 	{
-		$appView = $this->getAppViewPath($this->package, $this->namespace);
+		$appView = $this->getAppViewPath(static::PACKAGE, static::DOMAIN);
 		
 		if ($this->app['files']->isDirectory($appView)) {
-			$this->app['view']->addNamespace($this->namespace, $appView);
+			$this->app['view']->addNamespace(static::DOMAIN, $appView);
 		}
 
-		$this->app['view']->addNamespace($this->namespace, static::$resPath . '/views');
+		$this->app['view']->addNamespace(static::DOMAIN, static::$resPath . '/views');
 	}
 
 	/**
