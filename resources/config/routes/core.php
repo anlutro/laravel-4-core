@@ -30,7 +30,7 @@ return [
 		'url' => '/user/profile',
 		'method' => 'post',
 		'uses' => 'anlutro\Core\Web\UserController@updateProfile',
-		'before' => ['auth'],
+		'before' => ['auth', 'csrf'],
 	],
 	'logout' => [
 		'url' => '/user/logout',
@@ -54,7 +54,7 @@ return [
 		'url' => '/admin/users',
 		'method' => 'post',
 		'uses' => 'anlutro\Core\Web\UserController@bulk',
-		'before' => ['auth', 'access:admin'],
+		'before' => ['auth', 'access:admin', 'csrf'],
 	],
 	'user.create' => [
 		'url' => '/admin/users/new',
@@ -66,7 +66,7 @@ return [
 		'url' => '/admin/users/new',
 		'method' => 'post',
 		'uses' => 'anlutro\Core\Web\UserController@store',
-		'before' => ['auth', 'access:admin'],
+		'before' => ['auth', 'access:admin', 'csrf'],
 	],
 	'user.edit' => [
 		'url' => '/admin/users/{id}',
@@ -78,18 +78,18 @@ return [
 		'url' => '/admin/users/{id}',
 		'method' => 'post',
 		'uses' => 'anlutro\Core\Web\UserController@update',
-		'before' => ['auth', 'access:admin'],
+		'before' => ['auth', 'access:admin', 'csrf'],
 	],
 	'user.delete' => [
 		'url' => '/admin/users/{id}',
 		'method' => 'delete',
 		'uses' => 'anlutro\Core\Web\UserController@delete',
-		'before' => ['auth', 'access:admin'],
+		'before' => ['auth', 'access:admin', 'csrf'],
 	],
 	'user.restore' => [
 		'url' => '/admin/users/{id}/restore',
 		'method' => 'post',
 		'uses' => 'anlutro\Core\Web\UserController@restore',
-		'before' => ['auth', 'access:admin'],
+		'before' => ['auth', 'access:admin', 'csrf'],
 	],
 ];

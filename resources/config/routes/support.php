@@ -18,6 +18,6 @@ return [
 		'url' => '/support',
 		'method' => 'post',
 		'uses' => 'anlutro\Core\Web\SupportController@handleForm',
-		'before' => ['auth'],
+		'before' => ['auth', 'csrf'],
 	],
 ];
