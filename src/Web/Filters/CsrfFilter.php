@@ -17,17 +17,21 @@ use Illuminate\Session\TokenMismatchException;
 class CsrfFilter
 {
 	protected $session;
+	protected $regenerate;
 
-	public function __construct(Store $session)
+	public function __construct(Store $session, $regenerate = true)
 	{
 		$this->session = $session;
+		$this->regenerate = $regenerate;
 	}
 
 	public function filter(Route $route, Request $request)
 	{
 		if ($this->session->token() != $request->input('_token')) {
 			throw new TokenMismatchException;
-		} else {
+		}
+
+		if ($this->regenerate) {
 			$this->session->regenerateToken();
 		}
 	}

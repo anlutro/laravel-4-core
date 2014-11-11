@@ -35,4 +35,7 @@ return [
 	// file's `redirect-login`) in the top menu. Can be a closure that is
 	// lazily invoked.
 	'enable-home-link' => function() { return Illuminate\Support\Facades\Auth::check(); },
+
+	// Whether or not to regenerate the CSRF token on every request.
+	'regenerate-csrf' => true,
 ];

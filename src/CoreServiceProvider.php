@@ -171,6 +171,10 @@ class CoreServiceProvider extends ServiceProvider
 		$this->app['router']->filter('guest', 'anlutro\Core\Web\Filters\GuestFilter');
 		$this->app['router']->filter('auth', 'anlutro\Core\Web\Filters\AuthFilter');
 		$this->app['router']->filter('access', 'anlutro\Core\Web\Filters\AccessFilter');
+		$this->app->bind('anlutro\Core\Web\Filters\CsrfFilter', function($app) {
+			$regenerate = $app['config']->get('c::regenerate-csrf');
+			return new Web\Filters\CsrfFilter($app['session'], $regenerate);
+		});
 		$this->app['router']->filter('csrf', 'anlutro\Core\Web\Filters\CsrfFilter');
 		$this->app['router']->before(function(Request $request) {
 			if ($request->ajax() || $request->isJson() || $request->wantsJson()) {
