@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Session\Store;
 use Illuminate\Session\TokenMismatchException;
+use Symfony\Component\Security\Core\Util\StringUtils;
 
 class CsrfFilter
 {
@@ -27,7 +28,7 @@ class CsrfFilter
 
 	public function filter(Route $route, Request $request)
 	{
-		if ($this->session->token() != $request->input('_token')) {
+		if (!StringUtils::equals($this->session->token(), $request->input('_token'))) {
 			throw new TokenMismatchException;
 		}
 
