@@ -16,7 +16,7 @@
 		"laravel/framework": "~4.2"
 	},
 	"require-dev": {
-		"laravel/laravel": "dev-master",
+		"laravel/laravel": "~4.2",
 		"mockery/mockery": "~0.9",
 		"anlutro/menu": "~0.2"
 	},
