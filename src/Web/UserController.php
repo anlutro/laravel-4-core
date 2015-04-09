@@ -11,6 +11,8 @@ namespace anlutro\Core\Web;
 
 use anlutro\LaravelController\Controller;
 use anlutro\LaravelValidation\ValidationException;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -96,13 +98,15 @@ class UserController extends Controller
 			+ $this->getUserTypes();
 
 		return $this->view('c::user.list', [
-			'users'       => $users,
-			'userTypes'   => $types,
-			'bulkActions' => $this->getBulkActions(),
-			'showAction'  => $this->action('show'),
-			'editAction'  => $this->action('edit'),
-			'newUrl'      => $this->url('create'),
-			'backUrl'     => URL::to('/'),
+			'users'        => $users,
+			'userTypes'    => $types,
+			'bulkActions'  => $this->getBulkActions(),
+			'showAction'   => $this->action('@show'),
+			'editAction'   => $this->action('@edit'),
+			'switchAction' => $this->canSwitchUser() ?
+				$this->action('@switchUser') : null,
+			'newUrl'       => $this->url('create'),
+			'backUrl'      => URL::to('/'),
 		]);
 	}
 
@@ -308,6 +312,17 @@ class UserController extends Controller
 		}
 	}
 
+	public function switchUser($userId)
+	{
+		$this->users->switchToUserId($userId);
+
+		$url = Config::get('c::redirect-login', '/');
+		$redirect = Redirect::to($url)
+			->with('success', Lang::get('c::auth.login-success'));
+
+		return $redirect;
+	}
+
 	/**
 	 * Return a not found redirect.
 	 *
@@ -347,5 +362,11 @@ class UserController extends Controller
 			'activate'   => Lang::get('c::user.activate'),
 			'deactivate' => Lang::get('c::user.deactivate'),
 		];
+	}
+
+	protected function canSwitchUser()
+	{
+		return $this->users->getCurrentUser()
+			->hasAccess('superadmin');
 	}
 }

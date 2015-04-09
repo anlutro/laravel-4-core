@@ -22,6 +22,7 @@ return [
 	'admin-edituser' => 'Edit user',
 	'admin-newuser' => 'Add user',
 	'deactivate' => 'Deactivate',
+	'switch' => 'Log in as',
 
 	// field labels
 	'activation-field' => 'Send activation instructions',

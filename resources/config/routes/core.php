@@ -92,4 +92,10 @@ return [
 		'uses' => 'anlutro\Core\Web\UserController@restore',
 		'before' => ['auth', 'access:admin', 'csrf'],
 	],
+	'user.switch' => [
+		'url' => '/admin/users/{id}/switch',
+		'method' => 'get',
+		'uses' => 'anlutro\Core\Web\UserController@switchUser',
+		'before' => ['auth', 'access:superadmin'],
+	],
 ];

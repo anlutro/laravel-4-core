@@ -316,6 +316,16 @@ class UserManager
 		$this->auth->logout();
 	}
 
+	public function switchToUser($user, $remember = false)
+	{
+		$this->auth->login($user, $remember);
+	}
+
+	public function switchToUserId($userId, $remember = false)
+	{
+		$this->auth->loginUsingId($userId, $remember);
+	}
+
 	/**
 	 * Send an activation code to a user.
 	 *

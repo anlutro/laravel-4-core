@@ -22,6 +22,7 @@ return [
 	'user.update' => '/admin/brukere/{id}',
 	'user.delete' => '/admin/brukere/{id}',
 	'user.restore' => '/admin/brukere/{id}/gjenopprett',
+	'user.switch' => '/admin/brukere/{id}/bytt-til',
 	'pwreset.request' => '/passord/glemt',
 	'pwreset.request_post' => '/passord/glemt',
 	'pwreset.reset' => '/passord/tilbakestill',

@@ -22,6 +22,7 @@ return [
 	'admin-edituser' => 'Rediger bruker',
 	'admin-newuser' => 'Ny bruker',
 	'deactivate' => 'Deaktiver',
+	'switch' => 'Logg inn som',
 
 	// field labels
 	'activation-field' => 'Send aktiveringsinstrukser',

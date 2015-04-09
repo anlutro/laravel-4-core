@@ -67,6 +67,12 @@
 				<td>{{{ $user->email }}}</td>
 				<td>{{{ $user->phone }}}</td>
 				<td class="text-right">
+				@if ($switchAction)
+					<a href="{{ URL::action($switchAction, [$user->id]) }}" class="btn btn-xs btn-default">
+						<span class="glyphicon glyphicon-lock"></span>
+						@lang('c::user.switch')
+					</a>
+				@endif
 					<a href="{{ URL::action($showAction, [$user->id]) }}" class="btn btn-xs btn-default">
 						<span class="glyphicon glyphicon-eye-open"></span>
 						@lang('c::std.view')
