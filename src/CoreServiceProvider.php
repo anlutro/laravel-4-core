@@ -259,7 +259,8 @@ class CoreServiceProvider extends ServiceProvider
 			$subMenu->addItem(
 				$lang->get('c::auth.logout'),
 				$url->route('c::logout'),
-				['id' => 'log-out']
+				['id' => 'log-out'],
+				50
 			);
 		} else {
 			$menu->getMenu('right')->addItem(
