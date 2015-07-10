@@ -69,7 +69,7 @@ class AuthController extends Controller
 			'remember' => Config::get('c::login-remember', false),
 			'resetUrl' => $this->remindersEnabled() ? $this->url('reminder') : null,
 		];
-		
+
 		return $this->view('c::auth.login', $viewData);
 	}
 

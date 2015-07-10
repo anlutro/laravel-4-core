@@ -56,7 +56,8 @@ class RelationshipQueryJoinerTest extends EloquentTestCase
 			left join "stub_model_ones" on "stub_models"."foreign_key" = "stub_model_ones"."id"
 			left join "stub_model_twos" on "stub_model_twos"."foreign_key" = "stub_models"."id"';
 		$query = (new StubModel)->newQuery();
-		(new RelationshipQueryJoiner($query))->join(['one', 'two']);
+		$joiner = new RelationshipQueryJoiner($query);
+		$joiner->join(['one', 'two']);
 		$this->assertEquals($this->trimSql($sql), $query->toSql());
 	}
 
@@ -67,8 +68,22 @@ class RelationshipQueryJoinerTest extends EloquentTestCase
 			left join "stub_model_ones" on "stub_models"."foreign_key" = "stub_model_ones"."id"
 			left join "stub_model_threes" on "stub_model_threes"."foreign_key" = "stub_model_ones"."id"';
 		$query = (new StubModel)->newQuery();
-		(new RelationshipQueryJoiner($query))->join(['one', 'one.five']);
+		$joiner = new RelationshipQueryJoiner($query);
+		$joiner->join(['one', 'one.five']);
 		$this->assertEquals($this->trimSql($sql), $query->toSql());
+	}
+
+	/** @test */
+	public function joinClauseCanBeManipulated()
+	{
+		$sql = 'select "stub_models".* from "stub_models"
+			left join "stub_model_ones" on "stub_models"."foreign_key" = "stub_model_ones"."id"
+			and "other_column" = ?';
+		$query = (new StubModel)->newQuery();
+		(new RelationshipQueryJoiner($query))->join('one')
+			->where('other_column', '=', '123');
+		$this->assertEquals($this->trimSql($sql), $query->toSql());
+		$this->assertEquals(['123'], $query->getBindings());
 	}
 
 	protected function trimSql($string)

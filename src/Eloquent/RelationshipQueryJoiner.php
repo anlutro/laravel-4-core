@@ -12,6 +12,7 @@ namespace anlutro\Core\Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\JoinClause;
 
 /**
  * Utility class for joining related tables in Eloquent.
@@ -52,26 +53,27 @@ class RelationshipQueryJoiner
 	/**
 	 * Join one or multiple relations onto the query.
 	 *
-	 * @param  string|array $relations Single string or array of strings with
-	 * the name of the relation(s) that should be joined onto the query.
-	 * @param  string       $type      The join type - left, inner etc
+	 * @param  string $relation  Name of the relation that should be joined
+	 * @param  string $type      The join type - left, inner etc
 	 *
-	 * @return static
+	 * @return JoinClause
 	 */
-	public function join($relations, $type = 'left')
+	public function join($relation, $type = 'left')
 	{
-		foreach ((array) $relations as $relation) {
-			if (in_array($relation, $this->joined)) {
-				continue;
-			}
+		if (is_array($relation)) {
+			return array_map([$this, 'join'], $relation);
+		}
 
-			if (strpos($relation, '.') !== false) {
-				$this->joinNested($relation, $type);
-			} else {
-				$this->joined[] = $relation;
-				$relation = $this->getRelation($this->model, $relation);
-				$this->joinRelation($relation, $type);
-			}
+		if (isset($this->joined[$relation])) {
+			return $this->joined[$relation];
+		}
+
+		if (strpos($relation, '.') !== false) {
+			$join = $this->joinNested($relation, $type);
+		} else {
+			$this->joined[$relation] = true; // @todo necessary?
+			$relation = $this->getRelation($this->model, $relation);
+			$join = $this->joinRelation($relation, $type);
 		}
 
 		$this->checkQuerySelects();
@@ -79,7 +81,7 @@ class RelationshipQueryJoiner
 		// @todo resarch when/if group by's are necessary
 		// $this->checkQueryGroupBy();
 
-		return $this;
+		return $join;
 	}
 
 	/**
@@ -109,9 +111,9 @@ class RelationshipQueryJoiner
 			$current = $current ? "$current.$segment" : $segment;
 			$relation = $this->getRelation($model, $segment);
 
-			if (!in_array($current, $this->joined)) {
-				$this->joinRelation($relation, $type);
-			}
+			$join = isset($this->joined[$current])
+				? $this->joined[$current]
+				: $this->joinRelation($relation, $type);
 
 			$model = $relation->getRelated();
 		}
@@ -140,11 +142,14 @@ class RelationshipQueryJoiner
 	protected function joinRelation(Relation $relation, $type)
 	{
 		if ($relation instanceof Relations\BelongsToMany) {
-			$this->joinManyToManyRelation($relation, $type);
+			return $this->joinManyToManyRelation($relation, $type);
 		} else if ($relation instanceof Relations\HasOneOrMany) {
-			$this->joinHasRelation($relation, $type);
+			return $this->joinHasRelation($relation, $type);
 		} else if ($relation instanceof Relations\BelongsTo) {
-			$this->joinBelongsToRelation($relation, $type);
+			return $this->joinBelongsToRelation($relation, $type);
+		} else {
+			$type = get_class($relation);
+			throw new \UnexpectedValueException("Cannot join relation of type $type");
 		}
 	}
 
@@ -154,7 +159,7 @@ class RelationshipQueryJoiner
 		$foreignKey = $relation->getForeignKey();
 		$localKey = $relation->getQualifiedParentKeyName();
 
-		$this->query->join($table, $foreignKey, '=', $localKey, $type);
+		return $this->joinQuery($table, $foreignKey, '=', $localKey, $type);
 	}
 
 	protected function joinBelongsToRelation(Relations\BelongsTo $relation, $type)
@@ -163,7 +168,7 @@ class RelationshipQueryJoiner
 		$foreignKey = $relation->getQualifiedForeignKey();
 		$localKey = $relation->getQualifiedOtherKeyName();
 
-		$this->query->join($table, $foreignKey, '=', $localKey, $type);
+		return $this->joinQuery($table, $foreignKey, '=', $localKey, $type);
 	}
 
 	protected function joinManyToManyRelation(Relations\BelongsToMany $relation, $type)
@@ -173,13 +178,24 @@ class RelationshipQueryJoiner
 		$parentKey = $relation->getParent()->getQualifiedKeyName();
 		$localKey = $relation->getOtherKey();
 
-		$this->query->join($pivotTable, $localKey, '=', $parentKey, $type);
+		$join1 = $this->joinQuery($pivotTable, $localKey, '=', $parentKey, $type);
 
 		$related = $relation->getRelated();
 		$foreignKey = $relation->getForeignKey();
 		$relatedTable = $related->getTable();
 		$relatedKey = $related->getQualifiedKeyName();
 
-		$this->query->join($relatedTable, $foreignKey, '=', $relatedKey, $type);
+		$join2 = $this->joinQuery($relatedTable, $foreignKey, '=', $relatedKey, $type);
+
+		return [$join1, $join2];
+	}
+
+	protected function joinQuery($table, $one, $operator = null, $two = null, $type = 'inner', $where = false)
+	{
+		$join = new JoinClause($type, $table);
+		$join->on($one, $operator, $two, 'and', $where);
+		$this->query->getQuery()->joins[] = $join;
+
+		return $join;
 	}
 }
