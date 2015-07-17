@@ -29,10 +29,28 @@ class CsrfFilterTest extends PHPUnit_Framework_TestCase
 	 * @test
 	 * @dataProvider getTokenData
 	 */
-	public function throwsExceptionWhenTokensAreNotEqual($throws, $input, $sessionToken)
+	public function readsInputToken($throws, $input, $sessionToken)
 	{
 		$route = $this->mockRoute();
 		$request = Request::create('/', 'POST', ['_token' => $input]);
+		$session = $this->mockSession();
+		$session->shouldReceive('token')->andReturn($sessionToken);
+		$filter = $this->makeFilter($session, false);
+		if ($throws) {
+			$this->setExpectedException('Illuminate\Session\TokenMismatchException');
+		}
+		$filter->filter($route, $request);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider getTokenData
+	 */
+	public function readsCookieToken($throws, $input, $sessionToken)
+	{
+		$route = $this->mockRoute();
+		$request = Request::create('/', 'POST', []);
+		$request->cookies->set('X-XSRF-TOKEN', $input);
 		$session = $this->mockSession();
 		$session->shouldReceive('token')->andReturn($sessionToken);
 		$filter = $this->makeFilter($session, false);
