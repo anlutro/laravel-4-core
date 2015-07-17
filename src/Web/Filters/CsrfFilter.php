@@ -29,9 +29,11 @@ class CsrfFilter
 	public function filter(Route $route, Request $request)
 	{
 		$token = $request->input('_token');
-
 		if (!$token) {
-			$token = $request->cookie('X-XSRF-TOKEN');
+			$token = $request->headers->get('X-XSRF-TOKEN');
+		}
+		if (!$token) {
+			$token = $request->cookie('XSRF-TOKEN');
 		}
 
 		if (!StringUtils::equals($this->session->token(), $token)) {
