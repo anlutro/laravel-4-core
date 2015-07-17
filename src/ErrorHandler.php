@@ -12,6 +12,7 @@ namespace anlutro\Core;
 use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -62,9 +63,13 @@ class ErrorHandler
 			return null;
 		}
 
-		$view = $this->app['view'];
+		if ($this->shouldRespondWithJson()) {
+			return new JsonResponse(['status' => 'missing'], 404);
+		}
+
 		$translator = $this->app['translator'];
 		$url = $this->app['url'];
+		$view = $this->app['view'];
 
 		$contents = $view->make('c::error', [
 			'title' => $translator->get('smarterror::error.missingTitle'),
@@ -77,6 +82,10 @@ class ErrorHandler
 
 	protected function handleTokenMismatch()
 	{
+		if ($this->shouldRespondWithJson()) {
+			return new JsonResponse(['status' => 'token_mismatch'], 400);
+		}
+
 		$view = $this->app['view'];
 		$translator = $this->app['translator'];
 		$url = $this->app['url'];
@@ -94,6 +103,10 @@ class ErrorHandler
 	{
 		if ($this->app->runningInConsole() || $this->app['config']->get('app.debug')) {
 			return null;
+		}
+
+		if ($this->shouldRespondWithJson()) {
+			return new JsonResponse(['status' => 'internal error'], 500);
 		}
 
 		$viewFactory = $this->app['view'];
@@ -126,5 +139,12 @@ class ErrorHandler
 		$contents = $translator->get('c::std.maintenance-info');
 
 		return new Response($contents, 503);
+	}
+
+	protected function shouldRespondWithJson()
+	{
+		$request = $this->app['request'];
+
+		return $request->ajax() || $request->isJson() || $request->wantsJson();
 	}
 }
