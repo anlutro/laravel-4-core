@@ -65,7 +65,7 @@ class ApiAuthControllerTest extends AuthControllerTestCase
 
 		$response = $this->getAction('logout');
 
-		$this->assertEquals(403, $response->getStatusCode());
+		$this->assertEquals(200, $response->getStatusCode());
 	}
 
 	public function testRegister()
