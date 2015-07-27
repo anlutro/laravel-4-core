@@ -88,7 +88,7 @@ class ApiAuthController extends ApiController
 	{
 		$this->users->logout();
 
-		return $this->status('logged out', 403);
+		return $this->status('logged out', 200);
 	}
 
 	/**
