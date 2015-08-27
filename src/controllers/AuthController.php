@@ -189,7 +189,7 @@ class AuthController extends \c\Controller
 
 		if (Password::requestReset($user)) {
 			return $this->redirect('login')
-				->with('info', Lang::get('c::auth.reminder-sent'));
+				->with('info', Lang::get('c::auth.resetpass-sent'));
 		} else {
 			return $this->redirect('reminder')
 				->withErrors(Lang::get('c::std.failure'));
