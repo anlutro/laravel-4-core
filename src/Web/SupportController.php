@@ -76,4 +76,9 @@ class SupportController extends Controller
 
 		return count(Mail::failures()) == 0;
 	}
+
+	protected function getClassName()
+	{
+		return __CLASS__;
+	}
 }

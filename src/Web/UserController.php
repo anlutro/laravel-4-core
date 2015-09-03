@@ -369,4 +369,9 @@ class UserController extends Controller
 		return $this->users->getCurrentUser()
 			->hasAccess('superadmin');
 	}
+
+	protected function getClassName()
+	{
+		return __CLASS__;
+	}
 }

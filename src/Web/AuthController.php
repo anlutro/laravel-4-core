@@ -269,4 +269,9 @@ class AuthController extends Controller
 	{
 		return $this->users->remindersEnabled();
 	}
+
+	protected function getClassName()
+	{
+		return __CLASS__;
+	}
 }
