@@ -22,7 +22,7 @@ class SupportController extends Controller
 	public function displayForm()
 	{
 		return $this->view('c::support.form', [
-			'formAction' => $this->url('@handleForm'),
+			'formAction' => $this->url('handleForm'),
 		]);
 	}
 
@@ -31,12 +31,12 @@ class SupportController extends Controller
 		$input = $this->input(['subject', 'email', 'phone', 'body']);
 
 		if ($errors = $this->getValidationErrors($input)) {
-			return $this->redirect('@displayForm')
+			return $this->redirect('displayForm')
 				->withInput()->withErrors($errors);
 		}
 
 		if (!$this->sendMail($input)) {
-			return $this->redirect('@displayForm')->withInput()
+			return $this->redirect('displayForm')->withInput()
 				->with('error', Lang::get('c::support.mail-failure'));
 		}
 

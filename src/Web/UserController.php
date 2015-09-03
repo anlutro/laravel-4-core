@@ -101,10 +101,10 @@ class UserController extends Controller
 			'users'        => $users,
 			'userTypes'    => $types,
 			'bulkActions'  => $this->getBulkActions(),
-			'showAction'   => $this->action('@show'),
-			'editAction'   => $this->action('@edit'),
+			'showAction'   => $this->action('show'),
+			'editAction'   => $this->action('edit'),
 			'switchAction' => $this->canSwitchUser() ?
-				$this->action('@switchUser') : null,
+				$this->action('switchUser') : null,
 			'newUrl'       => $this->url('create'),
 			'backUrl'      => URL::to('/'),
 		]);
@@ -159,7 +159,7 @@ class UserController extends Controller
 
 		if ($canEdit) {
 			$view->with([
-				'editUrl' => $this->url('@edit', [$userId]),
+				'editUrl' => $this->url('edit', [$userId]),
 			]);
 		}
 

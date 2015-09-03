@@ -184,7 +184,7 @@ class AuthController extends Controller
 	{
 		return $this->view('c::auth.reminder', [
 			'formAction' => $this->url('sendReminder'),
-			'loginUrl' => $this->url('@login'),
+			'loginUrl' => $this->url('login'),
 		]);
 	}
 
@@ -241,7 +241,7 @@ class AuthController extends Controller
 			return $this->redirect('login')
 				->with('success', Lang::get('c::auth.reset-success'));
 		} catch (ValidationException $e) {
-			return $this->redirect('@reset')
+			return $this->redirect('reset')
 				->withInput()->withErrors($e);
 		} catch (ReminderException $e) {
 			if ($this->debug) throw $e;
